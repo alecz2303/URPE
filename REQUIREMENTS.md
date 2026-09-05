@@ -2,6 +2,15 @@
 
 ## Alcance funcional
 
+### Acceso y autenticación
+
+- Inicio de sesión mediante credenciales locales y sesión web.
+- Cierre de sesión seguro.
+- Regeneración de sesión al autenticar e invalidación al cerrar sesión.
+- Mensajes de credenciales inválidas que no revelen si una cuenta existe.
+- Rutas exclusivas para invitados y usuarios autenticados.
+- Autenticación separada de la autorización: roles y permisos granulares se implementan como capacidad posterior.
+
 ### Agenda y calendario
 
 La agenda es una capacidad crítica de V1 y debe ser visible desde el dashboard.

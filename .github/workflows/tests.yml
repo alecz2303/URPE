@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - master
+      - 'URPE-*'
 
 jobs:
   tests:
@@ -31,16 +32,17 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
-      - name: Run PHP tests
-        run: php artisan test
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
 
       - name: Install frontend dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Build frontend assets
         run: npm run build
+
+      - name: Run PHP tests
+        run: php artisan test

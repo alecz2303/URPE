@@ -17,6 +17,16 @@ URPE procesará información clínica y datos personales; seguridad es requisito
 - Información sensible excluida de logs y mensajes de error.
 - Auditoría para consultas/modificaciones críticas según la política que se concrete por recurso.
 
+## Autenticación web
+
+- Autenticación basada en sesión con mecanismos nativos de Laravel.
+- Regeneración del identificador de sesión después de un login exitoso.
+- Invalidación de la sesión y regeneración del token CSRF al cerrar sesión.
+- Errores de credenciales genéricos: no deben revelar si una cuenta existe.
+- Rutas para invitados y usuarios autenticados protegidas con middleware `guest` y `auth`.
+- No se implementan roles/permisos dentro de URPE-3; autorización granular es una tarea posterior.
+- Antes de producción se definirá rate limiting específico para autenticación y políticas finales de contraseña/recuperación.
+
 ## Acceso por perfil
 
 - Administrador: gestión global sujeta a auditoría.

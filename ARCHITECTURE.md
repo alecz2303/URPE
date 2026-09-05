@@ -5,7 +5,8 @@
 - PHP 8.4
 - Laravel 13
 - Blade/Vite para la base web; decisiones de componentes interactivos se tomarán por tarea.
-- Base de datos relacional (motor de producción por definir antes de despliegue).
+- MySQL como motor relacional para desarrollo local y producción.
+- SQLite `:memory:` para la suite automatizada por defecto, salvo pruebas que requieran comportamiento específico de MySQL.
 - PHPUnit para pruebas automatizadas.
 
 ## Estilo
@@ -32,6 +33,10 @@ Aplicación monolítica modular Laravel para V1. Se prioriza simplicidad, seguri
 - Application: acciones/casos de uso y coordinación transaccional.
 - Domain: reglas y modelos de negocio donde aporten claridad.
 - Infrastructure: Eloquent, almacenamiento, colas/integraciones futuras.
+
+## Identity & Access
+
+URPE-3 establece autenticación web basada en sesión usando mecanismos nativos de Laravel. La autenticación y la autorización se mantienen separadas: URPE-3 resuelve identidad/login; roles y permisos granulares se implementarán en una tarea posterior.
 
 ## Principios
 
