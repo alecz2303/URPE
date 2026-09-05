@@ -8,7 +8,13 @@
 <body>
     <main>
         <h1>URPE Gestión Clínica</h1>
-        <p>Base técnica del proyecto inicializada. La funcionalidad clínica se implementará por tareas Jira aprobadas.</p>
+        <p>Plataforma clínica en desarrollo bajo el flujo canónico de URPE.</p>
+
+        @auth
+            <p><a href="{{ route('dashboard') }}">Ir al dashboard</a></p>
+        @else
+            <p><a href="{{ route('login') }}">Iniciar sesión</a></p>
+        @endauth
     </main>
 </body>
 </html>

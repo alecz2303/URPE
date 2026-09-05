@@ -7,10 +7,13 @@ Sistema web para la operación clínica de la Unidad de Rehabilitación Pediátr
 - Proyecto Jira: `URPE`
 - Repositorio: `alecz2303/URPE`
 - Rama estable: `master`
-- Rama activa: `URPE-2`
+- Rama activa: `URPE-3`
 - Stack base: Laravel 13 / PHP 8.4 / MySQL
 - Entorno local recomendado: Laragon
 - V1: alcance canónico aprobado
+- URPE-1: cerrado
+- URPE-2: cerrado
+- URPE-3: autenticación, en curso
 
 ## Propósito
 
@@ -81,4 +84,8 @@ En Bash puede usarse `cp .env.example .env` en lugar de `copy`.
 
 La aplicación local y producción usan MySQL. La suite automática usa SQLite en memoria por defecto para aislamiento y velocidad mediante `phpunit.xml`.
 
-> URPE-2 completa la base técnica antes de iniciar funcionalidad clínica de dominio.
+## Estado técnico estable
+
+URPE-2 dejó integrado en `master` el bootstrap técnico, CI, configuración Laravel, runtime paths y lockfiles reproducibles. La validación post-merge terminó correctamente.
+
+URPE-3 inicia la capa de autenticación segura por sesión; roles y permisos granulares quedan fuera de esta tarea y se implementarán después.
