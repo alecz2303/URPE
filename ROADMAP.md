@@ -1,0 +1,56 @@
+# Roadmap — URPE Gestión Clínica
+
+## Fase 0 — Fundación
+
+**URPE-1** Documentación canónica, workflow, stack y repositorio.
+
+## Fase 1 — Plataforma y seguridad
+
+1. Bootstrap completo Laravel, CI y configuración de ambientes.
+2. Autenticación.
+3. Usuarios, roles y permisos granulares.
+4. Auditoría base y política de archivos clínicos.
+5. Configuración general del centro y horarios.
+
+## Fase 2 — Estructura clínica
+
+1. Terapeutas y disponibilidad individual.
+2. Catálogo configurable de terapias.
+3. Pacientes, tutores/responsables y datos administrativos.
+4. Base del expediente clínico.
+
+## Fase 3 — Agenda / calendario — prioridad crítica
+
+1. Vista día/semana/mes y dashboard.
+2. Crear, editar, reprogramar y cancelar citas.
+3. Duración automática según terapia.
+4. Asignación de uno o varios terapeutas.
+5. Validación de disponibilidad durante toda la cita.
+6. Prevención de traslapes.
+7. Citas recurrentes.
+8. Ausencias, bloqueos y descansos.
+9. Estados y filtros operativos.
+10. Historial básico de cambios.
+
+## Fase 4 — Expediente y evolución
+
+1. Historia clínica.
+2. Diagnósticos, objetivos y observaciones.
+3. Archivos clínicos protegidos.
+4. Bitácora por sesión.
+5. Línea de tiempo clínica.
+6. Reglas de cierre/corrección y trazabilidad.
+
+## Fase 5 — Operación y cierre V1
+
+1. Dashboard operativo final.
+2. Reportes esenciales.
+3. Cobertura de permisos y auditoría.
+4. Regresión, seguridad, rendimiento y respaldo.
+5. UAT y despliegue.
+
+## V1.x / V2
+
+- WhatsApp y automatizaciones de comunicación.
+- Integraciones adicionales.
+- Funciones administrativas/financieras no aprobadas para V1.
