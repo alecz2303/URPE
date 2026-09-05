@@ -36,6 +36,23 @@
 - No existe bypass operativo para saltarse la regla.
 - El único cambio directo excepcional fue el bootstrap inicial necesario para crear una rama en un repositorio vacío.
 
+## Cierre obligatorio de una tarea Git
+
+Antes de integrar cualquier tarea a `master`:
+
+1. terminar el alcance y dejar la suite en 0 failures;
+2. hacer **squash** de los commits de desarrollo de la rama para dejar una historia limpia;
+3. hacer **rebase** de la rama de tarea contra el `master` más reciente;
+4. resolver conflictos sin alterar funcionalidad ajena;
+5. ejecutar nuevamente la suite completa después del rebase;
+6. abrir o actualizar el Pull Request hacia `master`;
+7. obtener mínimo 1 aprobación;
+8. integrar usando el flujo de **rebase/merge acordado**, evitando trasladar a `master` la pila de commits intermedios;
+9. verificar el commit estable resultante y la suite en `master`;
+10. actualizar/cerrar Jira únicamente después de esa verificación.
+
+URPE-1 fue integrado antes de formalizar esta regla y no se reescribirá de forma retroactiva.
+
 ## Convención Git/Jira
 
 - Rama: `URPE-<número>`.
@@ -54,4 +71,5 @@ Según aplique:
 - regresión verde;
 - documentación actualizada;
 - revisión funcional;
+- squash y rebase completados antes de integrar;
 - PR aprobado antes de merge.
