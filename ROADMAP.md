@@ -7,8 +7,8 @@
 
 ## Fase 1 — Plataforma y seguridad
 
-1. [ ] **URPE-3** Autenticación.
-2. [ ] Usuarios, roles y permisos granulares.
+1. [x] **URPE-3** Autenticación.
+2. [ ] **URPE-4** Usuarios, roles y permisos granulares.
 3. [ ] Auditoría base y política de archivos clínicos.
 4. [ ] Configuración general del centro y horarios.
 

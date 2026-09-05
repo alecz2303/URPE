@@ -34,8 +34,34 @@
         <section class="rounded-3xl bg-gradient-to-r from-cyan-700 to-teal-700 p-8 text-white shadow-lg shadow-cyan-900/10 sm:p-10">
             <p class="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-100">Acceso confirmado</p>
             <h2 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Bienvenido, {{ auth()->user()->name }}.</h2>
-            <p class="mt-4 max-w-2xl text-cyan-50/90">La autenticación de URPE Gestión Clínica está funcionando correctamente. Los módulos operativos se incorporarán de forma progresiva según el Roadmap.</p>
+            <p class="mt-4 max-w-2xl text-cyan-50/90">URPE Gestión Clínica ya cuenta con autenticación y autorización granular. Los módulos clínicos se incorporarán de forma progresiva según el Roadmap.</p>
         </section>
+
+        @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view'))
+            <section class="mt-8">
+                <div class="mb-4">
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Administración</p>
+                    <h3 class="mt-1 text-xl font-bold">Seguridad y accesos</h3>
+                </div>
+                <div class="grid gap-5 md:grid-cols-2">
+                    @can('users.view')
+                        <a href="{{ route('users.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
+                            <p class="text-sm font-semibold text-cyan-700">Usuarios</p>
+                            <h4 class="mt-2 text-lg font-bold">Administrar cuentas</h4>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Consulta usuarios, roles asignados y estado de acceso.</p>
+                        </a>
+                    @endcan
+
+                    @can('roles.view')
+                        <a href="{{ route('roles.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
+                            <p class="text-sm font-semibold text-cyan-700">Roles y permisos</p>
+                            <h4 class="mt-2 text-lg font-bold">Configurar autorización</h4>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Revisa los roles del sistema y los permisos efectivos de cada uno.</p>
+                        </a>
+                    @endcan
+                </div>
+            </section>
+        @endif
 
         <section class="mt-8 grid gap-5 md:grid-cols-3">
             <article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
@@ -53,7 +79,7 @@
             <article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
                 <p class="text-sm font-semibold text-cyan-700">Seguridad</p>
                 <h3 class="mt-2 text-lg font-bold">Sesión protegida</h3>
-                <p class="mt-2 text-sm leading-6 text-slate-500">El acceso al dashboard requiere autenticación activa.</p>
+                <p class="mt-2 text-sm leading-6 text-slate-500">El acceso depende de autenticación activa y permisos granulares.</p>
             </article>
         </section>
     </main>

@@ -74,6 +74,43 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_inactive_account_uses_same_generic_credential_error(): void
+    {
+        $user = User::factory()->create([
+            'password' => 'password',
+            'is_active' => false,
+        ]);
+
+        $response = $this->from(route('login'))->post(route('login.store'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $response
+            ->assertRedirect(route('login'))
+            ->assertSessionHasErrors([
+                'email' => 'Las credenciales proporcionadas no son válidas.',
+            ]);
+
+        $this->assertGuest();
+    }
+
+    public function test_deactivated_authenticated_session_is_invalidated_on_next_request(): void
+    {
+        $user = User::factory()->create(['is_active' => true]);
+
+        $this->actingAs($user)
+            ->get(route('dashboard'))
+            ->assertOk();
+
+        $user->update(['is_active' => false]);
+
+        $this->get(route('dashboard'))
+            ->assertRedirect(route('login'));
+
+        $this->assertGuest();
+    }
+
     public function test_authenticated_user_can_access_dashboard(): void
     {
         $user = User::factory()->create();
