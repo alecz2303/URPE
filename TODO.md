@@ -24,7 +24,7 @@
 - [x] PR aprobado y rebase merge a `master`.
 - [x] CI post-merge en `master` verde.
 
-## URPE-3 — Autenticación — EN CURSO
+## URPE-3 — Autenticación — CERRADO
 
 - [x] Login seguro por sesión.
 - [x] Logout con invalidación/regeneración de sesión.
@@ -35,6 +35,27 @@
 - [x] Regresión completa y build frontend verdes en CI de rama.
 - [x] Actualizar documentación afectada.
 - [x] Validación local en Laragon: login, dashboard y estilos confirmados visualmente.
+- [x] Squash + rebase/sincronización contra `master` antes de PR.
+- [x] PR #3 aprobado, rebase merge y Test #13 post-merge en verde.
+
+## URPE-4 — Usuarios, roles y permisos — EN CURSO
+
+- [x] Definir modelo de usuarios, roles y permisos granulares.
+- [x] Crear roles iniciales: Administrador, Coordinación Clínica, Terapeuta, Recepción y Consulta/Dirección.
+- [x] Establecer autorización granular mediante Laravel Gate, sin condicionales dispersos por nombre de rol.
+- [x] Implementar relaciones y asignación/sincronización de roles y permisos.
+- [x] Proteger rutas/acciones administrativas con autorización granular.
+- [x] Implementar administración básica de usuarios: listado, alta, edición y asignación de rol.
+- [x] Separar permisos de gestión de cuentas (`users.*`) de la asignación de roles (`roles.manage`).
+- [x] Implementar administración básica de roles y permisos.
+- [x] Implementar activación/desactivación segura de cuentas y bloqueo de login para cuentas inactivas.
+- [x] Invalidar la sesión de una cuenta desactivada en su siguiente solicitud autenticada.
+- [x] Incorporar `urpe:grant-admin` para bootstrap reproducible del primer administrador.
+- [x] Cubrir accesos permitidos/denegados, asignación de roles, permisos, estado de cuenta y bootstrap de administrador con tests.
+- [x] Suite local completa verde: 41/41 tests.
+- [x] GitHub Actions verde hasta Test #60.
+- [x] Actualizar documentación técnica de implementación de URPE-4.
+- [ ] Validación visual final en Laragon de Usuarios + Roles y permisos.
 - [ ] Squash + rebase contra `master` antes de PR.
 - [ ] PR aprobado, rebase merge y validación post-merge.
 

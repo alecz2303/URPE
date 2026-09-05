@@ -8,6 +8,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Seeders will be introduced only by Jira-scoped functionality.
+        $this->call([
+            AuthorizationSeeder::class,
+        ]);
     }
 }

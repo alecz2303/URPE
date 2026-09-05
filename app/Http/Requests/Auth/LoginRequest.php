@@ -23,7 +23,11 @@ class LoginRequest extends FormRequest
 
     public function authenticate(): void
     {
-        if (! Auth::attempt($this->only('email', 'password'))) {
+        if (! Auth::attempt([
+            'email' => $this->string('email')->toString(),
+            'password' => $this->string('password')->toString(),
+            'is_active' => true,
+        ])) {
             throw ValidationException::withMessages([
                 'email' => 'Las credenciales proporcionadas no son válidas.',
             ]);
