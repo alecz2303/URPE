@@ -74,6 +74,22 @@
 
 **BR-036.** Vojta y Pediasuit se crean como datos iniciales configurables, no como reglas especiales de código. Sus valores iniciales son Vojta 40 min / 1 terapeuta y Pediasuit 60 min / 2 terapeutas.
 
+**BR-037.** Cada paciente debe conservar un folio interno estable con formato `URPE-AAAA-NNNNNN`; la numeración es consecutiva e independiente por año.
+
+**BR-038.** Un paciente puede tener uno o varios tutores/responsables administrativos vinculados.
+
+**BR-039.** La relación paciente-responsable puede registrar parentesco o relación y únicamente un responsable puede quedar marcado como principal para un mismo paciente.
+
+**BR-040.** Los responsables administrativos no se convierten en usuarios autenticados del sistema por el hecho de estar vinculados a un paciente.
+
+**BR-041.** Los pacientes inactivos permanecen persistidos para integridad histórica; desactivar no equivale a eliminar.
+
+**BR-042.** La administración de pacientes se protege mediante permisos granulares `patients.view` y `patients.manage`; no se autoriza por nombre de rol dentro de controladores o vistas.
+
+**BR-043.** El rol Terapeuta no recibe acceso global a pacientes por defecto. El alcance clínico por cita o asignación se definirá en una etapa posterior.
+
+**BR-044.** Los cambios administrativos relevantes de pacientes y responsables deben ser auditables sin almacenar innecesariamente payloads sensibles completos.
+
 ## Decisiones abiertas
 
 Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:

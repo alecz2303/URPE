@@ -50,6 +50,13 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - SweetAlert para cambios de estado y feedback de administración de terapias.
 - Auditoría de `therapy.created`, `therapy.updated` y `therapy.status_updated`.
 - Cobertura automatizada de catálogo, permisos, seed, validaciones, auditoría, estado activo/inactivo y visibilidad desde dashboard.
+- Dominio administrativo de pacientes y tutores/responsables con relación muchos-a-muchos, parentesco y responsable principal único por paciente.
+- Folios de paciente consecutivos por año con formato `URPE-AAAA-NNNNNN` y secuencia transaccional dedicada.
+- Permisos granulares `patients.view` y `patients.manage`, con acceso administrativo base para Administrador, Coordinación Clínica y Recepción, lectura para Consulta/Dirección y sin acceso global para Terapeuta.
+- Interfaz de pacientes con listado, alta, ficha, edición, activación/desactivación y gestión de responsables.
+- Auditoría de creación, actualización, estado, responsables y cambio de responsable principal.
+- SweetAlert para cambios sensibles de pacientes y responsables, y formularios visualmente normalizados.
+- Cobertura automatizada de dominio, permisos, validación, relaciones, responsable principal, estado, auditoría y folios anuales consecutivos.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -59,4 +66,5 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-5 cerrado mediante PR #5, rebase merge y Test #102 post-merge verde.
 - URPE-6 cerrado mediante PR #6, rebase merge, CI post-merge y cierre Jira.
 - URPE-7 cerrado mediante PR #7, rebase merge y CI post-merge #161 verde.
-- URPE-8 completó implementación funcional, validación local y CI de rama; permanece en curso hasta completar integración protegida en `master`.
+- URPE-8 cerrado mediante PR #8, rebase merge y CI post-merge #184 verde.
+- URPE-9 en curso con implementación funcional y CI de rama; pendiente validación local final, squash/rebase, PR e integración protegida.
