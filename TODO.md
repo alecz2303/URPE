@@ -57,7 +57,7 @@
 - [x] Squash + rebase contra `master` antes de PR.
 - [x] PR #4 aprobado, rebase merge y Test #68 post-merge en verde.
 
-## URPE-5 — Auditoría y archivos clínicos — EN CURSO
+## URPE-5 — Auditoría y archivos clínicos — CERRADO
 
 - [x] Implementar modelo y persistencia reutilizable de auditoría.
 - [x] Registrar autenticación y acciones administrativas sensibles.
@@ -66,22 +66,44 @@
 - [x] Implementar metadatos, UUID, SHA-256 y relación futura con entidades clínicas.
 - [x] Implementar descarga protegida por permiso granular.
 - [x] Implementar retiro lógico conservando archivo físico y trazabilidad.
-- [x] Suite local Bloque 1: 44/44 pruebas verdes.
-- [x] GitHub Actions Test #77 verde.
-- [x] Suite local Bloque 2: 51/51 pruebas verdes.
-- [x] GitHub Actions Test #86 verde.
 - [x] Incorporar baseline reutilizable de SweetAlert para feedback y confirmaciones sensibles.
-- [ ] Validar suite completa después del baseline SweetAlert.
-- [ ] Actualizar documentación técnica final de URPE-5.
-- [ ] Validación visual final en Laragon.
-- [ ] Squash + rebase contra `master` antes de PR.
-- [ ] PR aprobado, rebase merge, CI post-merge y limpieza de ramas.
+- [x] Validar suite completa y build frontend.
+- [x] Actualizar documentación técnica final de URPE-5.
+- [x] Validación visual final en Laragon.
+- [x] Squash + rebase contra `master` antes de PR.
+- [x] PR #5 aprobado, rebase merge, CI post-merge Test #102 verde y cierre Jira.
+
+## URPE-6 — Configuración del centro y horarios — EN CURSO
+
+- [x] Crear persistencia de configuración general del centro.
+- [x] Crear persistencia de horarios operativos semanales.
+- [x] Definir horario inicial editable 09:00–18:00.
+- [x] Permitir días habilitados/deshabilitados y múltiples ventanas por día.
+- [x] Validar rangos inválidos y traslapes.
+- [x] Normalizar horarios a `HH:MM:SS` de forma consistente entre SQLite/MySQL.
+- [x] Implementar servicio reutilizable para consultar si el centro está abierto en un instante.
+- [x] Implementar validación reutilizable de intervalos completos para la futura agenda.
+- [x] Proteger configuración con permiso granular `center.manage`.
+- [x] Auditar cambios mediante `center.configuration_updated`.
+- [x] Implementar interfaz administrativa de datos generales y horarios.
+- [x] Agregar soporte visual para múltiples ventanas por día.
+- [x] Integrar SweetAlert para confirmación, éxito y errores.
+- [x] Integrar acceso condicionado desde dashboard.
+- [x] Validación funcional local de interfaz y permisos.
+- [x] Suite local Bloque 2: 68/68 pruebas verdes.
+- [x] GitHub Actions Test #117 verde.
+- [x] Actualizar documentación canónica de URPE-5/URPE-6.
+- [ ] Validar suite completa después del hardening de intervalos.
+- [ ] Validar build frontend final.
+- [ ] Squash + rebase/sincronización contra `master` antes de PR.
+- [ ] PR aprobado, rebase merge, CI post-merge, limpieza de ramas y cierre Jira.
 
 ## V1 — Backlog canónico
 
 - [x] Autenticación y gestión de usuarios.
 - [x] Roles y permisos granulares.
-- [ ] Configuración general y horarios operativos.
+- [x] Auditoría base de acciones sensibles.
+- [ ] Configuración general y horarios operativos. *(URPE-6 en curso)*
 - [ ] Catálogo de terapeutas y disponibilidad.
 - [ ] Catálogo de terapias configurable.
 - [ ] Pacientes y tutores/responsables.
@@ -92,7 +114,6 @@
 - [ ] Documentos, imágenes, radiografías y estudios.
 - [ ] Bitácoras/evolución de sesiones.
 - [ ] Dashboard operativo.
-- [x] Auditoría base de acciones sensibles.
 - [ ] Reportes operativos esenciales.
 - [ ] Hardening, pruebas de regresión y preparación de despliegue.
 

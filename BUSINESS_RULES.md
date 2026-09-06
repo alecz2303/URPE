@@ -40,6 +40,8 @@
 
 **BR-019.** WhatsApp y comunicación automatizada están fuera de V1.
 
+**BR-020.** Una cita ordinaria debe quedar completamente contenida dentro de una ventana operativa habilitada del centro; no puede atravesar un periodo cerrado entre dos ventanas ni extenderse fuera del horario operativo. Las excepciones, si se autorizan posteriormente, deberán definirse de forma explícita y auditable.
+
 ## Decisiones abiertas
 
 Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:
@@ -51,6 +53,6 @@ Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:
 - **BR-P05:** Pediasuit requiere exactamente 2 terapeutas o mínimo 2.
 - **BR-P06:** campos clínicos visibles para Recepción.
 - **BR-P07:** pacientes visibles para Terapeuta según cita/asignación.
-- **BR-P08:** excepciones para citas fuera del horario operativo.
+- **BR-P08:** mecanismo y permisos para excepciones de citas fuera del horario operativo, si se aprueban.
 - **BR-P09:** asignación de terapeutas manual, automática o mixta.
 - **BR-P10:** cualificaciones requeridas por terapia, si aplican.

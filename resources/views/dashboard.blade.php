@@ -37,13 +37,13 @@
             <p class="mt-4 max-w-2xl text-cyan-50/90">URPE Gestión Clínica ya cuenta con autenticación y autorización granular. Los módulos clínicos se incorporarán de forma progresiva según el Roadmap.</p>
         </section>
 
-        @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view'))
+        @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view') || auth()->user()->can('center.manage'))
             <section class="mt-8">
                 <div class="mb-4">
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Administración</p>
-                    <h3 class="mt-1 text-xl font-bold">Seguridad y accesos</h3>
+                    <h3 class="mt-1 text-xl font-bold">Seguridad y configuración</h3>
                 </div>
-                <div class="grid gap-5 md:grid-cols-2">
+                <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                     @can('users.view')
                         <a href="{{ route('users.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
                             <p class="text-sm font-semibold text-cyan-700">Usuarios</p>
@@ -57,6 +57,14 @@
                             <p class="text-sm font-semibold text-cyan-700">Roles y permisos</p>
                             <h4 class="mt-2 text-lg font-bold">Configurar autorización</h4>
                             <p class="mt-2 text-sm leading-6 text-slate-500">Revisa los roles del sistema y los permisos efectivos de cada uno.</p>
+                        </a>
+                    @endcan
+
+                    @can('center.manage')
+                        <a href="{{ route('center.edit') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
+                            <p class="text-sm font-semibold text-cyan-700">Centro</p>
+                            <h4 class="mt-2 text-lg font-bold">Configuración y horarios</h4>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Administra datos operativos y el horario semanal que usará la futura agenda.</p>
                         </a>
                     @endcan
                 </div>
