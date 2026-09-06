@@ -38,7 +38,7 @@
 - [x] Squash + rebase/sincronización contra `master` antes de PR.
 - [x] PR #3 aprobado, rebase merge y Test #13 post-merge en verde.
 
-## URPE-4 — Usuarios, roles y permisos — EN CURSO
+## URPE-4 — Usuarios, roles y permisos — CERRADO
 
 - [x] Definir modelo de usuarios, roles y permisos granulares.
 - [x] Crear roles iniciales: Administrador, Coordinación Clínica, Terapeuta, Recepción y Consulta/Dirección.
@@ -53,16 +53,34 @@
 - [x] Incorporar `urpe:grant-admin` para bootstrap reproducible del primer administrador.
 - [x] Cubrir accesos permitidos/denegados, asignación de roles, permisos, estado de cuenta y bootstrap de administrador con tests.
 - [x] Suite local completa verde: 41/41 tests.
-- [x] GitHub Actions verde hasta Test #60.
-- [x] Actualizar documentación técnica de implementación de URPE-4.
-- [ ] Validación visual final en Laragon de Usuarios + Roles y permisos.
+- [x] Validación visual final en Laragon de Usuarios + Roles y permisos.
+- [x] Squash + rebase contra `master` antes de PR.
+- [x] PR #4 aprobado, rebase merge y Test #68 post-merge en verde.
+
+## URPE-5 — Auditoría y archivos clínicos — EN CURSO
+
+- [x] Implementar modelo y persistencia reutilizable de auditoría.
+- [x] Registrar autenticación y acciones administrativas sensibles.
+- [x] Excluir contraseñas, tokens, secretos y credenciales de metadata de auditoría.
+- [x] Crear almacenamiento clínico privado fuera de `public/`.
+- [x] Implementar metadatos, UUID, SHA-256 y relación futura con entidades clínicas.
+- [x] Implementar descarga protegida por permiso granular.
+- [x] Implementar retiro lógico conservando archivo físico y trazabilidad.
+- [x] Suite local Bloque 1: 44/44 pruebas verdes.
+- [x] GitHub Actions Test #77 verde.
+- [x] Suite local Bloque 2: 51/51 pruebas verdes.
+- [x] GitHub Actions Test #86 verde.
+- [x] Incorporar baseline reutilizable de SweetAlert para feedback y confirmaciones sensibles.
+- [ ] Validar suite completa después del baseline SweetAlert.
+- [ ] Actualizar documentación técnica final de URPE-5.
+- [ ] Validación visual final en Laragon.
 - [ ] Squash + rebase contra `master` antes de PR.
-- [ ] PR aprobado, rebase merge y validación post-merge.
+- [ ] PR aprobado, rebase merge, CI post-merge y limpieza de ramas.
 
 ## V1 — Backlog canónico
 
-- [ ] Autenticación y gestión de usuarios.
-- [ ] Roles y permisos granulares.
+- [x] Autenticación y gestión de usuarios.
+- [x] Roles y permisos granulares.
 - [ ] Configuración general y horarios operativos.
 - [ ] Catálogo de terapeutas y disponibilidad.
 - [ ] Catálogo de terapias configurable.
@@ -74,7 +92,7 @@
 - [ ] Documentos, imágenes, radiografías y estudios.
 - [ ] Bitácoras/evolución de sesiones.
 - [ ] Dashboard operativo.
-- [ ] Auditoría de acciones sensibles.
+- [x] Auditoría base de acciones sensibles.
 - [ ] Reportes operativos esenciales.
 - [ ] Hardening, pruebas de regresión y preparación de despliegue.
 

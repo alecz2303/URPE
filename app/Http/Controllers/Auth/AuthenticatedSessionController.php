@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
+use App\Services\AuditTrail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,16 +17,26 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request, AuditTrail $audit): RedirectResponse
     {
         $request->authenticate();
         $request->session()->regenerate();
 
+        /** @var User $user */
+        $user = $request->user();
+        $audit->record('auth.login', $user, actor: $user, request: $request);
+
         return redirect()->intended(route('dashboard'));
     }
 
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request, AuditTrail $audit): RedirectResponse
     {
+        $user = $request->user();
+
+        if ($user instanceof User) {
+            $audit->record('auth.logout', $user, actor: $user, request: $request);
+        }
+
         auth()->guard('web')->logout();
 
         $request->session()->invalidate();

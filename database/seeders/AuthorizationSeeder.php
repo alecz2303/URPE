@@ -17,6 +17,7 @@ class AuthorizationSeeder extends Seeder
             ['name' => 'Desactivar usuarios', 'slug' => 'users.deactivate', 'description' => 'Desactivar cuentas internas de URPE.'],
             ['name' => 'Ver roles y permisos', 'slug' => 'roles.view', 'description' => 'Consultar la configuración de roles y permisos.'],
             ['name' => 'Administrar roles y permisos', 'slug' => 'roles.manage', 'description' => 'Modificar asignaciones de roles y permisos.'],
+            ['name' => 'Descargar archivos clínicos', 'slug' => 'clinical_files.download', 'description' => 'Descargar adjuntos clínicos protegidos tras autorización.'],
         ])->mapWithKeys(function (array $permission): array {
             $model = Permission::query()->updateOrCreate(
                 ['slug' => $permission['slug']],
