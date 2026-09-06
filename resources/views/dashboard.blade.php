@@ -44,13 +44,13 @@
             <p class="mt-4 max-w-2xl text-cyan-50/90">URPE Gestión Clínica ya cuenta con autenticación y autorización granular. Los módulos clínicos se incorporarán de forma progresiva según el Roadmap.</p>
         </section>
 
-        @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view') || auth()->user()->can('center.manage') || auth()->user()->can('therapists.manage') || auth()->user()->can('therapies.manage'))
+        @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view') || auth()->user()->can('center.manage') || auth()->user()->can('therapists.manage') || auth()->user()->can('therapies.manage') || auth()->user()->can('patients.view'))
             <section class="mt-8">
                 <div class="mb-4">
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Administración</p>
-                    <h3 class="mt-1 text-xl font-bold">Seguridad y configuración</h3>
+                    <h3 class="mt-1 text-xl font-bold">Seguridad, configuración y estructura clínica</h3>
                 </div>
-                <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+                <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                     @can('users.view')
                         <a href="{{ route('users.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
                             <p class="text-sm font-semibold text-cyan-700">Usuarios</p>
@@ -90,6 +90,14 @@
                             <p class="mt-2 text-sm leading-6 text-slate-500">Configura duración, terapeutas requeridos, color y disponibilidad para nuevas citas.</p>
                         </a>
                     @endcan
+
+                    @can('patients.view')
+                        <a href="{{ route('patients.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
+                            <p class="text-sm font-semibold text-cyan-700">Pacientes</p>
+                            <h4 class="mt-2 text-lg font-bold">Pacientes y responsables</h4>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Consulta datos administrativos, responsables vinculados y contacto principal.</p>
+                        </a>
+                    @endcan
                 </div>
             </section>
         @endif
@@ -102,9 +110,9 @@
             </article>
 
             <article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <p class="text-sm font-semibold text-cyan-700">Pacientes</p>
+                <p class="text-sm font-semibold text-cyan-700">Expediente clínico</p>
                 <h3 class="mt-2 text-lg font-bold">Próximamente</h3>
-                <p class="mt-2 text-sm leading-6 text-slate-500">Expediente clínico, responsables y seguimiento.</p>
+                <p class="mt-2 text-sm leading-6 text-slate-500">Historia clínica, documentos y evolución terapéutica.</p>
             </article>
 
             <article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">

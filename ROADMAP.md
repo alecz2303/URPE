@@ -15,8 +15,8 @@
 ## Fase 2 — Estructura clínica
 
 1. [x] **URPE-7** Terapeutas y disponibilidad individual.
-2. [ ] **URPE-8** Catálogo configurable de terapias. *(En curso; implementación, validación local y CI de rama completas, pendiente integración protegida)*
-3. [ ] Pacientes, tutores/responsables y datos administrativos.
+2. [x] **URPE-8** Catálogo configurable de terapias.
+3. [ ] **URPE-9** Pacientes, tutores/responsables y datos administrativos. *(En curso; dominio, UI, auditoría, permisos, folio consecutivo anual y CI implementados; pendiente validación local final e integración protegida)*
 4. [ ] Base del expediente clínico.
 
 ## Fase 3 — Agenda / calendario — prioridad crítica

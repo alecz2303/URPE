@@ -4,3 +4,17 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+
+@layer base {
+    input:not([type='checkbox']):not([type='radio']):not([type='hidden']),
+    textarea,
+    select {
+        @apply border border-slate-300 bg-white text-slate-900 shadow-sm;
+    }
+
+    input:not([type='checkbox']):not([type='radio']):not([type='hidden']):focus,
+    textarea:focus,
+    select:focus {
+        @apply border-cyan-600 outline-none ring-2 ring-cyan-600/20;
+    }
+}

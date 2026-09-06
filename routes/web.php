@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CenterConfigurationController;
 use App\Http\Controllers\ClinicalFileController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TherapistController;
 use App\Http\Controllers\TherapyController;
@@ -47,6 +48,17 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/terapias/{therapy}/editar', [TherapyController::class, 'edit'])->name('therapies.edit');
     Route::put('/terapias/{therapy}', [TherapyController::class, 'update'])->name('therapies.update');
     Route::patch('/terapias/{therapy}/estado', [TherapyController::class, 'toggleActive'])->name('therapies.toggle-active');
+
+    Route::get('/pacientes', [PatientController::class, 'index'])->name('patients.index');
+    Route::get('/pacientes/crear', [PatientController::class, 'create'])->name('patients.create');
+    Route::post('/pacientes', [PatientController::class, 'store'])->name('patients.store');
+    Route::get('/pacientes/{patient}', [PatientController::class, 'show'])->name('patients.show');
+    Route::get('/pacientes/{patient}/editar', [PatientController::class, 'edit'])->name('patients.edit');
+    Route::put('/pacientes/{patient}', [PatientController::class, 'update'])->name('patients.update');
+    Route::patch('/pacientes/{patient}/estado', [PatientController::class, 'toggleActive'])->name('patients.toggle-active');
+    Route::post('/pacientes/{patient}/responsables', [PatientController::class, 'storeGuardian'])->name('patients.guardians.store');
+    Route::put('/pacientes/{patient}/responsables/{guardian}', [PatientController::class, 'updateGuardian'])->name('patients.guardians.update');
+    Route::patch('/pacientes/{patient}/responsables/{guardian}/principal', [PatientController::class, 'setPrimaryGuardian'])->name('patients.guardians.primary');
 
     Route::get('/archivos-clinicos/{clinicalFile}/descargar', [ClinicalFileController::class, 'download'])
         ->name('clinical-files.download');
