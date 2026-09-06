@@ -28,14 +28,6 @@
             @endcan
         </div>
 
-        @if (session('status'))
-            <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ session('status') }}</div>
-        @endif
-
-        @if (session('error'))
-            <div class="mt-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800">{{ session('error') }}</div>
-        @endif
-
         <div class="mt-8 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-slate-200">
@@ -69,7 +61,15 @@
 
                                         @can('users.deactivate')
                                             @if (! auth()->user()->is($managedUser))
-                                                <form method="POST" action="{{ route('users.toggle-active', $managedUser) }}">
+                                                <form
+                                                    method="POST"
+                                                    action="{{ route('users.toggle-active', $managedUser) }}"
+                                                    data-swal-confirm
+                                                    data-swal-title="{{ $managedUser->is_active ? '¿Desactivar usuario?' : '¿Activar usuario?' }}"
+                                                    data-swal-text="{{ $managedUser->is_active ? 'El usuario perderá acceso al sistema.' : 'El usuario recuperará el acceso al sistema.' }}"
+                                                    data-swal-confirm-text="{{ $managedUser->is_active ? 'Sí, desactivar' : 'Sí, activar' }}"
+                                                    data-swal-icon="{{ $managedUser->is_active ? 'warning' : 'question' }}"
+                                                >
                                                     @csrf
                                                     @method('PATCH')
                                                     <button type="submit" class="text-sm font-semibold {{ $managedUser->is_active ? 'text-rose-700 hover:text-rose-900' : 'text-emerald-700 hover:text-emerald-900' }}">
@@ -89,5 +89,7 @@
             </div>
         </div>
     </main>
+
+    <x-sweet-alerts />
 </body>
 </html>

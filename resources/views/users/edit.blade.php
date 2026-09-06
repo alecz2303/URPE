@@ -27,10 +27,11 @@
 
             <div><label class="text-sm font-semibold">Nueva contraseña <span class="font-normal text-slate-400">(opcional)</span></label><input type="password" name="password" class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3"></div>
             <div><label class="text-sm font-semibold">Confirmar nueva contraseña</label><input type="password" name="password_confirmation" class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3"></div>
-            @if($errors->any())<div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800"><ul class="list-disc pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
             <button class="rounded-xl bg-cyan-700 px-5 py-3 text-sm font-semibold text-white hover:bg-cyan-800">Guardar cambios</button>
         </form>
     </div>
 </main>
+
+<x-sweet-alerts />
 </body>
 </html>

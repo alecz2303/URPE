@@ -23,10 +23,6 @@
         <p class="mt-2 text-sm text-slate-500">Consulta qué roles existen y cuántos permisos tiene cada uno.</p>
     </div>
 
-    @if (session('status'))
-        <div class="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ session('status') }}</div>
-    @endif
-
     <div class="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         @foreach($roles as $role)
             <article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
@@ -60,5 +56,7 @@
         @endforeach
     </div>
 </main>
+
+<x-sweet-alerts />
 </body>
 </html>

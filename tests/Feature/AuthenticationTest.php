@@ -36,6 +36,12 @@ class AuthenticationTest extends TestCase
 
         $response->assertRedirect(route('dashboard'));
         $this->assertAuthenticatedAs($user);
+        $this->assertDatabaseHas('audit_events', [
+            'actor_id' => $user->id,
+            'event' => 'auth.login',
+            'target_type' => $user->getMorphClass(),
+            'target_id' => (string) $user->id,
+        ]);
     }
 
     public function test_invalid_credentials_are_rejected_with_generic_message(): void
@@ -130,5 +136,11 @@ class AuthenticationTest extends TestCase
 
         $response->assertRedirect(route('login'));
         $this->assertGuest();
+        $this->assertDatabaseHas('audit_events', [
+            'actor_id' => $user->id,
+            'event' => 'auth.logout',
+            'target_type' => $user->getMorphClass(),
+            'target_id' => (string) $user->id,
+        ]);
     }
 }

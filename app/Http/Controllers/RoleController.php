@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Services\AuditTrail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -33,7 +35,7 @@ class RoleController extends Controller
         ]);
     }
 
-    public function update(Request $request, Role $role): RedirectResponse
+    public function update(Request $request, Role $role, AuditTrail $audit): RedirectResponse
     {
         $this->authorize('roles.manage');
 
@@ -42,7 +44,16 @@ class RoleController extends Controller
             'permissions.*' => ['integer', Rule::exists('permissions', 'id')],
         ]);
 
-        $role->permissions()->sync($validated['permissions'] ?? []);
+        DB::transaction(function () use ($validated, $request, $role, $audit): void {
+            $before = $role->permissions()->pluck('permissions.id')->sort()->values()->all();
+            $role->permissions()->sync($validated['permissions'] ?? []);
+            $after = $role->permissions()->pluck('permissions.id')->sort()->values()->all();
+
+            $audit->record('role.permissions_updated', $role, [
+                'before_permission_ids' => $before,
+                'after_permission_ids' => $after,
+            ], $request->user(), $request);
+        });
 
         return redirect()
             ->route('roles.index')

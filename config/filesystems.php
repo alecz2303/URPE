@@ -14,6 +14,15 @@ return [
             'report' => false,
         ],
 
+        'clinical' => [
+            'driver' => 'local',
+            'root' => storage_path('app/clinical-private'),
+            'serve' => false,
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
