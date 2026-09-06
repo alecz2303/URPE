@@ -73,7 +73,7 @@
 - [x] Squash + rebase contra `master` antes de PR.
 - [x] PR #5 aprobado, rebase merge, CI post-merge Test #102 verde y cierre Jira.
 
-## URPE-6 — Configuración del centro y horarios — EN CURSO
+## URPE-6 — Configuración del centro y horarios — CERRADO
 
 - [x] Crear persistencia de configuración general del centro.
 - [x] Crear persistencia de horarios operativos semanales.
@@ -90,11 +90,31 @@
 - [x] Integrar SweetAlert para confirmación, éxito y errores.
 - [x] Integrar acceso condicionado desde dashboard.
 - [x] Validación funcional local de interfaz y permisos.
-- [x] Suite local Bloque 2: 68/68 pruebas verdes.
-- [x] GitHub Actions Test #117 verde.
-- [x] Actualizar documentación canónica de URPE-5/URPE-6.
-- [ ] Validar suite completa después del hardening de intervalos.
-- [ ] Validar build frontend final.
+- [x] Validar suite completa y build frontend final.
+- [x] Squash + rebase/sincronización contra `master`.
+- [x] PR #6 aprobado, rebase merge, CI post-merge y cierre Jira.
+
+## URPE-7 — Terapeutas y disponibilidad — EN CURSO
+
+- [x] Crear perfiles operativos de terapeutas vinculables a usuarios internos.
+- [x] Sincronizar automáticamente usuarios con rol Terapeuta hacia su perfil operativo.
+- [x] Incorporar estado activo/inactivo y datos profesionales del terapeuta.
+- [x] Crear disponibilidad semanal configurable con múltiples ventanas por día.
+- [x] Subordinar la disponibilidad individual al horario operativo del centro.
+- [x] Rechazar rangos inválidos y ventanas traslapadas.
+- [x] Crear ausencias/bloqueos como restricciones de disponibilidad.
+- [x] Implementar validación reutilizable de disponibilidad durante el intervalo completo.
+- [x] Proteger administración mediante permiso granular `therapists.manage`.
+- [x] Implementar interfaz de listado, alta, edición, disponibilidad y bloqueos.
+- [x] Integrar SweetAlert para feedback de operaciones.
+- [x] Auditar cambios de perfil, disponibilidad y bloqueos.
+- [x] Validar acceso permitido/denegado mediante pruebas funcionales.
+- [x] Validar reglas de disponibilidad mediante pruebas de dominio.
+- [x] Validación visual en Laragon, incluido usuario Terapeuta existente sincronizado.
+- [x] Regresión local completa: 87 pruebas / 294 assertions verdes.
+- [x] CI de rama verde antes de documentación final.
+- [x] Actualizar documentación canónica de URPE-6/URPE-7.
+- [ ] Validar build frontend final después de documentación.
 - [ ] Squash + rebase/sincronización contra `master` antes de PR.
 - [ ] PR aprobado, rebase merge, CI post-merge, limpieza de ramas y cierre Jira.
 
@@ -103,8 +123,8 @@
 - [x] Autenticación y gestión de usuarios.
 - [x] Roles y permisos granulares.
 - [x] Auditoría base de acciones sensibles.
-- [ ] Configuración general y horarios operativos. *(URPE-6 en curso)*
-- [ ] Catálogo de terapeutas y disponibilidad.
+- [x] Configuración general y horarios operativos. *(URPE-6 cerrado)*
+- [ ] Catálogo de terapeutas y disponibilidad. *(URPE-7 en curso)*
 - [ ] Catálogo de terapias configurable.
 - [ ] Pacientes y tutores/responsables.
 - [ ] Agenda/calendario clínico.

@@ -9,9 +9,16 @@
 <body class="min-h-screen bg-slate-100 text-slate-900 antialiased">
     <header class="border-b border-slate-200 bg-white">
         <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
-            <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-700">URPE</p>
-                <h1 class="text-xl font-bold">Gestión Clínica</h1>
+            <div class="flex min-w-0 items-center gap-4">
+                <img
+                    src="{{ asset('images/brand/urpe-logo.png') }}"
+                    alt="URPE - Unidad de Rehabilitación Pediátrica Evolutiva y Fisioterapia Infantil"
+                    class="h-14 w-auto max-w-[190px] object-contain sm:h-16 sm:max-w-[240px]"
+                >
+                <div class="hidden border-l border-slate-200 pl-4 md:block">
+                    <h1 class="text-lg font-bold text-slate-900">Gestión Clínica</h1>
+                    <p class="text-xs text-slate-500">Sistema de gestión clínica</p>
+                </div>
             </div>
 
             <div class="flex items-center gap-4">
@@ -37,13 +44,13 @@
             <p class="mt-4 max-w-2xl text-cyan-50/90">URPE Gestión Clínica ya cuenta con autenticación y autorización granular. Los módulos clínicos se incorporarán de forma progresiva según el Roadmap.</p>
         </section>
 
-        @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view') || auth()->user()->can('center.manage'))
+        @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view') || auth()->user()->can('center.manage') || auth()->user()->can('therapists.manage'))
             <section class="mt-8">
                 <div class="mb-4">
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Administración</p>
                     <h3 class="mt-1 text-xl font-bold">Seguridad y configuración</h3>
                 </div>
-                <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
                     @can('users.view')
                         <a href="{{ route('users.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
                             <p class="text-sm font-semibold text-cyan-700">Usuarios</p>
@@ -65,6 +72,14 @@
                             <p class="text-sm font-semibold text-cyan-700">Centro</p>
                             <h4 class="mt-2 text-lg font-bold">Configuración y horarios</h4>
                             <p class="mt-2 text-sm leading-6 text-slate-500">Administra datos operativos y el horario semanal que usará la futura agenda.</p>
+                        </a>
+                    @endcan
+
+                    @can('therapists.manage')
+                        <a href="{{ route('therapists.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
+                            <p class="text-sm font-semibold text-cyan-700">Terapeutas</p>
+                            <h4 class="mt-2 text-lg font-bold">Perfiles y disponibilidad</h4>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Gestiona terapeutas, horarios semanales, ausencias y bloqueos operativos.</p>
                         </a>
                     @endcan
                 </div>

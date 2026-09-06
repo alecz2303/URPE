@@ -42,6 +42,22 @@
 
 **BR-020.** Una cita ordinaria debe quedar completamente contenida dentro de una ventana operativa habilitada del centro; no puede atravesar un periodo cerrado entre dos ventanas ni extenderse fuera del horario operativo. Las excepciones, si se autorizan posteriormente, deberán definirse de forma explícita y auditable.
 
+**BR-021.** La disponibilidad semanal de un terapeuta está subordinada al horario operativo del centro; ninguna ventana individual puede extenderse fuera de una ventana operativa habilitada del mismo día.
+
+**BR-022.** Un terapeuta puede tener múltiples ventanas de disponibilidad en un mismo día para representar descansos u horarios divididos, pero dichas ventanas no pueden traslaparse.
+
+**BR-023.** Una cita que requiera a un terapeuta debe quedar completamente contenida dentro de una única ventana de disponibilidad habilitada de ese terapeuta y no puede atravesar descansos entre ventanas.
+
+**BR-024.** Un terapeuta inactivo se considera no disponible para nuevas asignaciones independientemente de su horario semanal configurado.
+
+**BR-025.** Las ausencias y bloqueos del terapeuta son restricciones explícitas de agenda; cualquier intervalo de cita que se traslape con uno de ellos se considera no disponible.
+
+**BR-026.** Un bloqueo que termina exactamente cuando inicia una cita, o inicia exactamente cuando termina, no se considera traslape; los intervalos se evalúan con límites adyacentes permitidos.
+
+**BR-027.** El perfil operativo de terapeuta puede vincularse a una cuenta interna. Los usuarios con rol Terapeuta deben contar con su perfil operativo sincronizado, sin convertir el nombre del rol en la regla de autorización de las pantallas administrativas.
+
+**BR-028.** La administración de perfiles, disponibilidad y bloqueos de terapeutas se autoriza mediante permisos granulares; `therapists.manage` es el permiso base de URPE-7.
+
 ## Decisiones abiertas
 
 Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:

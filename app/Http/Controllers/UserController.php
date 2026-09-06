@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\Therapist;
 use App\Models\User;
 use App\Services\AuditTrail;
 use Illuminate\Http\RedirectResponse;
@@ -63,6 +64,8 @@ class UserController extends Controller
             if ($canManageRoles) {
                 $user->roles()->sync([$validated['role_id']]);
             }
+
+            $this->syncTherapistProfile($user);
 
             $audit->record('user.created', $user, [
                 'role_id' => $canManageRoles ? $validated['role_id'] : null,
@@ -127,6 +130,8 @@ class UserController extends Controller
                 $user->roles()->sync([$validated['role_id']]);
             }
 
+            $this->syncTherapistProfile($user->fresh('roles'));
+
             $audit->record('user.updated', $user, [
                 'before' => $before,
                 'after' => [
@@ -156,6 +161,7 @@ class UserController extends Controller
         DB::transaction(function () use ($request, $user, $audit): void {
             $previous = $user->is_active;
             $user->update(['is_active' => ! $previous]);
+            $this->syncTherapistProfile($user->fresh('roles'));
 
             $audit->record(
                 $user->is_active ? 'user.activated' : 'user.deactivated',
@@ -163,8 +169,7 @@ class UserController extends Controller
                 [
                     'before' => ['is_active' => $previous],
                     'after' => ['is_active' => $user->is_active],
-                ],
-                $request->user(),
+                ], $request->user(),
                 $request,
             );
         });
@@ -173,6 +178,26 @@ class UserController extends Controller
             'status',
             $user->is_active ? 'Usuario activado correctamente.' : 'Usuario desactivado correctamente.'
         );
+    }
+
+    private function syncTherapistProfile(User $user): void
+    {
+        if ($user->hasRole('therapist')) {
+            Therapist::query()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'is_active' => $user->is_active,
+                ],
+            );
+
+            return;
+        }
+
+        Therapist::query()
+            ->where('user_id', $user->id)
+            ->update(['is_active' => false]);
     }
 
     private function validationMessages(): array

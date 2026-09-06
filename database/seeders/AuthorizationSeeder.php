@@ -19,6 +19,7 @@ class AuthorizationSeeder extends Seeder
             ['name' => 'Administrar roles y permisos', 'slug' => 'roles.manage', 'description' => 'Modificar asignaciones de roles y permisos.'],
             ['name' => 'Descargar archivos clínicos', 'slug' => 'clinical_files.download', 'description' => 'Descargar adjuntos clínicos protegidos tras autorización.'],
             ['name' => 'Administrar configuración del centro', 'slug' => 'center.manage', 'description' => 'Modificar configuración general y horarios operativos del centro.'],
+            ['name' => 'Administrar terapeutas', 'slug' => 'therapists.manage', 'description' => 'Administrar perfiles, disponibilidad y bloqueos de terapeutas.'],
         ])->mapWithKeys(function (array $permission): array {
             $model = Permission::query()->updateOrCreate(
                 ['slug' => $permission['slug']],

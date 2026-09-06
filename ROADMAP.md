@@ -10,11 +10,11 @@
 1. [x] **URPE-3** Autenticación.
 2. [x] **URPE-4** Usuarios, roles y permisos granulares.
 3. [x] **URPE-5** Auditoría base y política de archivos clínicos.
-4. [ ] **URPE-6** Configuración general del centro y horarios. *(En curso)*
+4. [x] **URPE-6** Configuración general del centro y horarios.
 
 ## Fase 2 — Estructura clínica
 
-1. [ ] Terapeutas y disponibilidad individual.
+1. [ ] **URPE-7** Terapeutas y disponibilidad individual. *(En curso; implementación y regresión funcional completas, pendiente integración)*
 2. [ ] Catálogo configurable de terapias.
 3. [ ] Pacientes, tutores/responsables y datos administrativos.
 4. [ ] Base del expediente clínico.
