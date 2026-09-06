@@ -9,8 +9,8 @@
 
 1. [x] **URPE-3** Autenticación.
 2. [x] **URPE-4** Usuarios, roles y permisos granulares.
-3. [ ] **URPE-5** Auditoría base y política de archivos clínicos. *(En curso)*
-4. [ ] Configuración general del centro y horarios.
+3. [x] **URPE-5** Auditoría base y política de archivos clínicos.
+4. [ ] **URPE-6** Configuración general del centro y horarios. *(En curso)*
 
 ## Fase 2 — Estructura clínica
 
@@ -25,12 +25,13 @@
 2. [ ] Crear, editar, reprogramar y cancelar citas.
 3. [ ] Duración automática según terapia.
 4. [ ] Asignación de uno o varios terapeutas.
-5. [ ] Validación de disponibilidad durante toda la cita.
-6. [ ] Prevención de traslapes.
-7. [ ] Citas recurrentes.
-8. [ ] Ausencias, bloqueos y descansos.
-9. [ ] Estados y filtros operativos.
-10. [ ] Historial básico de cambios.
+5. [ ] Validación de horario operativo del centro durante toda la cita.
+6. [ ] Validación de disponibilidad de todos los terapeutas requeridos durante toda la cita.
+7. [ ] Prevención de traslapes.
+8. [ ] Citas recurrentes.
+9. [ ] Ausencias, bloqueos y descansos.
+10. [ ] Estados y filtros operativos.
+11. [ ] Historial básico de cambios.
 
 ## Fase 4 — Expediente y evolución
 

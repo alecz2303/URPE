@@ -28,10 +28,18 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Invalidación de sesiones de cuentas desactivadas.
 - Comando `urpe:grant-admin` para bootstrap reproducible del primer administrador.
 - Cobertura automatizada de autorización positiva/negativa, cambios de rol, estado de cuenta y bootstrap administrativo.
+- Auditoría reutilizable de acciones sensibles y almacenamiento clínico privado con descarga protegida.
+- Baseline reutilizable de SweetAlert para confirmaciones y feedback.
+- Configuración general del centro con datos de identidad/contacto y zona horaria.
+- Horarios operativos semanales configurables, días habilitados/deshabilitados y múltiples ventanas por día.
+- Permiso granular `center.manage` y auditoría `center.configuration_updated`.
+- Interfaz administrativa para editar configuración y horarios del centro.
+- Validación reutilizable de apertura puntual y de intervalos completos para la futura agenda.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
 - URPE-2 cerrado e integrado mediante squash + rebase/rebase merge.
 - URPE-3 cerrado mediante squash + rebase/rebase merge y validado en `master` con Test #13 verde.
-- `master` estable después de URPE-3: `588250eb0835a176c85bf8d6a8c4256ebe08fb34`.
-- URPE-4 avanzó a validación final con 41/41 pruebas locales verdes y GitHub Actions Test #60 verde.
+- URPE-4 cerrado mediante PR #4 y rebase merge.
+- URPE-5 cerrado mediante PR #5, rebase merge y Test #102 post-merge verde.
+- URPE-6 se encuentra en validación final de configuración general y horarios operativos.
