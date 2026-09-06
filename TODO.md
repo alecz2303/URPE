@@ -94,7 +94,7 @@
 - [x] Squash + rebase/sincronización contra `master`.
 - [x] PR #6 aprobado, rebase merge, CI post-merge y cierre Jira.
 
-## URPE-7 — Terapeutas y disponibilidad — EN CURSO
+## URPE-7 — Terapeutas y disponibilidad — CERRADO
 
 - [x] Crear perfiles operativos de terapeutas vinculables a usuarios internos.
 - [x] Sincronizar automáticamente usuarios con rol Terapeuta hacia su perfil operativo.
@@ -112,9 +112,30 @@
 - [x] Validar reglas de disponibilidad mediante pruebas de dominio.
 - [x] Validación visual en Laragon, incluido usuario Terapeuta existente sincronizado.
 - [x] Regresión local completa: 87 pruebas / 294 assertions verdes.
-- [x] CI de rama verde antes de documentación final.
-- [x] Actualizar documentación canónica de URPE-6/URPE-7.
-- [ ] Validar build frontend final después de documentación.
+- [x] CI de rama verde.
+- [x] Build frontend final verde.
+- [x] Squash + rebase/sincronización contra `master`.
+- [x] PR #7 aprobado, rebase merge, CI post-merge y cierre Jira.
+
+## URPE-8 — Catálogo configurable de terapias — EN CURSO
+
+- [x] Crear persistencia y modelo `Therapy`.
+- [x] Incorporar nombre, duración, terapeutas requeridos, color y estado activo/inactivo.
+- [x] Sembrar Vojta 40 min / 1 terapeuta y Pediasuit 60 min / 2 terapeutas como datos configurables.
+- [x] Permitir alta y edición de terapias sin cambios de código.
+- [x] Validar duración, cantidad de terapeutas, nombre único y color hexadecimal.
+- [x] Mantener terapias inactivas para integridad histórica, sin eliminación destructiva.
+- [x] Proteger administración con `therapies.manage`.
+- [x] Otorgar `therapies.manage` a Administrador y Coordinación Clínica; no otorgarlo al rol Terapeuta por defecto.
+- [x] Implementar listado, alta, edición y activación/desactivación.
+- [x] Integrar acceso desde dashboard.
+- [x] Integrar SweetAlert en cambios de estado y feedback.
+- [x] Auditar creación, actualización y cambio de estado.
+- [x] Agregar pruebas positivas/negativas de permisos, persistencia, validación, seed, auditoría y estado.
+- [x] Validación funcional local en Laragon confirmada.
+- [x] Suite completa y build frontend confirmados por validación local.
+- [x] CI de rama verde antes del cierre técnico.
+- [x] Actualizar documentación canónica de URPE-7/URPE-8.
 - [ ] Squash + rebase/sincronización contra `master` antes de PR.
 - [ ] PR aprobado, rebase merge, CI post-merge, limpieza de ramas y cierre Jira.
 
@@ -124,8 +145,8 @@
 - [x] Roles y permisos granulares.
 - [x] Auditoría base de acciones sensibles.
 - [x] Configuración general y horarios operativos. *(URPE-6 cerrado)*
-- [ ] Catálogo de terapeutas y disponibilidad. *(URPE-7 en curso)*
-- [ ] Catálogo de terapias configurable.
+- [x] Catálogo de terapeutas y disponibilidad. *(URPE-7 cerrado)*
+- [ ] Catálogo de terapias configurable. *(URPE-8 en curso)*
 - [ ] Pacientes y tutores/responsables.
 - [ ] Agenda/calendario clínico.
 - [ ] Reglas de disponibilidad y colisiones.

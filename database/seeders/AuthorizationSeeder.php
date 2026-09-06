@@ -20,6 +20,7 @@ class AuthorizationSeeder extends Seeder
             ['name' => 'Descargar archivos clínicos', 'slug' => 'clinical_files.download', 'description' => 'Descargar adjuntos clínicos protegidos tras autorización.'],
             ['name' => 'Administrar configuración del centro', 'slug' => 'center.manage', 'description' => 'Modificar configuración general y horarios operativos del centro.'],
             ['name' => 'Administrar terapeutas', 'slug' => 'therapists.manage', 'description' => 'Administrar perfiles, disponibilidad y bloqueos de terapeutas.'],
+            ['name' => 'Administrar terapias', 'slug' => 'therapies.manage', 'description' => 'Administrar el catálogo configurable de terapias.'],
         ])->mapWithKeys(function (array $permission): array {
             $model = Permission::query()->updateOrCreate(
                 ['slug' => $permission['slug']],
@@ -50,5 +51,10 @@ class AuthorizationSeeder extends Seeder
 
         $administrator = Role::query()->where('slug', 'administrator')->firstOrFail();
         $administrator->permissions()->sync($permissions->pluck('id')->all());
+
+        $clinicalCoordination = Role::query()->where('slug', 'clinical_coordination')->firstOrFail();
+        $coordinationPermissionIds = $clinicalCoordination->permissions()->pluck('permissions.id')->all();
+        $coordinationPermissionIds[] = $permissions->get('therapies.manage')->id;
+        $clinicalCoordination->permissions()->sync(array_values(array_unique($coordinationPermissionIds)));
     }
 }

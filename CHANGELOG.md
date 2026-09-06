@@ -43,6 +43,13 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Interfaz administrativa de terapeutas integrada al dashboard y feedback mediante SweetAlert.
 - Cobertura automatizada de dominio, autorización, persistencia, auditoría, horarios, bloqueos e intervalos completos para terapeutas.
 - Integración del logotipo oficial URPE en login y dashboard.
+- Catálogo configurable de terapias con nombre, duración, cantidad requerida de terapeutas, color y estado activo/inactivo.
+- Seed inicial de Vojta (40 min / 1 terapeuta) y Pediasuit (60 min / 2 terapeutas) como datos configurables.
+- Permiso granular `therapies.manage`, asignado en el baseline a Administrador y Coordinación Clínica.
+- Interfaz de terapias con listado, alta, edición y activación/desactivación sin eliminación destructiva.
+- SweetAlert para cambios de estado y feedback de administración de terapias.
+- Auditoría de `therapy.created`, `therapy.updated` y `therapy.status_updated`.
+- Cobertura automatizada de catálogo, permisos, seed, validaciones, auditoría, estado activo/inactivo y visibilidad desde dashboard.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -51,4 +58,5 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-4 cerrado mediante PR #4 y rebase merge.
 - URPE-5 cerrado mediante PR #5, rebase merge y Test #102 post-merge verde.
 - URPE-6 cerrado mediante PR #6, rebase merge, CI post-merge y cierre Jira.
-- URPE-7 completó implementación funcional y regresión local de 87 pruebas / 294 assertions; permanece en curso hasta completar integración protegida en `master`.
+- URPE-7 cerrado mediante PR #7, rebase merge y CI post-merge #161 verde.
+- URPE-8 completó implementación funcional, validación local y CI de rama; permanece en curso hasta completar integración protegida en `master`.

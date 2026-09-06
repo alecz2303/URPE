@@ -44,13 +44,13 @@
             <p class="mt-4 max-w-2xl text-cyan-50/90">URPE Gestión Clínica ya cuenta con autenticación y autorización granular. Los módulos clínicos se incorporarán de forma progresiva según el Roadmap.</p>
         </section>
 
-        @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view') || auth()->user()->can('center.manage') || auth()->user()->can('therapists.manage'))
+        @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view') || auth()->user()->can('center.manage') || auth()->user()->can('therapists.manage') || auth()->user()->can('therapies.manage'))
             <section class="mt-8">
                 <div class="mb-4">
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Administración</p>
                     <h3 class="mt-1 text-xl font-bold">Seguridad y configuración</h3>
                 </div>
-                <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+                <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-5">
                     @can('users.view')
                         <a href="{{ route('users.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
                             <p class="text-sm font-semibold text-cyan-700">Usuarios</p>
@@ -80,6 +80,14 @@
                             <p class="text-sm font-semibold text-cyan-700">Terapeutas</p>
                             <h4 class="mt-2 text-lg font-bold">Perfiles y disponibilidad</h4>
                             <p class="mt-2 text-sm leading-6 text-slate-500">Gestiona terapeutas, horarios semanales, ausencias y bloqueos operativos.</p>
+                        </a>
+                    @endcan
+
+                    @can('therapies.manage')
+                        <a href="{{ route('therapies.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
+                            <p class="text-sm font-semibold text-cyan-700">Terapias</p>
+                            <h4 class="mt-2 text-lg font-bold">Catálogo configurable</h4>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Configura duración, terapeutas requeridos, color y disponibilidad para nuevas citas.</p>
                         </a>
                     @endcan
                 </div>
