@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CenterConfigurationController;
 use App\Http\Controllers\ClinicalFileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TherapistController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,13 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
 
     Route::get('/configuracion/centro', [CenterConfigurationController::class, 'edit'])->name('center.edit');
     Route::put('/configuracion/centro', [CenterConfigurationController::class, 'update'])->name('center.update');
+
+    Route::get('/terapeutas', [TherapistController::class, 'index'])->name('therapists.index');
+    Route::get('/terapeutas/crear', [TherapistController::class, 'create'])->name('therapists.create');
+    Route::post('/terapeutas', [TherapistController::class, 'store'])->name('therapists.store');
+    Route::get('/terapeutas/{therapist}/editar', [TherapistController::class, 'edit'])->name('therapists.edit');
+    Route::put('/terapeutas/{therapist}', [TherapistController::class, 'update'])->name('therapists.update');
+    Route::post('/terapeutas/{therapist}/bloqueos', [TherapistController::class, 'storeBlock'])->name('therapists.blocks.store');
 
     Route::get('/archivos-clinicos/{clinicalFile}/descargar', [ClinicalFileController::class, 'download'])
         ->name('clinical-files.download');

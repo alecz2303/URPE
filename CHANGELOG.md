@@ -35,6 +35,14 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Permiso granular `center.manage` y auditoría `center.configuration_updated`.
 - Interfaz administrativa para editar configuración y horarios del centro.
 - Validación reutilizable de apertura puntual y de intervalos completos para la futura agenda.
+- Perfiles operativos de terapeutas vinculables a cuentas internas y sincronización de usuarios con rol Terapeuta.
+- Disponibilidad semanal individual con múltiples ventanas por día subordinadas al horario del centro.
+- Ausencias/bloqueos de terapeutas como restricciones explícitas de disponibilidad.
+- Servicio reutilizable para validar disponibilidad del terapeuta durante el intervalo completo de una futura cita.
+- Permiso granular `therapists.manage` y administración de perfiles, disponibilidad y bloqueos.
+- Interfaz administrativa de terapeutas integrada al dashboard y feedback mediante SweetAlert.
+- Cobertura automatizada de dominio, autorización, persistencia, auditoría, horarios, bloqueos e intervalos completos para terapeutas.
+- Integración del logotipo oficial URPE en login y dashboard.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -42,4 +50,5 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-3 cerrado mediante squash + rebase/rebase merge y validado en `master` con Test #13 verde.
 - URPE-4 cerrado mediante PR #4 y rebase merge.
 - URPE-5 cerrado mediante PR #5, rebase merge y Test #102 post-merge verde.
-- URPE-6 se encuentra en validación final de configuración general y horarios operativos.
+- URPE-6 cerrado mediante PR #6, rebase merge, CI post-merge y cierre Jira.
+- URPE-7 completó implementación funcional y regresión local de 87 pruebas / 294 assertions; permanece en curso hasta completar integración protegida en `master`.

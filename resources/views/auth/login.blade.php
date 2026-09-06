@@ -10,9 +10,14 @@
     <main class="grid min-h-screen lg:grid-cols-2">
         <section class="hidden bg-gradient-to-br from-sky-700 via-cyan-700 to-teal-700 p-12 text-white lg:flex lg:flex-col lg:justify-between">
             <div>
-                <div class="mb-10 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 text-2xl font-bold ring-1 ring-white/20">U</div>
-                <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-100">Unidad de Rehabilitación Pediátrica y Evolutiva</p>
-                <h1 class="mt-4 max-w-xl text-5xl font-bold leading-tight">URPE Gestión Clínica</h1>
+                <div class="mb-10 max-w-md rounded-3xl bg-white p-5 shadow-lg shadow-cyan-950/10 ring-1 ring-white/30">
+                    <img
+                        src="{{ asset('images/brand/urpe-logo.png') }}"
+                        alt="URPE - Unidad de Rehabilitación Pediátrica Evolutiva y Fisioterapia Infantil"
+                        class="h-auto w-full object-contain"
+                    >
+                </div>
+                <h1 class="max-w-xl text-5xl font-bold leading-tight">Gestión Clínica</h1>
                 <p class="mt-6 max-w-lg text-lg leading-8 text-cyan-50/90">Plataforma clínica para organizar la operación, la agenda y el seguimiento de pacientes de forma segura.</p>
             </div>
             <p class="text-sm text-cyan-100/80">Acceso exclusivo para personal autorizado.</p>
@@ -21,8 +26,12 @@
         <section class="flex items-center justify-center px-6 py-12 sm:px-10 lg:px-16">
             <div class="w-full max-w-md">
                 <div class="mb-8 lg:hidden">
-                    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-700">URPE</p>
-                    <h1 class="mt-2 text-3xl font-bold">Gestión Clínica</h1>
+                    <img
+                        src="{{ asset('images/brand/urpe-logo.png') }}"
+                        alt="URPE - Unidad de Rehabilitación Pediátrica Evolutiva y Fisioterapia Infantil"
+                        class="mb-5 h-auto w-full max-w-xs object-contain"
+                    >
+                    <h1 class="text-3xl font-bold">Gestión Clínica</h1>
                 </div>
 
                 <div class="rounded-3xl bg-white p-7 shadow-xl shadow-slate-200/70 ring-1 ring-slate-200 sm:p-9">
