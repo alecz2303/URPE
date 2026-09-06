@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AuthorizationSeeder::class,
+            TherapySeeder::class,
         ]);
     }
 }

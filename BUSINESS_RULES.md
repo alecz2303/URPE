@@ -58,6 +58,22 @@
 
 **BR-028.** La administración de perfiles, disponibilidad y bloqueos de terapeutas se autoriza mediante permisos granulares; `therapists.manage` es el permiso base de URPE-7.
 
+**BR-029.** Cada terapia del catálogo debe persistir como dato configurable con nombre, duración en minutos, cantidad requerida de terapeutas, color de visualización y estado activo/inactivo.
+
+**BR-030.** La duración de una terapia debe ser un entero positivo expresado en minutos; la agenda futura deberá tomar este valor desde el registro de terapia y no desde condicionales por nombre.
+
+**BR-031.** La cantidad requerida de terapeutas debe ser un entero positivo; la agenda futura deberá exigir disponibilidad simultánea de ese número de recursos humanos durante todo el intervalo.
+
+**BR-032.** Las terapias inactivas conservan su registro para integridad histórica y no deben eliminarse de forma destructiva como mecanismo normal de administración.
+
+**BR-033.** Una terapia inactiva no debe estar disponible para nuevas selecciones de agenda, aunque puede permanecer referenciada por información histórica creada previamente.
+
+**BR-034.** El color de una terapia es configuración de presentación y debe almacenarse como un color hexadecimal válido `#RRGGBB`.
+
+**BR-035.** La administración del catálogo de terapias se autoriza mediante el permiso granular `therapies.manage`; Administrador y Coordinación Clínica reciben este permiso en el baseline, mientras que Terapeuta no lo recibe por defecto.
+
+**BR-036.** Vojta y Pediasuit se crean como datos iniciales configurables, no como reglas especiales de código. Sus valores iniciales son Vojta 40 min / 1 terapeuta y Pediasuit 60 min / 2 terapeutas.
+
 ## Decisiones abiertas
 
 Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:
