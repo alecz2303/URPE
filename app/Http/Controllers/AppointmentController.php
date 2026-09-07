@@ -37,12 +37,25 @@ class AppointmentController extends Controller
             ->orderBy('starts_at')
             ->get();
 
+        $weekDays = collect(range(0, 6))
+            ->map(fn (int $offset) => $date->startOfWeek()->addDays($offset));
+
+        $calendarStart = $date->startOfMonth()->startOfWeek();
+        $calendarEnd = $date->endOfMonth()->endOfWeek();
+        $calendarDays = collect();
+
+        for ($cursor = $calendarStart; $cursor->lte($calendarEnd); $cursor = $cursor->addDay()) {
+            $calendarDays->push($cursor);
+        }
+
         return view('appointments.index', compact(
             'appointments',
             'mode',
             'date',
             'rangeStart',
             'rangeEnd',
+            'weekDays',
+            'calendarDays',
         ));
     }
 

@@ -38,7 +38,6 @@ class PatientController extends Controller
         $this->authorize('patients.manage');
 
         $validated = $request->validate($this->patientRules(), $this->patientMessages(), $this->patientAttributes());
-
         $patient = Patient::query()->create($this->patientPayload($validated));
 
         $audit->record('patient.created', $patient, [
@@ -56,7 +55,15 @@ class PatientController extends Controller
     {
         $this->authorize('patients.view');
 
-        $patient->load(['guardians' => fn ($query) => $query->orderByPivot('is_primary', 'desc')->orderBy('last_name')]);
+        $patient->load([
+            'guardians' => fn ($query) => $query->orderByPivot('is_primary', 'desc')->orderBy('last_name'),
+            'appointments' => fn ($query) => $query
+                ->with(['therapy', 'therapists'])
+                ->where('starts_at', '>=', now()->startOfDay())
+                ->orderBy('starts_at')
+                ->limit(5),
+            'clinicalRecord',
+        ]);
 
         return view('patients.show', compact('patient'));
     }
@@ -102,6 +109,24 @@ class PatientController extends Controller
             ->with('status', $patient->is_active
                 ? 'Paciente activado correctamente.'
                 : 'Paciente desactivado correctamente.');
+    }
+
+    public function createGuardian(Patient $patient): View
+    {
+        $this->authorize('patients.manage');
+
+        return view('patients.guardians.create', compact('patient'));
+    }
+
+    public function editGuardian(Patient $patient, Guardian $guardian): View
+    {
+        $this->authorize('patients.manage');
+        $this->ensureGuardianLinked($patient, $guardian);
+        $patient->load('guardians');
+
+        $linkedGuardian = $patient->guardians->firstWhere('id', $guardian->id);
+
+        return view('patients.guardians.edit', compact('patient', 'guardian', 'linkedGuardian'));
     }
 
     public function storeGuardian(
