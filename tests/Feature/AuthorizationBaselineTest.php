@@ -19,7 +19,7 @@ class AuthorizationBaselineTest extends TestCase
         $this->seed(AuthorizationSeeder::class);
 
         $this->assertDatabaseCount('roles', 5);
-        $this->assertDatabaseCount('permissions', 12);
+        $this->assertDatabaseCount('permissions', 14);
 
         foreach ([
             'administrator',
@@ -37,10 +37,12 @@ class AuthorizationBaselineTest extends TestCase
         $this->assertDatabaseHas('permissions', ['slug' => 'therapies.manage']);
         $this->assertDatabaseHas('permissions', ['slug' => 'patients.view']);
         $this->assertDatabaseHas('permissions', ['slug' => 'patients.manage']);
+        $this->assertDatabaseHas('permissions', ['slug' => 'clinical_records.view']);
+        $this->assertDatabaseHas('permissions', ['slug' => 'clinical_records.manage']);
 
         $administrator = Role::query()->where('slug', 'administrator')->firstOrFail();
 
-        $this->assertCount(12, $administrator->permissions);
+        $this->assertCount(14, $administrator->permissions);
     }
 
     public function test_user_inherits_permissions_from_assigned_role(): void
@@ -122,6 +124,8 @@ class AuthorizationBaselineTest extends TestCase
         $this->assertFalse($user->hasPermission('therapies.manage'));
         $this->assertFalse($user->hasPermission('patients.view'));
         $this->assertFalse($user->hasPermission('patients.manage'));
+        $this->assertFalse($user->hasPermission('clinical_records.view'));
+        $this->assertFalse($user->hasPermission('clinical_records.manage'));
         $this->assertFalse(Gate::forUser($user)->allows('users.view'));
     }
 }

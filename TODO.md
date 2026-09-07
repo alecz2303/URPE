@@ -117,7 +117,7 @@
 - [x] Squash + rebase/sincronización contra `master`.
 - [x] PR #7 aprobado, rebase merge, CI post-merge y cierre Jira.
 
-## URPE-8 — Catálogo configurable de terapias — EN CURSO
+## URPE-8 — Catálogo configurable de terapias — CERRADO
 
 - [x] Crear persistencia y modelo `Therapy`.
 - [x] Incorporar nombre, duración, terapeutas requeridos, color y estado activo/inactivo.
@@ -136,8 +136,48 @@
 - [x] Suite completa y build frontend confirmados por validación local.
 - [x] CI de rama verde antes del cierre técnico.
 - [x] Actualizar documentación canónica de URPE-7/URPE-8.
-- [ ] Squash + rebase/sincronización contra `master` antes de PR.
-- [ ] PR aprobado, rebase merge, CI post-merge, limpieza de ramas y cierre Jira.
+- [x] Squash + rebase/sincronización contra `master` antes de PR.
+- [x] PR #8 aprobado, rebase merge, CI post-merge y cierre Jira.
+
+## URPE-9 — Pacientes y responsables — CERRADO
+
+- [x] Crear persistencia y modelos de pacientes, responsables y vínculo paciente-responsable.
+- [x] Implementar responsable principal único por paciente.
+- [x] Implementar folio anual consecutivo `URPE-AAAA-NNNNNN`.
+- [x] Proteger acceso con `patients.view` y `patients.manage`.
+- [x] Mantener al rol Terapeuta sin acceso global a pacientes por defecto.
+- [x] Implementar listado, alta, ficha, edición y activación/desactivación de pacientes.
+- [x] Implementar alta, edición y cambio de responsable principal.
+- [x] Integrar SweetAlert en acciones sensibles.
+- [x] Auditar cambios administrativos sin duplicar payloads sensibles completos.
+- [x] Agregar cobertura de dominio, autorización, validación, auditoría y folios.
+- [x] Validación funcional local en Laragon.
+- [x] Suite completa y CI de rama verdes.
+- [x] Squash + sincronización contra `master`.
+- [x] PR #9 aprobado, rebase merge, CI post-merge #216 verde y cierre Jira.
+
+## URPE-10 — Expediente clínico base — EN CURSO
+
+- [x] Crear persistencia uno-a-uno entre paciente y expediente clínico base.
+- [x] Incorporar antecedentes médicos, prenatales/perinatales, del desarrollo y familiares.
+- [x] Incorporar diagnósticos, objetivos terapéuticos y observaciones clínicas generales.
+- [x] Mantener el expediente clínico separado de datos y notas administrativas.
+- [x] Mantener evolución por sesión fuera del alcance del expediente base.
+- [x] Impedir eliminación destructiva del paciente mientras exista expediente clínico.
+- [x] Proteger lectura y administración con `clinical_records.view` y `clinical_records.manage`.
+- [x] Otorgar acceso base a Administrador y Coordinación Clínica sin acceso clínico global automático para Terapeuta.
+- [x] Implementar pantalla de expediente clínico desde el contexto del paciente.
+- [x] Integrar acceso condicionado al expediente desde la ficha administrativa del paciente.
+- [x] Integrar SweetAlert para feedback de creación y actualización.
+- [x] Auditar `clinical_record.created` y `clinical_record.updated` sin duplicar texto clínico sensible en metadata.
+- [x] Agregar pruebas de persistencia, unicidad, validación, autorización, auditoría, SweetAlert y acceso desde ficha del paciente.
+- [x] Validación funcional local de creación, persistencia, actualización y acceso desde ficha confirmada.
+- [x] Actualizar ROADMAP, BUSINESS_RULES, CHANGELOG y TODO.
+- [ ] Confirmar CI final de rama verde después del Bloque 3.
+- [ ] Squash de todos los commits de URPE-10 en un único commit.
+- [ ] Rebase/sincronización contra `master` antes de PR.
+- [ ] CI verde sobre el commit final único.
+- [ ] PR aprobado, rebase merge, CI post-merge, limpieza de rama y cierre Jira.
 
 ## V1 — Backlog canónico
 
@@ -146,13 +186,13 @@
 - [x] Auditoría base de acciones sensibles.
 - [x] Configuración general y horarios operativos. *(URPE-6 cerrado)*
 - [x] Catálogo de terapeutas y disponibilidad. *(URPE-7 cerrado)*
-- [ ] Catálogo de terapias configurable. *(URPE-8 en curso)*
-- [ ] Pacientes y tutores/responsables.
+- [x] Catálogo de terapias configurable. *(URPE-8 cerrado)*
+- [x] Pacientes y tutores/responsables. *(URPE-9 cerrado)*
 - [ ] Agenda/calendario clínico.
 - [ ] Reglas de disponibilidad y colisiones.
 - [ ] Citas recurrentes, reprogramación y cancelación.
-- [ ] Expediente clínico digital.
-- [ ] Documentos, imágenes, radiografías y estudios.
+- [x] Expediente clínico digital base. *(URPE-10 implementado; cierre técnico en curso)*
+- [ ] Documentos, imágenes, radiografías y estudios vinculados al expediente.
 - [ ] Bitácoras/evolución de sesiones.
 - [ ] Dashboard operativo.
 - [ ] Reportes operativos esenciales.

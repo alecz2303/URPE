@@ -16,8 +16,8 @@
 
 1. [x] **URPE-7** Terapeutas y disponibilidad individual.
 2. [x] **URPE-8** Catálogo configurable de terapias.
-3. [ ] **URPE-9** Pacientes, tutores/responsables y datos administrativos. *(En curso; dominio, UI, auditoría, permisos, folio consecutivo anual y CI implementados; pendiente validación local final e integración protegida)*
-4. [ ] Base del expediente clínico.
+3. [x] **URPE-9** Pacientes, tutores/responsables y datos administrativos.
+4. [x] **URPE-10** Base del expediente clínico: antecedentes, diagnósticos, objetivos terapéuticos y observaciones generales, separados de la evolución por sesión.
 
 ## Fase 3 — Agenda / calendario — prioridad crítica
 
@@ -35,9 +35,9 @@
 
 ## Fase 4 — Expediente y evolución
 
-1. [ ] Historia clínica.
-2. [ ] Diagnósticos, objetivos y observaciones.
-3. [ ] Archivos clínicos protegidos.
+1. [x] Historia clínica base. *(URPE-10)*
+2. [x] Diagnósticos, objetivos y observaciones basales. *(URPE-10)*
+3. [ ] Archivos clínicos protegidos vinculados al expediente.
 4. [ ] Bitácora por sesión.
 5. [ ] Línea de tiempo clínica.
 6. [ ] Reglas de cierre/corrección y trazabilidad.
