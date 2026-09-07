@@ -57,6 +57,12 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Auditoría de creación, actualización, estado, responsables y cambio de responsable principal.
 - SweetAlert para cambios sensibles de pacientes y responsables, y formularios visualmente normalizados.
 - Cobertura automatizada de dominio, permisos, validación, relaciones, responsable principal, estado, auditoría y folios anuales consecutivos.
+- Expediente clínico base con relación uno-a-uno por paciente y secciones estructuradas para antecedentes, diagnósticos, objetivos terapéuticos y observaciones clínicas generales.
+- Permisos granulares `clinical_records.view` y `clinical_records.manage`, con acceso base para Administrador y Coordinación Clínica y sin acceso clínico global automático para Terapeuta.
+- Interfaz de expediente clínico accesible desde la ficha del paciente solo para usuarios autorizados, sin exponer contenido clínico en la ficha administrativa.
+- Creación y actualización del expediente clínico con auditoría `clinical_record.created` y `clinical_record.updated` sin duplicar textos clínicos sensibles en metadata.
+- Integración de SweetAlert para feedback del expediente clínico.
+- Cobertura automatizada de persistencia uno-a-uno, autorización positiva/negativa, validación, auditoría, UI y acceso condicionado desde la ficha del paciente.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -67,4 +73,5 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-6 cerrado mediante PR #6, rebase merge, CI post-merge y cierre Jira.
 - URPE-7 cerrado mediante PR #7, rebase merge y CI post-merge #161 verde.
 - URPE-8 cerrado mediante PR #8, rebase merge y CI post-merge #184 verde.
-- URPE-9 en curso con implementación funcional y CI de rama; pendiente validación local final, squash/rebase, PR e integración protegida.
+- URPE-9 cerrado mediante PR #9, rebase merge y CI post-merge #216 verde.
+- URPE-10 implementado funcionalmente y validado en Laragon; pendiente squash/rebase, PR, aprobación, rebase merge, CI post-merge y cierre Jira.

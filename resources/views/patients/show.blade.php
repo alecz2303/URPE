@@ -18,6 +18,9 @@
         </div>
         <div class="flex items-center gap-3">
             <a href="{{ route('patients.index') }}" class="text-sm font-semibold text-slate-600 hover:text-cyan-700">Pacientes</a>
+            @can('clinical_records.view')
+                <a href="{{ route('clinical-records.show', $patient) }}" class="rounded-xl border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-semibold text-cyan-800 hover:bg-cyan-100">Expediente clínico</a>
+            @endcan
             @can('patients.manage')
                 <a href="{{ route('patients.edit', $patient) }}" class="rounded-xl bg-cyan-700 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-800">Editar paciente</a>
             @endcan

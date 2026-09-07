@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CenterConfigurationController;
 use App\Http\Controllers\ClinicalFileController;
+use App\Http\Controllers\ClinicalRecordController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TherapistController;
@@ -59,6 +60,11 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/pacientes/{patient}/responsables', [PatientController::class, 'storeGuardian'])->name('patients.guardians.store');
     Route::put('/pacientes/{patient}/responsables/{guardian}', [PatientController::class, 'updateGuardian'])->name('patients.guardians.update');
     Route::patch('/pacientes/{patient}/responsables/{guardian}/principal', [PatientController::class, 'setPrimaryGuardian'])->name('patients.guardians.primary');
+
+    Route::get('/pacientes/{patient}/expediente-clinico', [ClinicalRecordController::class, 'show'])
+        ->name('clinical-records.show');
+    Route::put('/pacientes/{patient}/expediente-clinico', [ClinicalRecordController::class, 'update'])
+        ->name('clinical-records.update');
 
     Route::get('/archivos-clinicos/{clinicalFile}/descargar', [ClinicalFileController::class, 'download'])
         ->name('clinical-files.download');

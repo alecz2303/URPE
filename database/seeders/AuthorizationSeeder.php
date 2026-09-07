@@ -23,6 +23,8 @@ class AuthorizationSeeder extends Seeder
             ['name' => 'Administrar terapias', 'slug' => 'therapies.manage', 'description' => 'Administrar el catálogo configurable de terapias.'],
             ['name' => 'Ver pacientes', 'slug' => 'patients.view', 'description' => 'Consultar registros administrativos de pacientes y responsables.'],
             ['name' => 'Administrar pacientes', 'slug' => 'patients.manage', 'description' => 'Crear y modificar registros administrativos de pacientes y responsables.'],
+            ['name' => 'Ver expediente clínico', 'slug' => 'clinical_records.view', 'description' => 'Consultar la información clínica base de los pacientes.'],
+            ['name' => 'Administrar expediente clínico', 'slug' => 'clinical_records.manage', 'description' => 'Crear y modificar la información clínica base de los pacientes.'],
         ])->mapWithKeys(function (array $permission): array {
             $model = Permission::query()->updateOrCreate(
                 ['slug' => $permission['slug']],
@@ -59,6 +61,8 @@ class AuthorizationSeeder extends Seeder
         $coordinationPermissionIds[] = $permissions->get('therapies.manage')->id;
         $coordinationPermissionIds[] = $permissions->get('patients.view')->id;
         $coordinationPermissionIds[] = $permissions->get('patients.manage')->id;
+        $coordinationPermissionIds[] = $permissions->get('clinical_records.view')->id;
+        $coordinationPermissionIds[] = $permissions->get('clinical_records.manage')->id;
         $clinicalCoordination->permissions()->sync(array_values(array_unique($coordinationPermissionIds)));
 
         $reception = Role::query()->where('slug', 'reception')->firstOrFail();

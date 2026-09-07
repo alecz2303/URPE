@@ -6,6 +6,7 @@ use App\Services\PatientFolioGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Patient extends Model
 {
@@ -45,6 +46,11 @@ class Patient extends Model
             ->using(PatientGuardian::class)
             ->withPivot(['relationship', 'is_primary'])
             ->withTimestamps();
+    }
+
+    public function clinicalRecord(): HasOne
+    {
+        return $this->hasOne(ClinicalRecord::class);
     }
 
     public function getFullNameAttribute(): string

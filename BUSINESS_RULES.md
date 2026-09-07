@@ -90,6 +90,26 @@
 
 **BR-044.** Los cambios administrativos relevantes de pacientes y responsables deben ser auditables sin almacenar innecesariamente payloads sensibles completos.
 
+**BR-045.** Cada paciente puede tener como máximo un expediente clínico base activo dentro del baseline de URPE-10.
+
+**BR-046.** El expediente clínico base almacena antecedentes médicos, antecedentes prenatales/perinatales, antecedentes del desarrollo, antecedentes familiares, diagnósticos, objetivos terapéuticos y observaciones clínicas generales.
+
+**BR-047.** El expediente clínico base se mantiene separado de los datos administrativos del paciente y de sus responsables; las notas administrativas no sustituyen ni duplican información clínica.
+
+**BR-048.** La evolución por sesión, actividades realizadas, respuesta del paciente, progreso, incidencias, recomendaciones domiciliarias y objetivos de próxima sesión no pertenecen al expediente clínico base y se implementarán en la bitácora/evolución por sesión.
+
+**BR-049.** El acceso al expediente clínico se autoriza mediante permisos granulares `clinical_records.view` y `clinical_records.manage`; no se autoriza por nombre de rol dentro de controladores o vistas.
+
+**BR-050.** El baseline otorga acceso clínico amplio a Administrador y Coordinación Clínica. El rol Terapeuta no recibe acceso clínico global por defecto; el alcance por asignación/cita se definirá posteriormente.
+
+**BR-051.** La creación y actualización del expediente clínico deben auditar actor, paciente y secciones afectadas sin duplicar en metadata de auditoría los textos clínicos sensibles completos.
+
+**BR-052.** La existencia de un expediente clínico base impide la eliminación destructiva del paciente; la integridad clínica prevalece sobre el borrado físico.
+
+**BR-053.** La ficha administrativa del paciente puede exponer un acceso al expediente clínico únicamente a usuarios autorizados, sin mostrar contenido clínico dentro de la ficha administrativa.
+
+**BR-054.** El modelo del expediente clínico base debe quedar preparado para futuras relaciones con archivos clínicos protegidos, pero URPE-10 no implementa la administración completa de adjuntos.
+
 ## Decisiones abiertas
 
 Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:
