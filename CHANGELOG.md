@@ -77,6 +77,9 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Presentación diferenciada de agenda: día cronológico, semana por columnas y mes en cuadrícula de calendario.
 - Vistas de consulta de terapeuta y terapia separadas de sus formularios de edición.
 - Cobertura específica del shell responsive y de las tres presentaciones de agenda.
+- Navegación temporal de agenda con acciones Anterior, Hoy y Siguiente, selector directo de fecha y acceso desde el calendario mensual a la vista diaria.
+- Pantalla dedicada de ausencias y bloqueos de terapeutas, accesible desde el listado y la ficha sin entrar a Editar terapeuta.
+- Sistema visual clínico más consistente y colorido aplicado a agenda, dashboard, pacientes, responsables, expediente clínico, terapeutas, terapias, usuarios, roles y configuración del centro.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -93,3 +96,6 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-12 rediseña la presentación sin alterar las reglas clínicas, permisos ni comportamiento de dominio establecidos en tickets anteriores.
 - La navegación superior dispersa se reemplaza por un shell con sidebar persistente y acceso móvil compacto.
 - Las pantallas de consulta dejan de presentar formularios editables como vista principal y pasan al flujo Listado → Ver → Editar.
+- URPE-13 refina el sistema visual y la navegación de agenda sin ampliar implícitamente permisos ni reglas clínicas existentes.
+- El registro de ausencias/bloqueos deja de formar parte de Editar terapeuta y pasa a un flujo independiente enfocado en disponibilidad extraordinaria.
+- La edición del expediente clínico adopta la misma jerarquía visual por secciones utilizada en la vista de consulta.

@@ -21,7 +21,7 @@
 
 ## Fase 3 — Agenda / calendario — prioridad crítica
 
-1. [x] Vista día/semana/mes y dashboard. *(URPE-11 base funcional; URPE-12 presentación UX diferenciada)*
+1. [x] Vista día/semana/mes y dashboard. *(URPE-11 base funcional; URPE-12 presentación UX diferenciada; URPE-13 navegación temporal y refinamiento visual)*
 2. [x] Crear, editar, reprogramar y cancelar citas. *(URPE-11)*
 3. [x] Duración automática según terapia. *(URPE-11)*
 4. [x] Asignación de uno o varios terapeutas. *(URPE-11)*
@@ -29,14 +29,15 @@
 6. [x] Validación de disponibilidad de todos los terapeutas requeridos durante toda la cita. *(URPE-11)*
 7. [x] Prevención de traslapes. *(URPE-11)*
 8. [ ] Citas recurrentes.
-9. [x] Ausencias, bloqueos y descansos como restricciones de agenda. *(URPE-11 reutiliza baseline URPE-7)*
+9. [x] Ausencias, bloqueos y descansos como restricciones de agenda. *(URPE-11 reutiliza baseline URPE-7; URPE-13 agrega acceso dedicado fuera de la edición del terapeuta)*
 10. [ ] Estados y filtros operativos ampliados.
 11. [x] Historial básico auditable de creación, reprogramación y cancelación. *(URPE-11)*
 12. [x] Presentación diferenciada: día cronológico, semana por columnas y mes en calendario. *(URPE-12)*
+13. [x] Navegación anterior/hoy/siguiente, selector de fecha y acceso de mes a día. *(URPE-13)*
 
 ## Fase 4 — Expediente y evolución
 
-1. [x] Historia clínica base. *(URPE-10)*
+1. [x] Historia clínica base. *(URPE-10; presentación y edición refinadas en URPE-12/URPE-13)*
 2. [x] Diagnósticos, objetivos y observaciones basales. *(URPE-10)*
 3. [ ] Archivos clínicos protegidos vinculados al expediente.
 4. [ ] Bitácora por sesión.
@@ -45,13 +46,14 @@
 
 ## Fase 5 — Operación y cierre V1
 
-1. [x] Dashboard operativo y navegación clínica base. *(URPE-12)*
-2. [x] Shell autenticado con sidebar persistente y menú móvil. *(URPE-12)*
+1. [x] Dashboard operativo y navegación clínica base. *(URPE-12; sistema visual refinado en URPE-13)*
+2. [x] Shell autenticado con sidebar persistente y menú móvil. *(URPE-12; refinamiento visual URPE-13)*
 3. [x] Separación UX de listado, consulta y edición en recursos clínicos/administrativos principales. *(URPE-12)*
-4. [ ] Reportes esenciales.
-5. [ ] Cobertura final de permisos y auditoría.
-6. [ ] Regresión, seguridad, rendimiento y respaldo.
-7. [ ] UAT y despliegue.
+4. [x] Sistema visual clínico consistente y más legible en agenda, pacientes, expediente, terapeutas, terapias, usuarios, roles y centro. *(URPE-13)*
+5. [ ] Reportes esenciales.
+6. [ ] Cobertura final de permisos y auditoría.
+7. [ ] Regresión, seguridad, rendimiento y respaldo.
+8. [ ] UAT y despliegue.
 
 ## V1.x / V2
 

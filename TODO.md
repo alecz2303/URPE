@@ -198,7 +198,7 @@
 - [x] PR #12 aprobado por `aruedaboldr`, rebase merge y CI post-merge Test #274 verde.
 - [x] Jira URPE-11 cerrado en Listo.
 
-## URPE-12 — Rediseño de dashboard, navegación y agenda — EN CURSO
+## URPE-12 — Rediseño de dashboard, navegación y agenda — CERRADO
 
 - [x] Sustituir la navegación superior por shell autenticado con sidebar persistente en escritorio.
 - [x] Implementar drawer lateral para navegación móvil con cierre por botón, backdrop y Escape.
@@ -214,9 +214,25 @@
 - [x] Mantener permisos y reglas de negocio existentes sin ampliación implícita.
 - [x] Normalizar directivas Blade en vistas críticas para evitar errores de compilación.
 - [x] Mejorar presentación de disponibilidad de terapeutas con nombres de día legibles.
-- [x] Actualizar ROADMAP y CHANGELOG con el alcance UX de URPE-12.
-- [x] CI de rama verde con Test #328.
-- [ ] Completar auditoría final de diff, tests UX y documentación canónica restante.
+- [x] Actualizar documentación canónica afectada.
+- [x] PR #13 aprobado por `aruedaboldr`, rebase merge y Test #332 post-merge verde.
+- [x] Jira URPE-12 cerrado en Listo.
+
+## URPE-13 — Refresh visual y navegación de agenda — EN CURSO
+
+- [x] Aplicar un sistema visual más alegre, luminoso y consistente sin perder legibilidad clínica.
+- [x] Refinar dashboard, pacientes, responsables, terapeutas, terapias, usuarios, roles, expediente clínico y configuración del centro.
+- [x] Mantener shell responsive y permisos existentes.
+- [x] Incorporar navegación temporal Anterior / Hoy / Siguiente en agenda.
+- [x] Incorporar selector directo de fecha preservando la vista día/semana/mes.
+- [x] Mantener acceso desde calendario mensual hacia la vista Día de la fecha seleccionada.
+- [x] Separar ausencias y bloqueos del formulario de edición del terapeuta.
+- [x] Crear pantalla dedicada de ausencias/bloqueos con acceso directo desde listado y ficha del terapeuta.
+- [x] Mantener validaciones, auditoría y reglas de disponibilidad existentes para bloqueos.
+- [x] Actualizar pruebas de agenda y flujo dedicado de bloqueos.
+- [x] Actualizar ROADMAP, CHANGELOG y TODO con el alcance real de URPE-13.
+- [x] CI de trabajo verde hasta Test #371.
+- [ ] Completar auditoría final del diff.
 - [ ] Consolidar la rama a exactamente un commit sobre `master` actualizado.
 - [ ] Validar CI verde sobre el SHA consolidado y abrir PR.
 - [ ] Solicitar revisión de `aruedaboldr`, verificar CI del PR y dejar listo para aprobación humana.
@@ -226,18 +242,18 @@
 - [x] Autenticación y gestión de usuarios.
 - [x] Roles y permisos granulares.
 - [x] Auditoría base de acciones sensibles.
-- [x] Configuración general y horarios operativos. *(URPE-6 cerrado)*
-- [x] Catálogo de terapeutas y disponibilidad. *(URPE-7 cerrado)*
-- [x] Catálogo de terapias configurable. *(URPE-8 cerrado)*
-- [x] Pacientes y tutores/responsables. *(URPE-9 cerrado)*
-- [x] Agenda/calendario clínico base. *(URPE-11 cerrado; UX refinada en URPE-12)*
+- [x] Configuración general y horarios operativos. *(URPE-6 cerrado; presentación refinada en URPE-13)*
+- [x] Catálogo de terapeutas y disponibilidad. *(URPE-7 cerrado; acceso a bloqueos refinado en URPE-13)*
+- [x] Catálogo de terapias configurable. *(URPE-8 cerrado; presentación refinada en URPE-13)*
+- [x] Pacientes y tutores/responsables. *(URPE-9 cerrado; presentación refinada en URPE-13)*
+- [x] Agenda/calendario clínico base. *(URPE-11 cerrado; UX refinada en URPE-12 y URPE-13)*
 - [x] Reglas base de disponibilidad y colisiones. *(URPE-11)*
 - [ ] Citas recurrentes y estados operativos ampliados.
 - [x] Reprogramación y cancelación base. *(URPE-11)*
-- [x] Expediente clínico digital base. *(URPE-10 cerrado; UX separada en URPE-12)*
+- [x] Expediente clínico digital base. *(URPE-10 cerrado; UX separada en URPE-12 y refinada en URPE-13)*
 - [ ] Documentos, imágenes, radiografías y estudios vinculados al expediente.
 - [ ] Bitácoras/evolución de sesiones.
-- [x] Dashboard operativo base rediseñado. *(URPE-12; cierre técnico pendiente)*
+- [x] Dashboard operativo base rediseñado. *(URPE-12; sistema visual refinado en URPE-13)*
 - [ ] Reportes operativos esenciales.
 - [ ] Hardening, pruebas de regresión y preparación de despliegue.
 

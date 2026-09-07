@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Services\AuditTrail;
 use App\Services\CenterConfiguration;
 use App\Services\TherapistAvailability;
-use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -133,37 +132,6 @@ class TherapistController extends Controller
 
         return redirect()->route('therapists.edit', $therapist)
             ->with('status', 'Terapeuta actualizado correctamente.');
-    }
-
-    public function storeBlock(
-        Request $request,
-        Therapist $therapist,
-        TherapistAvailability $availability,
-        AuditTrail $audit,
-    ): RedirectResponse {
-        $this->authorize('therapists.manage');
-
-        $validated = $request->validate([
-            'starts_at' => ['required', 'date'],
-            'ends_at' => ['required', 'date', 'after:starts_at'],
-            'reason' => ['nullable', 'string', 'max:500'],
-        ], $this->messages(), [
-            'starts_at' => 'inicio del bloqueo',
-            'ends_at' => 'fin del bloqueo',
-            'reason' => 'motivo',
-        ]);
-
-        $availability->addBlock(
-            $therapist,
-            CarbonImmutable::parse($validated['starts_at']),
-            CarbonImmutable::parse($validated['ends_at']),
-            $validated['reason'] ?? null,
-            $request->user(),
-            $audit,
-        );
-
-        return redirect()->route('therapists.edit', $therapist)
-            ->with('status', 'Bloqueo registrado correctamente.');
     }
 
     private function rules(?Therapist $therapist = null): array

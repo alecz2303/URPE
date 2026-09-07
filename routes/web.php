@@ -8,6 +8,7 @@ use App\Http\Controllers\ClinicalRecordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TherapistBlocksController;
 use App\Http\Controllers\TherapistController;
 use App\Http\Controllers\TherapistShowController;
 use App\Http\Controllers\TherapyController;
@@ -50,10 +51,11 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/terapeutas', [TherapistController::class, 'index'])->name('therapists.index');
     Route::get('/terapeutas/crear', [TherapistController::class, 'create'])->name('therapists.create');
     Route::post('/terapeutas', [TherapistController::class, 'store'])->name('therapists.store');
+    Route::get('/terapeutas/{therapist}/bloqueos', [TherapistBlocksController::class, 'index'])->name('therapists.blocks.index');
+    Route::post('/terapeutas/{therapist}/bloqueos', [TherapistBlocksController::class, 'store'])->name('therapists.blocks.store');
     Route::get('/terapeutas/{therapist}', TherapistShowController::class)->name('therapists.show');
     Route::get('/terapeutas/{therapist}/editar', [TherapistController::class, 'edit'])->name('therapists.edit');
     Route::put('/terapeutas/{therapist}', [TherapistController::class, 'update'])->name('therapists.update');
-    Route::post('/terapeutas/{therapist}/bloqueos', [TherapistController::class, 'storeBlock'])->name('therapists.blocks.store');
 
     Route::get('/terapias', [TherapyController::class, 'index'])->name('therapies.index');
     Route::get('/terapias/crear', [TherapyController::class, 'create'])->name('therapies.create');

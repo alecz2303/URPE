@@ -148,7 +148,7 @@ class TherapistAdministrationTest extends TestCase
             'starts_at' => '2026-09-07 12:00:00',
             'ends_at' => '2026-09-07 13:00:00',
             'reason' => 'Reunión clínica',
-        ])->assertRedirect(route('therapists.edit', $therapist));
+        ])->assertRedirect(route('therapists.blocks.index', $therapist));
 
         $this->assertDatabaseHas('therapist_blocks', [
             'therapist_id' => $therapist->id,
