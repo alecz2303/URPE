@@ -21,7 +21,7 @@
 
 ## Fase 3 — Agenda / calendario — prioridad crítica
 
-1. [x] Vista día/semana/mes y dashboard. *(URPE-11)*
+1. [x] Vista día/semana/mes y dashboard. *(URPE-11 base funcional; URPE-12 presentación UX diferenciada)*
 2. [x] Crear, editar, reprogramar y cancelar citas. *(URPE-11)*
 3. [x] Duración automática según terapia. *(URPE-11)*
 4. [x] Asignación de uno o varios terapeutas. *(URPE-11)*
@@ -32,6 +32,7 @@
 9. [x] Ausencias, bloqueos y descansos como restricciones de agenda. *(URPE-11 reutiliza baseline URPE-7)*
 10. [ ] Estados y filtros operativos ampliados.
 11. [x] Historial básico auditable de creación, reprogramación y cancelación. *(URPE-11)*
+12. [x] Presentación diferenciada: día cronológico, semana por columnas y mes en calendario. *(URPE-12)*
 
 ## Fase 4 — Expediente y evolución
 
@@ -44,11 +45,13 @@
 
 ## Fase 5 — Operación y cierre V1
 
-1. [ ] Dashboard operativo final.
-2. [ ] Reportes esenciales.
-3. [ ] Cobertura de permisos y auditoría.
-4. [ ] Regresión, seguridad, rendimiento y respaldo.
-5. [ ] UAT y despliegue.
+1. [x] Dashboard operativo y navegación clínica base. *(URPE-12)*
+2. [x] Shell autenticado con sidebar persistente y menú móvil. *(URPE-12)*
+3. [x] Separación UX de listado, consulta y edición en recursos clínicos/administrativos principales. *(URPE-12)*
+4. [ ] Reportes esenciales.
+5. [ ] Cobertura final de permisos y auditoría.
+6. [ ] Regresión, seguridad, rendimiento y respaldo.
+7. [ ] UAT y despliegue.
 
 ## V1.x / V2
 

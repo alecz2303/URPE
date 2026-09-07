@@ -23,6 +23,18 @@ class ClinicalRecordController extends Controller
         ]);
     }
 
+    public function edit(Patient $patient): View
+    {
+        $this->authorize('clinical_records.manage');
+
+        $patient->load(['clinicalRecord.creator', 'clinicalRecord.updater']);
+
+        return view('clinical-records.edit', [
+            'patient' => $patient,
+            'clinicalRecord' => $patient->clinicalRecord,
+        ]);
+    }
+
     public function update(Request $request, Patient $patient, AuditTrail $audit): RedirectResponse
     {
         $this->authorize('clinical_records.manage');

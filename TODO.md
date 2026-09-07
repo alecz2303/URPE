@@ -177,7 +177,7 @@
 - [x] CI post-merge Test #239 verde en `master`.
 - [x] Cierre técnico confirmado.
 
-## URPE-11 — Agenda clínica base — EN REVISIÓN TÉCNICA
+## URPE-11 — Agenda clínica base — CERRADO
 
 - [x] Crear persistencia de citas y relación con uno o varios terapeutas.
 - [x] Vincular exactamente un paciente y una terapia por cita.
@@ -194,10 +194,32 @@
 - [x] Auditar creación, reprogramación y cancelación sin payloads sensibles innecesarios.
 - [x] Integrar SweetAlert para confirmación y feedback.
 - [x] Cubrir permisos, persistencia, duración, terapeutas requeridos, colisiones, reprogramación y cancelación mediante tests.
-- [x] CI de rama verde antes del cierre documental (Test #264).
 - [x] Actualizar documentación canónica de URPE-11.
-- [ ] Consolidar rama a un único commit, validar CI final y abrir PR.
-- [ ] Revisión humana, rebase merge, CI post-merge y cierre Jira.
+- [x] PR #12 aprobado por `aruedaboldr`, rebase merge y CI post-merge Test #274 verde.
+- [x] Jira URPE-11 cerrado en Listo.
+
+## URPE-12 — Rediseño de dashboard, navegación y agenda — EN CURSO
+
+- [x] Sustituir la navegación superior por shell autenticado con sidebar persistente en escritorio.
+- [x] Implementar drawer lateral para navegación móvil con cierre por botón, backdrop y Escape.
+- [x] Reorientar dashboard a operación clínica del día, indicadores y agenda próxima.
+- [x] Separar navegación global de acciones contextuales.
+- [x] Normalizar flujo Listado → Ver → Editar para pacientes, terapeutas y terapias.
+- [x] Separar vista y edición del expediente clínico base.
+- [x] Separar alta/edición de responsables de la ficha del paciente.
+- [x] Migrar pantallas administrativas principales al shell común.
+- [x] Diferenciar agenda Día con presentación cronológica tipo timeline.
+- [x] Diferenciar agenda Semana con agrupación por días.
+- [x] Diferenciar agenda Mes con cuadrícula de calendario y resumen de citas.
+- [x] Mantener permisos y reglas de negocio existentes sin ampliación implícita.
+- [x] Normalizar directivas Blade en vistas críticas para evitar errores de compilación.
+- [x] Mejorar presentación de disponibilidad de terapeutas con nombres de día legibles.
+- [x] Actualizar ROADMAP y CHANGELOG con el alcance UX de URPE-12.
+- [x] CI de rama verde con Test #328.
+- [ ] Completar auditoría final de diff, tests UX y documentación canónica restante.
+- [ ] Consolidar la rama a exactamente un commit sobre `master` actualizado.
+- [ ] Validar CI verde sobre el SHA consolidado y abrir PR.
+- [ ] Solicitar revisión de `aruedaboldr`, verificar CI del PR y dejar listo para aprobación humana.
 
 ## V1 — Backlog canónico
 
@@ -208,14 +230,14 @@
 - [x] Catálogo de terapeutas y disponibilidad. *(URPE-7 cerrado)*
 - [x] Catálogo de terapias configurable. *(URPE-8 cerrado)*
 - [x] Pacientes y tutores/responsables. *(URPE-9 cerrado)*
-- [x] Agenda/calendario clínico base. *(URPE-11)*
+- [x] Agenda/calendario clínico base. *(URPE-11 cerrado; UX refinada en URPE-12)*
 - [x] Reglas base de disponibilidad y colisiones. *(URPE-11)*
 - [ ] Citas recurrentes y estados operativos ampliados.
 - [x] Reprogramación y cancelación base. *(URPE-11)*
-- [x] Expediente clínico digital base. *(URPE-10 cerrado)*
+- [x] Expediente clínico digital base. *(URPE-10 cerrado; UX separada en URPE-12)*
 - [ ] Documentos, imágenes, radiografías y estudios vinculados al expediente.
 - [ ] Bitácoras/evolución de sesiones.
-- [ ] Dashboard operativo final.
+- [x] Dashboard operativo base rediseñado. *(URPE-12; cierre técnico pendiente)*
 - [ ] Reportes operativos esenciales.
 - [ ] Hardening, pruebas de regresión y preparación de despliegue.
 

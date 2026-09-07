@@ -1,130 +1,55 @@
-<!doctype html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard — URPE Gestión Clínica</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="min-h-screen bg-slate-100 text-slate-900 antialiased">
-    <header class="border-b border-slate-200 bg-white">
-        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
-            <div class="flex min-w-0 items-center gap-4">
-                <img
-                    src="{{ asset('images/brand/urpe-logo.png') }}"
-                    alt="URPE - Unidad de Rehabilitación Pediátrica Evolutiva y Fisioterapia Infantil"
-                    class="h-14 w-auto max-w-[190px] object-contain sm:h-16 sm:max-w-[240px]"
-                >
-                <div class="hidden border-l border-slate-200 pl-4 md:block">
-                    <h1 class="text-lg font-bold text-slate-900">Gestión Clínica</h1>
-                    <p class="text-xs text-slate-500">Sistema de gestión clínica</p>
-                </div>
-            </div>
+<x-app-shell title="Hoy en URPE" eyebrow="Operación clínica">
+    <x-slot:actions>
+        @can('appointments.manage')
+            <a href="{{ route('appointments.create') }}" class="rounded-xl bg-cyan-700 px-4 py-2.5 text-sm font-bold text-white hover:bg-cyan-800">+ Nueva cita</a>
+        @endcan
+    </x-slot:actions>
 
-            <div class="flex items-center gap-4">
-                <div class="hidden text-right sm:block">
-                    <p class="text-sm font-semibold text-slate-800">{{ auth()->user()->name }}</p>
-                    <p class="text-xs text-slate-500">Sesión activa</p>
-                </div>
+    <p class="-mt-3 mb-6 text-sm text-slate-500">{{ $today->translatedFormat('l d \d\e F \d\e Y') }}</p>
 
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200">
-                        Cerrar sesión
-                    </button>
-                </form>
-            </div>
-        </div>
-    </header>
-
-    <main class="mx-auto max-w-7xl px-6 py-10 lg:px-8">
-        <section class="rounded-3xl bg-gradient-to-r from-cyan-700 to-teal-700 p-8 text-white shadow-lg shadow-cyan-900/10 sm:p-10">
-            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-100">Acceso confirmado</p>
-            <h2 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Bienvenido, {{ auth()->user()->name }}.</h2>
-            <p class="mt-4 max-w-2xl text-cyan-50/90">URPE Gestión Clínica integra seguridad granular, estructura clínica y agenda operativa según los permisos de tu cuenta.</p>
+    @if($todayAppointmentsCount !== null || $activePatientsCount !== null || $activeTherapistsCount !== null)
+        <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            @if($todayAppointmentsCount !== null)
+                <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p class="text-sm font-semibold text-slate-500">Citas de hoy</p><p class="mt-1 text-3xl font-bold">{{ $todayAppointmentsCount }}</p></article>
+            @endif
+            @if($activePatientsCount !== null)
+                <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p class="text-sm font-semibold text-slate-500">Pacientes activos</p><p class="mt-1 text-3xl font-bold">{{ $activePatientsCount }}</p></article>
+            @endif
+            @if($activeTherapistsCount !== null)
+                <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p class="text-sm font-semibold text-slate-500">Terapeutas activos</p><p class="mt-1 text-3xl font-bold">{{ $activeTherapistsCount }}</p></article>
+            @endif
         </section>
+    @endif
 
-        @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view') || auth()->user()->can('center.manage') || auth()->user()->can('therapists.manage') || auth()->user()->can('therapies.manage') || auth()->user()->can('patients.view'))
-            <section class="mt-8">
-                <div class="mb-4">
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Administración</p>
-                    <h3 class="mt-1 text-xl font-bold">Seguridad, configuración y estructura clínica</h3>
-                </div>
-                <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                    @can('users.view')
-                        <a href="{{ route('users.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
-                            <p class="text-sm font-semibold text-cyan-700">Usuarios</p>
-                            <h4 class="mt-2 text-lg font-bold">Administrar cuentas</h4>
-                            <p class="mt-2 text-sm leading-6 text-slate-500">Consulta usuarios, roles asignados y estado de acceso.</p>
-                        </a>
-                    @endcan
-
-                    @can('roles.view')
-                        <a href="{{ route('roles.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
-                            <p class="text-sm font-semibold text-cyan-700">Roles y permisos</p>
-                            <h4 class="mt-2 text-lg font-bold">Configurar autorización</h4>
-                            <p class="mt-2 text-sm leading-6 text-slate-500">Revisa los roles del sistema y los permisos efectivos de cada uno.</p>
-                        </a>
-                    @endcan
-
-                    @can('center.manage')
-                        <a href="{{ route('center.edit') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
-                            <p class="text-sm font-semibold text-cyan-700">Centro</p>
-                            <h4 class="mt-2 text-lg font-bold">Configuración y horarios</h4>
-                            <p class="mt-2 text-sm leading-6 text-slate-500">Administra datos operativos y el horario semanal que utiliza la agenda.</p>
-                        </a>
-                    @endcan
-
-                    @can('therapists.manage')
-                        <a href="{{ route('therapists.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
-                            <p class="text-sm font-semibold text-cyan-700">Terapeutas</p>
-                            <h4 class="mt-2 text-lg font-bold">Perfiles y disponibilidad</h4>
-                            <p class="mt-2 text-sm leading-6 text-slate-500">Gestiona terapeutas, horarios semanales, ausencias y bloqueos operativos.</p>
-                        </a>
-                    @endcan
-
-                    @can('therapies.manage')
-                        <a href="{{ route('therapies.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
-                            <p class="text-sm font-semibold text-cyan-700">Terapias</p>
-                            <h4 class="mt-2 text-lg font-bold">Catálogo configurable</h4>
-                            <p class="mt-2 text-sm leading-6 text-slate-500">Configura duración, terapeutas requeridos, color y disponibilidad para nuevas citas.</p>
-                        </a>
-                    @endcan
-
-                    @can('patients.view')
-                        <a href="{{ route('patients.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
-                            <p class="text-sm font-semibold text-cyan-700">Pacientes</p>
-                            <h4 class="mt-2 text-lg font-bold">Pacientes y responsables</h4>
-                            <p class="mt-2 text-sm leading-6 text-slate-500">Consulta datos administrativos, responsables vinculados y expediente clínico.</p>
-                        </a>
-                    @endcan
-                </div>
-            </section>
-        @endif
-
-        <section class="mt-8 grid gap-5 md:grid-cols-3">
-            @can('appointments.view')
-                <a href="{{ route('appointments.index') }}" data-testid="agenda-dashboard-card" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
-                    <p class="text-sm font-semibold text-cyan-700">Agenda</p>
-                    <h3 class="mt-2 text-lg font-bold">Abrir agenda clínica</h3>
-                    <p class="mt-2 text-sm leading-6 text-slate-500">Consulta citas por día, semana o mes y administra la programación según tus permisos.</p>
-                </a>
-            @endcan
-
-            @can('patients.view')
-                <a href="{{ route('patients.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
-                    <p class="text-sm font-semibold text-cyan-700">Expediente clínico</p>
-                    <h3 class="mt-2 text-lg font-bold">Disponible desde Pacientes</h3>
-                    <p class="mt-2 text-sm leading-6 text-slate-500">Accede al expediente clínico base desde el contexto del paciente autorizado.</p>
-                </a>
-            @endcan
-
-            <article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <p class="text-sm font-semibold text-cyan-700">Seguridad</p>
-                <h3 class="mt-2 text-lg font-bold">Sesión protegida</h3>
-                <p class="mt-2 text-sm leading-6 text-slate-500">El acceso depende de autenticación activa y permisos granulares.</p>
-            </article>
+    @can('appointments.view')
+        <section data-testid="agenda-dashboard-card" class="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+            <div class="flex items-center justify-between gap-4 border-b border-slate-100 px-6 py-5">
+                <div><p class="text-xs font-bold uppercase tracking-[0.16em] text-cyan-700">Agenda de hoy</p><h2 class="mt-1 text-xl font-bold">Actividad clínica programada</h2></div>
+                <a href="{{ route('appointments.index', ['view' => 'day', 'date' => $today->toDateString()]) }}" class="text-sm font-bold text-cyan-700">Abrir agenda clínica →</a>
+            </div>
+            <div class="divide-y divide-slate-100">
+                @forelse($todayAppointments as $appointment)
+                    <article class="relative grid gap-3 px-6 py-5 sm:grid-cols-[88px_minmax(0,1fr)_auto] sm:items-center {{ $appointment->isCancelled() ? 'opacity-55' : '' }}">
+                        <span class="absolute inset-y-3 left-0 w-1 rounded-r-full" style="background-color: {{ $appointment->therapy->color ?: '#0891b2' }}"></span>
+                        <div><p class="text-lg font-bold tabular-nums">{{ $appointment->starts_at->format('H:i') }}</p><p class="text-xs text-slate-400">{{ $appointment->ends_at->format('H:i') }}</p></div>
+                        <div class="min-w-0"><h3 class="truncate font-bold">{{ $appointment->patient->full_name }}</h3><p class="mt-1 text-sm font-semibold text-slate-600">{{ $appointment->therapy->name }}</p><p class="mt-1 text-xs text-slate-400">{{ $appointment->therapists->pluck('name')->implode(' · ') }}</p></div>
+                        @can('appointments.manage')
+                            @if(! $appointment->isCancelled())
+                                <a href="{{ route('appointments.edit', $appointment) }}" class="text-sm font-bold text-slate-500 hover:text-cyan-700">Editar</a>
+                            @endif
+                        @endcan
+                    </article>
+                @empty
+                    <div class="px-6 py-14 text-center">
+                        <div class="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-cyan-50 text-2xl text-cyan-700">✓</div>
+                        <h3 class="mt-4 font-bold">Sin citas programadas hoy</h3>
+                        <p class="mt-1 text-sm text-slate-500">La agenda está libre para esta fecha.</p>
+                        @can('appointments.manage')
+                            <a href="{{ route('appointments.create') }}" class="mt-4 inline-flex text-sm font-bold text-cyan-700">Programar una cita →</a>
+                        @endcan
+                    </div>
+                @endforelse
+            </div>
         </section>
-    </main>
-</body>
-</html>
+    @endcan
+</x-app-shell>

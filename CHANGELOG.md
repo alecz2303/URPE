@@ -70,6 +70,13 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Validación de cantidad requerida de terapeutas, estado activo de recursos, horario operativo del centro, disponibilidad individual, ausencias, bloqueos y colisiones.
 - Auditoría `appointment.created`, `appointment.rescheduled` y `appointment.cancelled` sin incluir motivos sensibles completos.
 - Cobertura automatizada de autorización, persistencia, duración, recursos requeridos, disponibilidad, colisiones, reprogramación y cancelación.
+- Shell autenticado reutilizable con navegación lateral persistente, estados activos y jerarquía clínica/administrativa.
+- Menú lateral móvil tipo drawer con backdrop, cierre por botón, clic exterior y tecla Escape.
+- Dashboard operativo centrado en la agenda del día, pacientes activos y terapeutas activos.
+- Separación explícita de UX entre listado, consulta y edición para pacientes, responsables, expediente clínico, terapeutas y terapias.
+- Presentación diferenciada de agenda: día cronológico, semana por columnas y mes en cuadrícula de calendario.
+- Vistas de consulta de terapeuta y terapia separadas de sus formularios de edición.
+- Cobertura específica del shell responsive y de las tres presentaciones de agenda.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -82,4 +89,7 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-8 cerrado mediante PR #8, rebase merge y CI post-merge #184 verde.
 - URPE-9 cerrado mediante PR #9, rebase merge y CI post-merge #216 verde.
 - URPE-10 cerrado técnicamente tras integración del commit `ee63f39` en `master` y CI post-merge Test #239 verde.
-- URPE-11 completa el baseline funcional de agenda; recurrencias, no-show/finalización y estados/filtros ampliados permanecen para tareas posteriores.
+- URPE-11 cerrado mediante PR #12, rebase merge y CI post-merge Test #274 verde.
+- URPE-12 rediseña la presentación sin alterar las reglas clínicas, permisos ni comportamiento de dominio establecidos en tickets anteriores.
+- La navegación superior dispersa se reemplaza por un shell con sidebar persistente y acceso móvil compacto.
+- Las pantallas de consulta dejan de presentar formularios editables como vista principal y pasan al flujo Listado → Ver → Editar.

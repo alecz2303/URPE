@@ -5,10 +5,13 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CenterConfigurationController;
 use App\Http\Controllers\ClinicalFileController;
 use App\Http\Controllers\ClinicalRecordController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TherapistController;
+use App\Http\Controllers\TherapistShowController;
 use App\Http\Controllers\TherapyController;
+use App\Http\Controllers\TherapyShowController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +24,7 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('/agenda', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::get('/agenda/citas/crear', [AppointmentController::class, 'create'])->name('appointments.create');
@@ -47,6 +50,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/terapeutas', [TherapistController::class, 'index'])->name('therapists.index');
     Route::get('/terapeutas/crear', [TherapistController::class, 'create'])->name('therapists.create');
     Route::post('/terapeutas', [TherapistController::class, 'store'])->name('therapists.store');
+    Route::get('/terapeutas/{therapist}', TherapistShowController::class)->name('therapists.show');
     Route::get('/terapeutas/{therapist}/editar', [TherapistController::class, 'edit'])->name('therapists.edit');
     Route::put('/terapeutas/{therapist}', [TherapistController::class, 'update'])->name('therapists.update');
     Route::post('/terapeutas/{therapist}/bloqueos', [TherapistController::class, 'storeBlock'])->name('therapists.blocks.store');
@@ -54,6 +58,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/terapias', [TherapyController::class, 'index'])->name('therapies.index');
     Route::get('/terapias/crear', [TherapyController::class, 'create'])->name('therapies.create');
     Route::post('/terapias', [TherapyController::class, 'store'])->name('therapies.store');
+    Route::get('/terapias/{therapy}', TherapyShowController::class)->name('therapies.show');
     Route::get('/terapias/{therapy}/editar', [TherapyController::class, 'edit'])->name('therapies.edit');
     Route::put('/terapias/{therapy}', [TherapyController::class, 'update'])->name('therapies.update');
     Route::patch('/terapias/{therapy}/estado', [TherapyController::class, 'toggleActive'])->name('therapies.toggle-active');
@@ -65,12 +70,16 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/pacientes/{patient}/editar', [PatientController::class, 'edit'])->name('patients.edit');
     Route::put('/pacientes/{patient}', [PatientController::class, 'update'])->name('patients.update');
     Route::patch('/pacientes/{patient}/estado', [PatientController::class, 'toggleActive'])->name('patients.toggle-active');
+    Route::get('/pacientes/{patient}/responsables/crear', [PatientController::class, 'createGuardian'])->name('patients.guardians.create');
     Route::post('/pacientes/{patient}/responsables', [PatientController::class, 'storeGuardian'])->name('patients.guardians.store');
+    Route::get('/pacientes/{patient}/responsables/{guardian}/editar', [PatientController::class, 'editGuardian'])->name('patients.guardians.edit');
     Route::put('/pacientes/{patient}/responsables/{guardian}', [PatientController::class, 'updateGuardian'])->name('patients.guardians.update');
     Route::patch('/pacientes/{patient}/responsables/{guardian}/principal', [PatientController::class, 'setPrimaryGuardian'])->name('patients.guardians.primary');
 
     Route::get('/pacientes/{patient}/expediente-clinico', [ClinicalRecordController::class, 'show'])
         ->name('clinical-records.show');
+    Route::get('/pacientes/{patient}/expediente-clinico/editar', [ClinicalRecordController::class, 'edit'])
+        ->name('clinical-records.edit');
     Route::put('/pacientes/{patient}/expediente-clinico', [ClinicalRecordController::class, 'update'])
         ->name('clinical-records.update');
 
