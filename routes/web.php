@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentAvailabilityController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CenterConfigurationController;
@@ -28,6 +29,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('/agenda', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('/agenda/disponibilidad', AppointmentAvailabilityController::class)->name('appointments.availability');
     Route::get('/agenda/citas/crear', [AppointmentController::class, 'create'])->name('appointments.create');
     Route::post('/agenda/citas', [AppointmentController::class, 'store'])->name('appointments.store');
     Route::get('/agenda/citas/{appointment}/editar', [AppointmentController::class, 'edit'])->name('appointments.edit');

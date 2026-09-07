@@ -80,6 +80,12 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Navegación temporal de agenda con acciones Anterior, Hoy y Siguiente, selector directo de fecha y acceso desde el calendario mensual a la vista diaria.
 - Pantalla dedicada de ausencias y bloqueos de terapeutas, accesible desde el listado y la ficha sin entrar a Editar terapeuta.
 - Sistema visual clínico más consistente y colorido aplicado a agenda, dashboard, pacientes, responsables, expediente clínico, terapeutas, terapias, usuarios, roles y configuración del centro.
+- Series de citas recurrentes semanales acotadas por fecha, persistidas como `appointment_series` y materializadas en citas individuales vinculadas.
+- Validación previa y atómica de todas las ocurrencias de una serie para impedir creación parcial ante conflictos de horario, disponibilidad, bloqueos o traslapes.
+- Edición y cancelación de citas recurrentes con alcance `solo esta`, `esta y siguientes` y `toda la serie`.
+- Consulta asistida de disponibilidad para nuevas citas, cruzando horario del centro, duración de terapia, disponibilidad semanal, ausencias/bloqueos, citas existentes y cantidad de terapeutas requeridos.
+- Selección guiada de horario y terapeutas disponibles antes de guardar una cita, manteniendo la validación definitiva en backend.
+- Cobertura automatizada específica para recurrencia, rollback atómico, disponibilidad de horarios y capacidad de terapeutas.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -99,3 +105,5 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-13 refina el sistema visual y la navegación de agenda sin ampliar implícitamente permisos ni reglas clínicas existentes.
 - El registro de ausencias/bloqueos deja de formar parte de Editar terapeuta y pasa a un flujo independiente enfocado en disponibilidad extraordinaria.
 - La edición del expediente clínico adopta la misma jerarquía visual por secciones utilizada en la vista de consulta.
+- URPE-14 convierte la programación recurrente en una operación de dominio explícita y auditable, sin reemplazar las reglas de `AppointmentScheduler`.
+- El formulario de nueva cita deja de depender de prueba y error para encontrar disponibilidad y pasa a un flujo asistido por fecha, horarios válidos y terapeutas disponibles.

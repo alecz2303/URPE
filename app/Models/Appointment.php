@@ -17,6 +17,8 @@ class Appointment extends Model
     protected $fillable = [
         'patient_id',
         'therapy_id',
+        'appointment_series_id',
+        'series_occurrence',
         'starts_at',
         'ends_at',
         'duration_minutes',
@@ -35,6 +37,7 @@ class Appointment extends Model
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
             'duration_minutes' => 'integer',
+            'series_occurrence' => 'integer',
             'cancelled_at' => 'datetime',
         ];
     }
@@ -49,6 +52,11 @@ class Appointment extends Model
         return $this->belongsTo(Therapy::class);
     }
 
+    public function series(): BelongsTo
+    {
+        return $this->belongsTo(AppointmentSeries::class, 'appointment_series_id');
+    }
+
     public function therapists(): BelongsToMany
     {
         return $this->belongsToMany(Therapist::class)->withTimestamps();
@@ -57,5 +65,10 @@ class Appointment extends Model
     public function isCancelled(): bool
     {
         return $this->status === self::STATUS_CANCELLED;
+    }
+
+    public function isRecurring(): bool
+    {
+        return $this->appointment_series_id !== null;
     }
 }

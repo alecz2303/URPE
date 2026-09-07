@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Appointment;
+use App\Models\AppointmentSeries;
 use App\Models\Patient;
 use App\Models\Therapist;
 use App\Models\Therapy;
@@ -26,14 +27,18 @@ class AppointmentScheduler
         array $therapistIds,
         CarbonInterface $startsAt,
         User $actor,
+        ?AppointmentSeries $series = null,
+        ?int $seriesOccurrence = null,
     ): Appointment {
         $this->assertSelectableEntities($patient, $therapy);
         [$therapists, $endsAt] = $this->validateSchedule($therapy, $therapistIds, $startsAt);
 
-        return DB::transaction(function () use ($patient, $therapy, $therapists, $startsAt, $endsAt, $actor): Appointment {
+        return DB::transaction(function () use ($patient, $therapy, $therapists, $startsAt, $endsAt, $actor, $series, $seriesOccurrence): Appointment {
             $appointment = Appointment::query()->create([
                 'patient_id' => $patient->id,
                 'therapy_id' => $therapy->id,
+                'appointment_series_id' => $series?->id,
+                'series_occurrence' => $seriesOccurrence,
                 'starts_at' => $startsAt,
                 'ends_at' => $endsAt,
                 'duration_minutes' => $therapy->duration_minutes,
@@ -45,13 +50,26 @@ class AppointmentScheduler
             $this->audit->record('appointment.created', $appointment, [
                 'patient_id' => $patient->id,
                 'therapy_id' => $therapy->id,
+                'appointment_series_id' => $series?->id,
+                'series_occurrence' => $seriesOccurrence,
                 'therapist_ids' => $therapists->pluck('id')->values()->all(),
                 'starts_at' => $startsAt->toIso8601String(),
                 'ends_at' => $endsAt->toIso8601String(),
             ], $actor);
 
-            return $appointment->load(['patient', 'therapy', 'therapists']);
+            return $appointment->load(['patient', 'therapy', 'therapists', 'series']);
         });
+    }
+
+    public function validateCandidate(
+        Patient $patient,
+        Therapy $therapy,
+        array $therapistIds,
+        CarbonInterface $startsAt,
+        array $ignoreAppointmentIds = [],
+    ): void {
+        $this->assertSelectableEntities($patient, $therapy);
+        $this->validateSchedule($therapy, $therapistIds, $startsAt, $ignoreAppointmentIds);
     }
 
     public function reschedule(
@@ -60,6 +78,7 @@ class AppointmentScheduler
         array $therapistIds,
         CarbonInterface $startsAt,
         User $actor,
+        array $ignoreAppointmentIds = [],
     ): Appointment {
         if ($appointment->isCancelled()) {
             throw ValidationException::withMessages(['appointment' => 'Una cita cancelada no puede reprogramarse.']);
@@ -67,7 +86,13 @@ class AppointmentScheduler
 
         $appointment->loadMissing('patient');
         $this->assertSelectableEntities($appointment->patient, $therapy);
-        [$therapists, $endsAt] = $this->validateSchedule($therapy, $therapistIds, $startsAt, $appointment);
+        $ignoreAppointmentIds = collect($ignoreAppointmentIds)
+            ->push($appointment->id)
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values()
+            ->all();
+        [$therapists, $endsAt] = $this->validateSchedule($therapy, $therapistIds, $startsAt, $ignoreAppointmentIds);
 
         return DB::transaction(function () use ($appointment, $therapy, $therapists, $startsAt, $endsAt, $actor): Appointment {
             $previous = [
@@ -93,7 +118,7 @@ class AppointmentScheduler
                 'therapist_ids' => $therapists->pluck('id')->values()->all(),
             ], $actor);
 
-            return $appointment->refresh()->load(['patient', 'therapy', 'therapists']);
+            return $appointment->refresh()->load(['patient', 'therapy', 'therapists', 'series']);
         });
     }
 
@@ -132,7 +157,7 @@ class AppointmentScheduler
         Therapy $therapy,
         array $therapistIds,
         CarbonInterface $startsAt,
-        ?Appointment $ignoreAppointment = null,
+        array $ignoreAppointmentIds = [],
     ): array {
         $therapistIds = collect($therapistIds)->map(fn ($id) => (int) $id)->unique()->values();
 
@@ -149,6 +174,7 @@ class AppointmentScheduler
 
         $start = CarbonImmutable::instance($startsAt);
         $endsAt = $start->addMinutes($therapy->duration_minutes);
+        $ignoreAppointmentIds = collect($ignoreAppointmentIds)->map(fn ($id) => (int) $id)->unique()->values()->all();
 
         if (! $start->isSameDay($endsAt)) {
             throw ValidationException::withMessages(['starts_at' => 'La cita debe iniciar y terminar el mismo día.']);
@@ -163,7 +189,7 @@ class AppointmentScheduler
 
             $overlap = Appointment::query()
                 ->where('status', '!=', Appointment::STATUS_CANCELLED)
-                ->when($ignoreAppointment, fn ($query) => $query->whereKeyNot($ignoreAppointment->id))
+                ->when($ignoreAppointmentIds !== [], fn ($query) => $query->whereNotIn('id', $ignoreAppointmentIds))
                 ->where('starts_at', '<', $endsAt)
                 ->where('ends_at', '>', $start)
                 ->whereHas('therapists', fn ($query) => $query->whereKey($therapist->id))

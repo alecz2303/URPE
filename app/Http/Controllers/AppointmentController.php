@@ -7,6 +7,7 @@ use App\Models\Patient;
 use App\Models\Therapist;
 use App\Models\Therapy;
 use App\Services\AppointmentScheduler;
+use App\Services\RecurringAppointmentScheduler;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +33,7 @@ class AppointmentController extends Controller
         };
 
         $appointments = Appointment::query()
-            ->with(['patient', 'therapy', 'therapists'])
+            ->with(['patient', 'therapy', 'therapists', 'series'])
             ->whereBetween('starts_at', [$rangeStart, $rangeEnd])
             ->orderBy('starts_at')
             ->get();
@@ -66,8 +67,11 @@ class AppointmentController extends Controller
         return view('appointments.create', $this->formData());
     }
 
-    public function store(Request $request, AppointmentScheduler $scheduler): RedirectResponse
-    {
+    public function store(
+        Request $request,
+        AppointmentScheduler $scheduler,
+        RecurringAppointmentScheduler $recurringScheduler,
+    ): RedirectResponse {
         Gate::authorize('appointments.manage');
 
         $data = $request->validate([
@@ -76,13 +80,39 @@ class AppointmentController extends Controller
             'therapist_ids' => ['required', 'array', 'min:1'],
             'therapist_ids.*' => ['integer', 'distinct', 'exists:therapists,id'],
             'starts_at' => ['required', 'date_format:Y-m-d\TH:i'],
+            'recurrence_enabled' => ['nullable', 'boolean'],
+            'recurrence_weekdays' => ['required_if:recurrence_enabled,1', 'array', 'min:1'],
+            'recurrence_weekdays.*' => ['integer', 'between:1,7', 'distinct'],
+            'recurrence_ends_on' => ['required_if:recurrence_enabled,1', 'nullable', 'date_format:Y-m-d'],
         ]);
 
+        $patient = Patient::query()->findOrFail($data['patient_id']);
+        $therapy = Therapy::query()->findOrFail($data['therapy_id']);
+        $startsAt = CarbonImmutable::createFromFormat('Y-m-d\TH:i', $data['starts_at']);
+
+        if ((bool) ($data['recurrence_enabled'] ?? false)) {
+            $series = $recurringScheduler->createWeeklySeries(
+                $patient,
+                $therapy,
+                $data['therapist_ids'],
+                $startsAt,
+                CarbonImmutable::createFromFormat('Y-m-d', $data['recurrence_ends_on']),
+                $data['recurrence_weekdays'],
+                $request->user(),
+            );
+
+            $firstAppointment = $series->appointments->first();
+
+            return redirect()
+                ->route('appointments.index', ['view' => 'day', 'date' => $firstAppointment->starts_at->toDateString()])
+                ->with('success', "Serie recurrente creada correctamente con {$series->appointments->count()} citas.");
+        }
+
         $appointment = $scheduler->create(
-            Patient::query()->findOrFail($data['patient_id']),
-            Therapy::query()->findOrFail($data['therapy_id']),
+            $patient,
+            $therapy,
             $data['therapist_ids'],
-            CarbonImmutable::createFromFormat('Y-m-d\TH:i', $data['starts_at']),
+            $startsAt,
             $request->user(),
         );
 
@@ -95,7 +125,7 @@ class AppointmentController extends Controller
     {
         Gate::authorize('appointments.manage');
 
-        $appointment->load(['patient', 'therapy', 'therapists']);
+        $appointment->load(['patient', 'therapy', 'therapists', 'series']);
 
         return view('appointments.edit', array_merge(
             $this->formData(),
@@ -103,8 +133,12 @@ class AppointmentController extends Controller
         ));
     }
 
-    public function update(Request $request, Appointment $appointment, AppointmentScheduler $scheduler): RedirectResponse
-    {
+    public function update(
+        Request $request,
+        Appointment $appointment,
+        AppointmentScheduler $scheduler,
+        RecurringAppointmentScheduler $recurringScheduler,
+    ): RedirectResponse {
         Gate::authorize('appointments.manage');
 
         $data = $request->validate([
@@ -112,32 +146,80 @@ class AppointmentController extends Controller
             'therapist_ids' => ['required', 'array', 'min:1'],
             'therapist_ids.*' => ['integer', 'distinct', 'exists:therapists,id'],
             'starts_at' => ['required', 'date_format:Y-m-d\TH:i'],
+            'scope' => ['nullable', 'in:single,following,series'],
         ]);
 
-        $scheduler->reschedule(
-            $appointment,
-            Therapy::query()->findOrFail($data['therapy_id']),
-            $data['therapist_ids'],
-            CarbonImmutable::createFromFormat('Y-m-d\TH:i', $data['starts_at']),
-            $request->user(),
-        );
+        $therapy = Therapy::query()->findOrFail($data['therapy_id']);
+        $startsAt = CarbonImmutable::createFromFormat('Y-m-d\TH:i', $data['starts_at']);
+        $scope = $appointment->isRecurring()
+            ? ($data['scope'] ?? RecurringAppointmentScheduler::SCOPE_SINGLE)
+            : RecurringAppointmentScheduler::SCOPE_SINGLE;
+
+        if ($appointment->isRecurring()) {
+            $updated = $recurringScheduler->rescheduleScope(
+                $appointment,
+                $therapy,
+                $data['therapist_ids'],
+                $startsAt,
+                $scope,
+                $request->user(),
+            );
+            $message = match ($scope) {
+                RecurringAppointmentScheduler::SCOPE_FOLLOWING => "Se reprogramaron {$updated->count()} citas desde esta sesión.",
+                RecurringAppointmentScheduler::SCOPE_SERIES => "Se reprogramaron {$updated->count()} citas de la serie.",
+                default => 'Cita reprogramada correctamente.',
+            };
+        } else {
+            $scheduler->reschedule(
+                $appointment,
+                $therapy,
+                $data['therapist_ids'],
+                $startsAt,
+                $request->user(),
+            );
+            $message = 'Cita reprogramada correctamente.';
+        }
 
         return redirect()
-            ->route('appointments.index', ['view' => 'day', 'date' => $data['starts_at'] ? substr($data['starts_at'], 0, 10) : now()->toDateString()])
-            ->with('success', 'Cita reprogramada correctamente.');
+            ->route('appointments.index', ['view' => 'day', 'date' => $startsAt->toDateString()])
+            ->with('success', $message);
     }
 
-    public function cancel(Request $request, Appointment $appointment, AppointmentScheduler $scheduler): RedirectResponse
-    {
+    public function cancel(
+        Request $request,
+        Appointment $appointment,
+        AppointmentScheduler $scheduler,
+        RecurringAppointmentScheduler $recurringScheduler,
+    ): RedirectResponse {
         Gate::authorize('appointments.manage');
 
         $data = $request->validate([
             'cancellation_reason' => ['nullable', 'string', 'max:1000'],
+            'scope' => ['nullable', 'in:single,following,series'],
         ]);
 
-        $scheduler->cancel($appointment, $data['cancellation_reason'] ?? null, $request->user());
+        $scope = $appointment->isRecurring()
+            ? ($data['scope'] ?? RecurringAppointmentScheduler::SCOPE_SINGLE)
+            : RecurringAppointmentScheduler::SCOPE_SINGLE;
 
-        return back()->with('success', 'Cita cancelada correctamente.');
+        if ($appointment->isRecurring()) {
+            $cancelled = $recurringScheduler->cancelScope(
+                $appointment,
+                $data['cancellation_reason'] ?? null,
+                $scope,
+                $request->user(),
+            );
+            $message = match ($scope) {
+                RecurringAppointmentScheduler::SCOPE_FOLLOWING => "Se cancelaron {$cancelled->count()} citas desde esta sesión.",
+                RecurringAppointmentScheduler::SCOPE_SERIES => "Se cancelaron {$cancelled->count()} citas de la serie.",
+                default => 'Cita cancelada correctamente.',
+            };
+        } else {
+            $scheduler->cancel($appointment, $data['cancellation_reason'] ?? null, $request->user());
+            $message = 'Cita cancelada correctamente.';
+        }
+
+        return back()->with('success', $message);
     }
 
     private function formData(): array

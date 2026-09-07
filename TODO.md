@@ -218,7 +218,7 @@
 - [x] PR #13 aprobado por `aruedaboldr`, rebase merge y Test #332 post-merge verde.
 - [x] Jira URPE-12 cerrado en Listo.
 
-## URPE-13 — Refresh visual y navegación de agenda — EN CURSO
+## URPE-13 — Refresh visual y navegación de agenda — CERRADO
 
 - [x] Aplicar un sistema visual más alegre, luminoso y consistente sin perder legibilidad clínica.
 - [x] Refinar dashboard, pacientes, responsables, terapeutas, terapias, usuarios, roles, expediente clínico y configuración del centro.
@@ -231,8 +231,27 @@
 - [x] Mantener validaciones, auditoría y reglas de disponibilidad existentes para bloqueos.
 - [x] Actualizar pruebas de agenda y flujo dedicado de bloqueos.
 - [x] Actualizar ROADMAP, CHANGELOG y TODO con el alcance real de URPE-13.
-- [x] CI de trabajo verde hasta Test #371.
-- [ ] Completar auditoría final del diff.
+- [x] Consolidación a un commit, PR #14, aprobación de `aruedaboldr`, rebase merge y Test #376 post-merge verde.
+- [x] Jira URPE-13 cerrado en Listo.
+
+## URPE-14 — Citas recurrentes y disponibilidad asistida — EN CURSO
+
+- [x] Crear persistencia para series recurrentes y vínculo con ocurrencias individuales.
+- [x] Implementar recurrencia semanal acotada por fecha final y uno o varios días de semana.
+- [x] Reutilizar `AppointmentScheduler` para todas las reglas clínicas de cada ocurrencia.
+- [x] Validar la serie completa antes de crearla y abortar atómicamente ante cualquier conflicto.
+- [x] Mostrar fechas concretas que presentan conflicto durante la creación recurrente.
+- [x] Incorporar consulta de horarios disponibles según centro, duración de terapia, disponibilidad, bloqueos, citas existentes y capacidad de terapeutas.
+- [x] Guiar el flujo de nueva cita como Fecha → Horario disponible → Terapeutas disponibles.
+- [x] Mantener validación definitiva de backend al guardar aunque el horario haya sido consultado previamente.
+- [x] Implementar alcance de edición recurrente: Solo esta / Esta y siguientes / Toda la serie.
+- [x] Implementar alcance de cancelación recurrente con las mismas tres opciones.
+- [x] Validar atómicamente las operaciones masivas antes de modificar varias ocurrencias.
+- [x] Auditar creación y operaciones de serie sin duplicar contenido clínico sensible.
+- [x] Cubrir recurrencia, conflictos, rollback, disponibilidad y capacidad de terapeutas mediante tests.
+- [x] CI de implementación verde hasta Test #395.
+- [x] Actualizar ROADMAP, CHANGELOG, BUSINESS_RULES, DATABASE y TODO con el alcance real de URPE-14.
+- [ ] Completar auditoría final del diff y regresión UX.
 - [ ] Consolidar la rama a exactamente un commit sobre `master` actualizado.
 - [ ] Validar CI verde sobre el SHA consolidado y abrir PR.
 - [ ] Solicitar revisión de `aruedaboldr`, verificar CI del PR y dejar listo para aprobación humana.
@@ -248,8 +267,10 @@
 - [x] Pacientes y tutores/responsables. *(URPE-9 cerrado; presentación refinada en URPE-13)*
 - [x] Agenda/calendario clínico base. *(URPE-11 cerrado; UX refinada en URPE-12 y URPE-13)*
 - [x] Reglas base de disponibilidad y colisiones. *(URPE-11)*
-- [ ] Citas recurrentes y estados operativos ampliados.
-- [x] Reprogramación y cancelación base. *(URPE-11)*
+- [x] Citas recurrentes. *(URPE-14)*
+- [ ] Estados operativos ampliados.
+- [x] Reprogramación y cancelación base. *(URPE-11; alcance por serie en URPE-14)*
+- [x] Consulta asistida de horarios y terapeutas disponibles. *(URPE-14)*
 - [x] Expediente clínico digital base. *(URPE-10 cerrado; UX separada en URPE-12 y refinada en URPE-13)*
 - [ ] Documentos, imágenes, radiografías y estudios vinculados al expediente.
 - [ ] Bitácoras/evolución de sesiones.
