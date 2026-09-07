@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Therapist extends Model
@@ -44,5 +45,10 @@ class Therapist extends Model
     public function blocks(): HasMany
     {
         return $this->hasMany(TherapistBlock::class);
+    }
+
+    public function appointments(): BelongsToMany
+    {
+        return $this->belongsToMany(Appointment::class)->withTimestamps();
     }
 }

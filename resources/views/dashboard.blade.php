@@ -41,7 +41,7 @@
         <section class="rounded-3xl bg-gradient-to-r from-cyan-700 to-teal-700 p-8 text-white shadow-lg shadow-cyan-900/10 sm:p-10">
             <p class="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-100">Acceso confirmado</p>
             <h2 class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">Bienvenido, {{ auth()->user()->name }}.</h2>
-            <p class="mt-4 max-w-2xl text-cyan-50/90">URPE Gestión Clínica ya cuenta con autenticación y autorización granular. Los módulos clínicos se incorporarán de forma progresiva según el Roadmap.</p>
+            <p class="mt-4 max-w-2xl text-cyan-50/90">URPE Gestión Clínica integra seguridad granular, estructura clínica y agenda operativa según los permisos de tu cuenta.</p>
         </section>
 
         @if(auth()->user()->can('users.view') || auth()->user()->can('roles.view') || auth()->user()->can('center.manage') || auth()->user()->can('therapists.manage') || auth()->user()->can('therapies.manage') || auth()->user()->can('patients.view'))
@@ -71,7 +71,7 @@
                         <a href="{{ route('center.edit') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
                             <p class="text-sm font-semibold text-cyan-700">Centro</p>
                             <h4 class="mt-2 text-lg font-bold">Configuración y horarios</h4>
-                            <p class="mt-2 text-sm leading-6 text-slate-500">Administra datos operativos y el horario semanal que usará la futura agenda.</p>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Administra datos operativos y el horario semanal que utiliza la agenda.</p>
                         </a>
                     @endcan
 
@@ -95,7 +95,7 @@
                         <a href="{{ route('patients.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
                             <p class="text-sm font-semibold text-cyan-700">Pacientes</p>
                             <h4 class="mt-2 text-lg font-bold">Pacientes y responsables</h4>
-                            <p class="mt-2 text-sm leading-6 text-slate-500">Consulta datos administrativos, responsables vinculados y contacto principal.</p>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Consulta datos administrativos, responsables vinculados y expediente clínico.</p>
                         </a>
                     @endcan
                 </div>
@@ -103,17 +103,21 @@
         @endif
 
         <section class="mt-8 grid gap-5 md:grid-cols-3">
-            <article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <p class="text-sm font-semibold text-cyan-700">Agenda</p>
-                <h3 class="mt-2 text-lg font-bold">Próximamente</h3>
-                <p class="mt-2 text-sm leading-6 text-slate-500">Calendario clínico, disponibilidad y citas.</p>
-            </article>
+            @can('appointments.view')
+                <a href="{{ route('appointments.index') }}" data-testid="agenda-dashboard-card" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
+                    <p class="text-sm font-semibold text-cyan-700">Agenda</p>
+                    <h3 class="mt-2 text-lg font-bold">Abrir agenda clínica</h3>
+                    <p class="mt-2 text-sm leading-6 text-slate-500">Consulta citas por día, semana o mes y administra la programación según tus permisos.</p>
+                </a>
+            @endcan
 
-            <article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-                <p class="text-sm font-semibold text-cyan-700">Expediente clínico</p>
-                <h3 class="mt-2 text-lg font-bold">Próximamente</h3>
-                <p class="mt-2 text-sm leading-6 text-slate-500">Historia clínica, documentos y evolución terapéutica.</p>
-            </article>
+            @can('patients.view')
+                <a href="{{ route('patients.index') }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:ring-cyan-300">
+                    <p class="text-sm font-semibold text-cyan-700">Expediente clínico</p>
+                    <h3 class="mt-2 text-lg font-bold">Disponible desde Pacientes</h3>
+                    <p class="mt-2 text-sm leading-6 text-slate-500">Accede al expediente clínico base desde el contexto del paciente autorizado.</p>
+                </a>
+            @endcan
 
             <article class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
                 <p class="text-sm font-semibold text-cyan-700">Seguridad</p>

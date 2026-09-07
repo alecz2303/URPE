@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CenterConfigurationController;
 use App\Http\Controllers\ClinicalFileController;
@@ -21,6 +22,13 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
+
+    Route::get('/agenda', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('/agenda/citas/crear', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/agenda/citas', [AppointmentController::class, 'store'])->name('appointments.store');
+    Route::get('/agenda/citas/{appointment}/editar', [AppointmentController::class, 'edit'])->name('appointments.edit');
+    Route::put('/agenda/citas/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
+    Route::patch('/agenda/citas/{appointment}/cancelar', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
 
     Route::get('/usuarios', [UserController::class, 'index'])->name('users.index');
     Route::get('/usuarios/crear', [UserController::class, 'create'])->name('users.create');
