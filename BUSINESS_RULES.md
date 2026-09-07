@@ -130,17 +130,28 @@
 
 **BR-064.** Crear, reprogramar y cancelar citas deben generar eventos de auditoría con identificadores y tiempos necesarios para trazabilidad, evitando payloads clínicos o motivos sensibles completos.
 
+**BR-065.** Una serie recurrente semanal debe tener fecha inicial, fecha final y al menos un día de la semana; no se permiten series abiertas o infinitas en V1.
+
+**BR-066.** Cada ocurrencia de una serie recurrente se persiste como una cita individual y conserva las mismas validaciones de horario, disponibilidad, bloqueos, cantidad de terapeutas y traslapes que una cita ordinaria.
+
+**BR-067.** La creación de una serie recurrente es atómica: si alguna ocurrencia no es válida, no debe persistirse ninguna cita de esa serie.
+
+**BR-068.** Las citas de una serie pueden editarse o cancelarse con alcance `solo esta cita`, `esta y las siguientes` o `toda la serie`; las operaciones sobre múltiples ocurrencias deben validarse completas antes de persistir cambios.
+
+**BR-069.** El flujo de creación de citas debe poder consultar horarios candidatos y terapeutas disponibles antes de guardar, usando las mismas restricciones de agenda como ayuda operativa; la validación final del backend sigue siendo obligatoria al persistir.
+
+**BR-070.** Un horario solo se presenta como disponible para una terapia cuando existe capacidad simultánea de al menos `required_therapists` terapeutas activos durante todo el intervalo calculado.
+
 ## Decisiones abiertas
 
 Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:
 
 - **BR-P01:** edición de bitácora tras cierre/firma.
 - **BR-P02:** quién puede corregir información clínica y mediante qué mecanismo.
-- **BR-P03:** comportamiento de series recurrentes al editar una ocurrencia.
 - **BR-P04:** efecto de cambiar duración/configuración de terapia sobre citas ya existentes.
 - **BR-P05:** Pediasuit requiere exactamente 2 terapeutas o mínimo 2. *(URPE-11 adopta exactamente `required_therapists` como baseline; revisar solo si negocio cambia la semántica futura.)*
 - **BR-P06:** campos clínicos visibles para Recepción.
 - **BR-P07:** pacientes visibles para Terapeuta según cita/asignación.
 - **BR-P08:** mecanismo y permisos para excepciones de citas fuera del horario operativo, si se aprueban.
-- **BR-P09:** asignación de terapeutas manual, automática o mixta.
+- **BR-P09:** asignación de terapeutas manual, automática o mixta. *(URPE-14 mantiene selección manual asistida por disponibilidad; revisar solo si se desea asignación totalmente automática.)*
 - **BR-P10:** cualificaciones requeridas por terapia, si aplican.

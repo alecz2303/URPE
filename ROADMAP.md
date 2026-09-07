@@ -22,18 +22,19 @@
 ## Fase 3 — Agenda / calendario — prioridad crítica
 
 1. [x] Vista día/semana/mes y dashboard. *(URPE-11 base funcional; URPE-12 presentación UX diferenciada; URPE-13 navegación temporal y refinamiento visual)*
-2. [x] Crear, editar, reprogramar y cancelar citas. *(URPE-11)*
+2. [x] Crear, editar, reprogramar y cancelar citas. *(URPE-11; URPE-14 agrega alcance por serie recurrente)*
 3. [x] Duración automática según terapia. *(URPE-11)*
 4. [x] Asignación de uno o varios terapeutas. *(URPE-11)*
 5. [x] Validación de horario operativo del centro durante toda la cita. *(URPE-11)*
-6. [x] Validación de disponibilidad de todos los terapeutas requeridos durante toda la cita. *(URPE-11)*
+6. [x] Validación de disponibilidad de todos los terapeutas requeridos durante toda la cita. *(URPE-11; URPE-14 agrega consulta anticipada de horarios y terapeutas disponibles)*
 7. [x] Prevención de traslapes. *(URPE-11)*
-8. [ ] Citas recurrentes.
+8. [x] Citas recurrentes. *(URPE-14: series semanales acotadas, ocurrencias individuales, validación atómica y edición/cancelación por alcance)*
 9. [x] Ausencias, bloqueos y descansos como restricciones de agenda. *(URPE-11 reutiliza baseline URPE-7; URPE-13 agrega acceso dedicado fuera de la edición del terapeuta)*
 10. [ ] Estados y filtros operativos ampliados.
-11. [x] Historial básico auditable de creación, reprogramación y cancelación. *(URPE-11)*
+11. [x] Historial básico auditable de creación, reprogramación y cancelación. *(URPE-11; URPE-14 agrega auditoría de operaciones sobre series)*
 12. [x] Presentación diferenciada: día cronológico, semana por columnas y mes en calendario. *(URPE-12)*
 13. [x] Navegación anterior/hoy/siguiente, selector de fecha y acceso de mes a día. *(URPE-13)*
+14. [x] Selector asistido de disponibilidad para nuevas citas. *(URPE-14: fecha → horarios válidos → terapeutas disponibles)*
 
 ## Fase 4 — Expediente y evolución
 
