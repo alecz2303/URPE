@@ -1,28 +1,30 @@
 <x-app-shell title="Editar terapeuta" eyebrow="Equipo clínico">
-    <x-slot:actions><a href="{{ route('therapists.show', $therapist) }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 hover:border-cyan-300 hover:text-cyan-800">Ver perfil</a></x-slot:actions>
+    <x-slot:actions>
+        <a href="{{ route('therapists.blocks.index', $therapist) }}" class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-bold text-amber-800 shadow-sm hover:bg-amber-100">Ausencias y bloqueos</a>
+        <a href="{{ route('therapists.show', $therapist) }}" class="rounded-xl border border-emerald-200 bg-white px-4 py-2.5 text-sm font-bold text-emerald-800 shadow-sm hover:bg-emerald-50">Ver perfil</a>
+    </x-slot:actions>
 
-    <form method="POST" action="{{ route('therapists.update', $therapist) }}" data-swal-confirm data-swal-title="¿Guardar cambios?" data-swal-text="Se actualizará el perfil y la disponibilidad semanal del terapeuta." data-swal-confirm-text="Sí, guardar">
+    <div class="mb-6 overflow-hidden rounded-3xl border border-violet-200 bg-gradient-to-r from-violet-50 via-fuchsia-50 to-cyan-50 shadow-sm">
+        <div class="h-1.5 bg-gradient-to-r from-violet-500 via-fuchsia-400 to-cyan-400"></div>
+        <div class="px-6 py-5 sm:px-7">
+            <span class="inline-flex rounded-full bg-white/80 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-violet-700 ring-1 ring-violet-200">Perfil clínico</span>
+            <h2 class="mt-3 text-xl font-black text-slate-900">{{ $therapist->name }}</h2>
+            <p class="mt-2 text-sm leading-6 text-slate-600">Actualiza sus datos profesionales y disponibilidad semanal. Las ausencias y bloqueos se administran ahora desde su acceso independiente.</p>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ route('therapists.update', $therapist) }}" class="overflow-hidden rounded-3xl border border-violet-100 bg-white shadow-sm" data-swal-confirm data-swal-title="¿Guardar cambios?" data-swal-text="Se actualizará el perfil y la disponibilidad semanal del terapeuta." data-swal-confirm-text="Sí, guardar">
         @csrf
         @method('PUT')
-        @include('therapists._form')
-        <div class="mt-8 flex justify-end"><button type="submit" class="rounded-xl bg-cyan-700 px-5 py-3 text-sm font-bold text-white shadow-sm hover:bg-cyan-800">Guardar cambios</button></div>
-    </form>
-
-    <section class="mt-8 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
-        <form method="POST" action="{{ route('therapists.blocks.store', $therapist) }}" class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm" data-swal-confirm data-swal-title="¿Registrar bloqueo?" data-swal-text="El terapeuta quedará no disponible durante el intervalo indicado." data-swal-confirm-text="Sí, registrar">
-            @csrf
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-cyan-700">Ausencias y bloqueos</p><h2 class="mt-1 text-xl font-bold">Nuevo bloqueo</h2><p class="mt-2 text-sm text-slate-500">Vacaciones, permisos, reuniones u otros periodos no disponibles.</p>
-            <div class="mt-6 space-y-4">
-                <label class="block"><span class="text-sm font-semibold text-slate-700">Inicio</span><input type="datetime-local" name="starts_at" value="{{ old('starts_at') }}" required class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm"></label>
-                <label class="block"><span class="text-sm font-semibold text-slate-700">Fin</span><input type="datetime-local" name="ends_at" value="{{ old('ends_at') }}" required class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm"></label>
-                <label class="block"><span class="text-sm font-semibold text-slate-700">Motivo</span><textarea name="reason" rows="3" maxlength="500" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">{{ old('reason') }}</textarea></label>
-                <button type="submit" class="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white hover:bg-slate-800">Registrar bloqueo</button>
+        <div class="border-b border-violet-100 bg-gradient-to-r from-violet-50/80 to-white px-6 py-4 sm:px-8">
+            <p class="text-xs font-bold uppercase tracking-[0.14em] text-violet-700">Perfil y disponibilidad</p>
+        </div>
+        <div class="p-6 sm:p-8">
+            @include('therapists._form')
+            <div class="mt-8 flex flex-wrap justify-end gap-3 border-t border-violet-100 pt-6">
+                <a href="{{ route('therapists.blocks.index', $therapist) }}" class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-800 hover:bg-amber-100">Gestionar ausencias</a>
+                <button type="submit" class="rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-3 text-sm font-bold text-white shadow-sm hover:from-violet-700 hover:to-fuchsia-700">Guardar cambios</button>
             </div>
-        </form>
-
-        <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <p class="text-xs font-bold uppercase tracking-[0.18em] text-cyan-700">Historial operativo</p><h2 class="mt-1 text-xl font-bold">Bloqueos registrados</h2>
-            <div class="mt-6 space-y-3">@forelse($therapist->blocks as $block)<article class="rounded-xl border border-slate-200 p-4"><p class="font-semibold">{{ $block->starts_at->format('d/m/Y H:i') }} — {{ $block->ends_at->format('d/m/Y H:i') }}</p><p class="mt-1 text-sm text-slate-500">{{ $block->reason ?: 'Sin motivo registrado.' }}</p></article>@empty<p class="rounded-xl bg-slate-50 p-5 text-sm text-slate-500">No hay bloqueos registrados para este terapeuta.</p>@endforelse</div>
-        </section>
-    </section>
+        </div>
+    </form>
 </x-app-shell>
