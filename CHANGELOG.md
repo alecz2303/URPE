@@ -74,4 +74,4 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-7 cerrado mediante PR #7, rebase merge y CI post-merge #161 verde.
 - URPE-8 cerrado mediante PR #8, rebase merge y CI post-merge #184 verde.
 - URPE-9 cerrado mediante PR #9, rebase merge y CI post-merge #216 verde.
-- URPE-10 implementado funcionalmente y validado en Laragon; pendiente squash/rebase, PR, aprobación, rebase merge, CI post-merge y cierre Jira.
+- URPE-10 cerrado técnicamente tras integración del commit `ee63f39` en `master` y CI post-merge Test #239 verde.
