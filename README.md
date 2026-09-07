@@ -7,14 +7,12 @@ Sistema web para la operación clínica de la Unidad de Rehabilitación Pediátr
 - Proyecto Jira: `URPE`
 - Repositorio: `alecz2303/URPE`
 - Rama estable: `master`
-- Rama activa: `URPE-4`
+- Rama activa: `URPE-15`
 - Stack base: Laravel 13 / PHP 8.4 / MySQL
 - Entorno local recomendado: Laragon
 - V1: alcance canónico aprobado
-- URPE-1: cerrado
-- URPE-2: cerrado
-- URPE-3: autenticación, cerrado
-- URPE-4: usuarios, roles y permisos granulares, en validación final
+- URPE-1 a URPE-14: cerrados e integrados en `master`
+- URPE-15: seeder opt-in para sitio de demostración, en curso
 
 ## Propósito
 
@@ -26,7 +24,7 @@ Centralizar agenda clínica, pacientes, expediente clínico digital, terapeutas,
 2. Configuración clínica importante no se hardcodea.
 3. Seguridad y auditoría se diseñan desde el inicio.
 4. `master` solo cambia mediante Pull Request con al menos 1 aprobación.
-5. Antes de integrar una tarea se realiza squash, rebase contra `master`, nueva ejecución de tests y el merge/rebase acordado.
+5. Antes de integrar una tarea se realiza squash/consolidación, sincronización contra `master`, nueva ejecución de tests y rebase merge.
 6. Jira gobierna el trabajo y Git cuenta la misma historia.
 7. No se inicia funcionalidad fuera del alcance aprobado.
 
@@ -91,16 +89,45 @@ php artisan urpe:grant-admin correo@ejemplo.test
 
 El comando es idempotente y evita depender de Tinker o de correos hardcodeados en seeders.
 
+## Sitio de demostración
+
+URPE incluye un seeder independiente para preparar una instancia de muestra sin contaminar el `DatabaseSeeder` normal:
+
+```bash
+php artisan db:seed --class=DemoSiteSeeder
+```
+
+El seeder configura:
+
+- horario del centro de lunes a viernes, 09:00–14:00 y 16:00–18:00;
+- Vojta, 40 minutos, 1 terapeuta;
+- Bipedestador, 40 minutos, 1 terapeuta;
+- Pediasuit, 60 minutos, 2 terapeutas;
+- Jonatham Zambrano y cuatro terapeutas genéricos;
+- disponibilidad semanal de los terapeutas alineada al horario del centro;
+- una cuenta interna activa con rol `Terapeuta` vinculada a cada perfil demo mediante `therapists.user_id`;
+- 12 pacientes ficticios con folios generados por la lógica normal de URPE.
+
+Cuentas demo de terapeutas:
+
+- `jonatham.zambrano@demo.urpe.test`
+- `terapeuta1@demo.urpe.test`
+- `terapeuta2@demo.urpe.test`
+- `terapeuta3@demo.urpe.test`
+- `terapeuta4@demo.urpe.test`
+
+La contraseña predeterminada del sitio demo es `UrpeDemo2026!`. Puede reemplazarse antes de ejecutar el seeder definiendo `URPE_DEMO_PASSWORD` en el `.env`. Esta credencial es exclusivamente para instancias de demostración y no debe utilizarse en producción.
+
+El vínculo usuario ↔ terapeuta permite identificar qué profesional autenticado corresponde al perfil operativo que participa en la agenda. Esa relación será la base para restringir la futura bitácora/evolución de sesión a los terapeutas autorizados y, cuando corresponda, a las citas en las que estén asignados.
+
+El seeder es opt-in y puede ejecutarse nuevamente sin duplicar sus registros de muestra estables.
+
 ## Testing
 
 La aplicación local y producción usan MySQL. La suite automática usa SQLite en memoria por defecto para aislamiento y velocidad mediante `phpunit.xml`.
 
 ## Estado técnico estable
 
-URPE-2 dejó integrado en `master` el bootstrap técnico, CI, configuración Laravel, runtime paths y lockfiles reproducibles.
+URPE-14 dejó integrada en `master` la agenda recurrente semanal, la validación atómica de series, la edición/cancelación por alcance y la disponibilidad asistida de horarios y terapeutas.
 
-URPE-3 dejó integrada la autenticación segura por sesión, login/logout, protección `guest`/`auth`, vistas base con Tailwind/Vite y pruebas de regresión. El cierre quedó validado en `master` por GitHub Actions Test #13.
-
-URPE-4 incorpora administración de usuarios, roles y permisos granulares mediante un RBAC propio de primera parte. La gestión de cuentas y la gestión de roles están separadas por permisos; las cuentas pueden activarse/desactivarse; una cuenta inactiva no puede iniciar sesión y una sesión ya abierta se invalida en la siguiente solicitud si la cuenta fue desactivada. Existe UI básica para usuarios y roles/permisos y cobertura automatizada de accesos permitidos y denegados. La suite local completa se encuentra en 41/41 pruebas verdes y GitHub Actions en Test #60 verde.
-
-Las reglas clínicas de alcance por paciente/terapeuta se formalizarán cuando existan las entidades de dominio correspondientes; no se concederá acceso clínico global por defecto.
+Las reglas clínicas de alcance por paciente/terapeuta se seguirán formalizando en los tickets correspondientes; no se concederá acceso clínico global por defecto.

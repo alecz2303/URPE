@@ -86,6 +86,8 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Consulta asistida de disponibilidad para nuevas citas, cruzando horario del centro, duración de terapia, disponibilidad semanal, ausencias/bloqueos, citas existentes y cantidad de terapeutas requeridos.
 - Selección guiada de horario y terapeutas disponibles antes de guardar una cita, manteniendo la validación definitiva en backend.
 - Cobertura automatizada específica para recurrencia, rollback atómico, disponibilidad de horarios y capacidad de terapeutas.
+- Seeder opt-in `DemoSiteSeeder` para preparar un sitio de muestra con horario URPE lunes-viernes 09:00–14:00 y 16:00–18:00, terapias Vojta/Bipedestador/Pediasuit, Jonatham Zambrano, cuatro terapeutas genéricos, disponibilidad compatible y 12 pacientes ficticios.
+- Cobertura automatizada de creación e idempotencia del seeder de demostración.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -107,3 +109,4 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - La edición del expediente clínico adopta la misma jerarquía visual por secciones utilizada en la vista de consulta.
 - URPE-14 convierte la programación recurrente en una operación de dominio explícita y auditable, sin reemplazar las reglas de `AppointmentScheduler`.
 - El formulario de nueva cita deja de depender de prueba y error para encontrar disponibilidad y pasa a un flujo asistido por fecha, horarios válidos y terapeutas disponibles.
+- URPE-15 mantiene el contenido demo fuera del `DatabaseSeeder` normal para que las instalaciones reales no reciban datos ficticios de forma accidental.
