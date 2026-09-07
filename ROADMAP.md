@@ -21,17 +21,17 @@
 
 ## Fase 3 — Agenda / calendario — prioridad crítica
 
-1. [ ] Vista día/semana/mes y dashboard.
-2. [ ] Crear, editar, reprogramar y cancelar citas.
-3. [ ] Duración automática según terapia.
-4. [ ] Asignación de uno o varios terapeutas.
-5. [ ] Validación de horario operativo del centro durante toda la cita.
-6. [ ] Validación de disponibilidad de todos los terapeutas requeridos durante toda la cita.
-7. [ ] Prevención de traslapes.
+1. [x] Vista día/semana/mes y dashboard. *(URPE-11)*
+2. [x] Crear, editar, reprogramar y cancelar citas. *(URPE-11)*
+3. [x] Duración automática según terapia. *(URPE-11)*
+4. [x] Asignación de uno o varios terapeutas. *(URPE-11)*
+5. [x] Validación de horario operativo del centro durante toda la cita. *(URPE-11)*
+6. [x] Validación de disponibilidad de todos los terapeutas requeridos durante toda la cita. *(URPE-11)*
+7. [x] Prevención de traslapes. *(URPE-11)*
 8. [ ] Citas recurrentes.
-9. [ ] Ausencias, bloqueos y descansos.
-10. [ ] Estados y filtros operativos.
-11. [ ] Historial básico de cambios.
+9. [x] Ausencias, bloqueos y descansos como restricciones de agenda. *(URPE-11 reutiliza baseline URPE-7)*
+10. [ ] Estados y filtros operativos ampliados.
+11. [x] Historial básico auditable de creación, reprogramación y cancelación. *(URPE-11)*
 
 ## Fase 4 — Expediente y evolución
 

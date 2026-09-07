@@ -63,6 +63,13 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Creación y actualización del expediente clínico con auditoría `clinical_record.created` y `clinical_record.updated` sin duplicar textos clínicos sensibles en metadata.
 - Integración de SweetAlert para feedback del expediente clínico.
 - Cobertura automatizada de persistencia uno-a-uno, autorización positiva/negativa, validación, auditoría, UI y acceso condicionado desde la ficha del paciente.
+- Agenda clínica base con persistencia de citas y relación muchos-a-muchos con terapeutas.
+- Vistas de agenda por día, semana y mes, accesibles desde el dashboard según `appointments.view`.
+- Creación, edición, reprogramación y cancelación lógica de citas protegidas por `appointments.manage`.
+- Duración y hora de término derivadas automáticamente de la terapia seleccionada.
+- Validación de cantidad requerida de terapeutas, estado activo de recursos, horario operativo del centro, disponibilidad individual, ausencias, bloqueos y colisiones.
+- Auditoría `appointment.created`, `appointment.rescheduled` y `appointment.cancelled` sin incluir motivos sensibles completos.
+- Cobertura automatizada de autorización, persistencia, duración, recursos requeridos, disponibilidad, colisiones, reprogramación y cancelación.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -75,3 +82,4 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-8 cerrado mediante PR #8, rebase merge y CI post-merge #184 verde.
 - URPE-9 cerrado mediante PR #9, rebase merge y CI post-merge #216 verde.
 - URPE-10 cerrado técnicamente tras integración del commit `ee63f39` en `master` y CI post-merge Test #239 verde.
+- URPE-11 completa el baseline funcional de agenda; recurrencias, no-show/finalización y estados/filtros ampliados permanecen para tareas posteriores.

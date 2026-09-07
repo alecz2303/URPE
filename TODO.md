@@ -177,6 +177,28 @@
 - [x] CI post-merge Test #239 verde en `master`.
 - [x] Cierre técnico confirmado.
 
+## URPE-11 — Agenda clínica base — EN REVISIÓN TÉCNICA
+
+- [x] Crear persistencia de citas y relación con uno o varios terapeutas.
+- [x] Vincular exactamente un paciente y una terapia por cita.
+- [x] Derivar duración y hora de término desde la terapia configurada.
+- [x] Exigir exactamente la cantidad de terapeutas configurada por la terapia.
+- [x] Rechazar paciente, terapia o terapeutas inactivos para nuevas programaciones.
+- [x] Validar intervalo completo contra horario operativo del centro.
+- [x] Validar disponibilidad, ausencias y bloqueos de todos los terapeutas asignados.
+- [x] Prevenir traslapes entre citas activas de un mismo terapeuta.
+- [x] Crear, editar y reprogramar citas autorizadas.
+- [x] Cancelar mediante estado sin eliminación destructiva.
+- [x] Implementar vistas día/semana/mes e integrar la agenda al dashboard.
+- [x] Proteger con `appointments.view` y `appointments.manage` sin autorización por nombre de rol.
+- [x] Auditar creación, reprogramación y cancelación sin payloads sensibles innecesarios.
+- [x] Integrar SweetAlert para confirmación y feedback.
+- [x] Cubrir permisos, persistencia, duración, terapeutas requeridos, colisiones, reprogramación y cancelación mediante tests.
+- [x] CI de rama verde antes del cierre documental (Test #264).
+- [x] Actualizar documentación canónica de URPE-11.
+- [ ] Consolidar rama a un único commit, validar CI final y abrir PR.
+- [ ] Revisión humana, rebase merge, CI post-merge y cierre Jira.
+
 ## V1 — Backlog canónico
 
 - [x] Autenticación y gestión de usuarios.
@@ -186,13 +208,14 @@
 - [x] Catálogo de terapeutas y disponibilidad. *(URPE-7 cerrado)*
 - [x] Catálogo de terapias configurable. *(URPE-8 cerrado)*
 - [x] Pacientes y tutores/responsables. *(URPE-9 cerrado)*
-- [ ] Agenda/calendario clínico.
-- [ ] Reglas de disponibilidad y colisiones.
-- [ ] Citas recurrentes, reprogramación y cancelación.
+- [x] Agenda/calendario clínico base. *(URPE-11)*
+- [x] Reglas base de disponibilidad y colisiones. *(URPE-11)*
+- [ ] Citas recurrentes y estados operativos ampliados.
+- [x] Reprogramación y cancelación base. *(URPE-11)*
 - [x] Expediente clínico digital base. *(URPE-10 cerrado)*
 - [ ] Documentos, imágenes, radiografías y estudios vinculados al expediente.
 - [ ] Bitácoras/evolución de sesiones.
-- [ ] Dashboard operativo.
+- [ ] Dashboard operativo final.
 - [ ] Reportes operativos esenciales.
 - [ ] Hardening, pruebas de regresión y preparación de despliegue.
 

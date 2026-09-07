@@ -25,6 +25,8 @@ class AuthorizationSeeder extends Seeder
             ['name' => 'Administrar pacientes', 'slug' => 'patients.manage', 'description' => 'Crear y modificar registros administrativos de pacientes y responsables.'],
             ['name' => 'Ver expediente clínico', 'slug' => 'clinical_records.view', 'description' => 'Consultar la información clínica base de los pacientes.'],
             ['name' => 'Administrar expediente clínico', 'slug' => 'clinical_records.manage', 'description' => 'Crear y modificar la información clínica base de los pacientes.'],
+            ['name' => 'Ver agenda clínica', 'slug' => 'appointments.view', 'description' => 'Consultar la agenda y las citas clínicas.'],
+            ['name' => 'Administrar agenda clínica', 'slug' => 'appointments.manage', 'description' => 'Crear, reprogramar y cancelar citas clínicas.'],
         ])->mapWithKeys(function (array $permission): array {
             $model = Permission::query()->updateOrCreate(
                 ['slug' => $permission['slug']],
@@ -63,17 +65,22 @@ class AuthorizationSeeder extends Seeder
         $coordinationPermissionIds[] = $permissions->get('patients.manage')->id;
         $coordinationPermissionIds[] = $permissions->get('clinical_records.view')->id;
         $coordinationPermissionIds[] = $permissions->get('clinical_records.manage')->id;
+        $coordinationPermissionIds[] = $permissions->get('appointments.view')->id;
+        $coordinationPermissionIds[] = $permissions->get('appointments.manage')->id;
         $clinicalCoordination->permissions()->sync(array_values(array_unique($coordinationPermissionIds)));
 
         $reception = Role::query()->where('slug', 'reception')->firstOrFail();
         $receptionPermissionIds = $reception->permissions()->pluck('permissions.id')->all();
         $receptionPermissionIds[] = $permissions->get('patients.view')->id;
         $receptionPermissionIds[] = $permissions->get('patients.manage')->id;
+        $receptionPermissionIds[] = $permissions->get('appointments.view')->id;
+        $receptionPermissionIds[] = $permissions->get('appointments.manage')->id;
         $reception->permissions()->sync(array_values(array_unique($receptionPermissionIds)));
 
         $consultationDirection = Role::query()->where('slug', 'consultation_direction')->firstOrFail();
         $directionPermissionIds = $consultationDirection->permissions()->pluck('permissions.id')->all();
         $directionPermissionIds[] = $permissions->get('patients.view')->id;
+        $directionPermissionIds[] = $permissions->get('appointments.view')->id;
         $consultationDirection->permissions()->sync(array_values(array_unique($directionPermissionIds)));
     }
 }

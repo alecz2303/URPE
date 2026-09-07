@@ -1,6 +1,6 @@
 # Database — Diseño inicial conceptual
 
-Este documento define entidades, no migraciones finales. Cada tarea aprobará su esquema concreto mediante migraciones.
+Este documento define entidades y registra los esquemas ya aprobados por tareas cerradas o en revisión. Cada cambio de esquema entra mediante migraciones versionadas.
 
 ## Motor canónico
 
@@ -27,7 +27,7 @@ La suite automática usa SQLite `:memory:` por defecto mediante `phpunit.xml`, s
 
 ### Acceso
 - users
-- roles / permissions (implementación por definir)
+- roles / permissions
 - audit_events
 
 ### Configuración
@@ -37,17 +37,41 @@ La suite automática usa SQLite `:memory:` por defecto mediante `phpunit.xml`, s
 - therapists
 - therapist_availabilities
 - therapist_blocks
-- therapy_types
+- therapies
 - patients
 - patient_guardians
-- clinical_histories / clinical_entries
+- clinical_records
 - clinical_documents
 
-### Agenda
-- appointments
-- appointment_therapists
-- appointment_status_history
-- recurrence metadata/series según diseño aprobado
+### Agenda — baseline URPE-11
+
+#### `appointments`
+- `id`
+- `patient_id` FK restrict
+- `therapy_id` FK restrict
+- `starts_at`
+- `ends_at`
+- `duration_minutes`
+- `status` (`scheduled` / `cancelled` en baseline)
+- `cancellation_reason` nullable
+- `cancelled_at` nullable
+- timestamps
+- índices por tiempos y estado
+
+#### `appointment_therapist`
+- `appointment_id` FK cascade
+- `therapist_id` FK restrict
+- timestamps
+- PK compuesta `appointment_id + therapist_id`
+- índice por terapeuta
+
+La duración queda persistida como snapshot operativo de la terapia usada al crear/reprogramar la cita. La relación con terapeutas es muchos-a-muchos para soportar terapias con uno o varios recursos humanos requeridos.
+
+Pendiente de fases posteriores:
+- historial de estados ampliado
+- series/metadata de recurrencia
+- no-show y finalización operativa
+- filtros y estados adicionales.
 
 ### Evolución
 - session_notes
@@ -60,5 +84,6 @@ La suite automática usa SQLite `:memory:` por defecto mediante `phpunit.xml`, s
 - Fechas clínicas y de auditoría conservan precisión suficiente para trazabilidad.
 - Relaciones sensibles usan integridad referencial.
 - La eliminación física de información clínica no será comportamiento por defecto.
+- Las citas se cancelan por estado; no se eliminan físicamente como flujo normal.
 - Los cambios de esquema solo entran mediante migraciones versionadas.
 - Índices deben cubrir búsquedas por paciente, terapeuta, intervalos de agenda y auditoría según uso real.

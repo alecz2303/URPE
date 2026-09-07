@@ -110,6 +110,26 @@
 
 **BR-054.** El modelo del expediente clínico base debe quedar preparado para futuras relaciones con archivos clínicos protegidos, pero URPE-10 no implementa la administración completa de adjuntos.
 
+**BR-055.** Cada cita clínica vincula exactamente un paciente y una terapia; no duplica contenido del expediente clínico ni evolución de sesión.
+
+**BR-056.** La duración y hora de término de una cita se derivan de `duration_minutes` de la terapia vigente al crear o reprogramar la cita; no se hardcodean por nombre de terapia.
+
+**BR-057.** La cantidad de terapeutas asignados a una cita debe coincidir exactamente con `required_therapists` de la terapia en el baseline de URPE-11.
+
+**BR-058.** Para crear o reprogramar una cita, paciente, terapia y todos los terapeutas asignados deben estar activos.
+
+**BR-059.** El intervalo completo de la cita debe quedar dentro del horario operativo habilitado del centro y dentro de la disponibilidad de cada terapeuta asignado, sin intersección con ausencias o bloqueos.
+
+**BR-060.** Un terapeuta no puede estar asignado a dos citas activas cuyos intervalos se traslapen; las citas canceladas liberan el intervalo para nuevas programaciones.
+
+**BR-061.** La reprogramación mantiene la identidad de la cita y puede modificar terapia, terapeutas y horario, recalculando duración y fin conforme a la terapia seleccionada.
+
+**BR-062.** La cancelación es un cambio de estado y no una eliminación física. Debe conservar la cita, marcar fecha de cancelación y permitir motivo opcional sin duplicarlo en metadata de auditoría.
+
+**BR-063.** La agenda base se autoriza mediante `appointments.view` y su administración mediante `appointments.manage`; controladores y vistas no dependen de nombres de rol.
+
+**BR-064.** Crear, reprogramar y cancelar citas deben generar eventos de auditoría con identificadores y tiempos necesarios para trazabilidad, evitando payloads clínicos o motivos sensibles completos.
+
 ## Decisiones abiertas
 
 Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:
@@ -118,7 +138,7 @@ Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:
 - **BR-P02:** quién puede corregir información clínica y mediante qué mecanismo.
 - **BR-P03:** comportamiento de series recurrentes al editar una ocurrencia.
 - **BR-P04:** efecto de cambiar duración/configuración de terapia sobre citas ya existentes.
-- **BR-P05:** Pediasuit requiere exactamente 2 terapeutas o mínimo 2.
+- **BR-P05:** Pediasuit requiere exactamente 2 terapeutas o mínimo 2. *(URPE-11 adopta exactamente `required_therapists` como baseline; revisar solo si negocio cambia la semántica futura.)*
 - **BR-P06:** campos clínicos visibles para Recepción.
 - **BR-P07:** pacientes visibles para Terapeuta según cita/asignación.
 - **BR-P08:** mecanismo y permisos para excepciones de citas fuera del horario operativo, si se aprueban.
