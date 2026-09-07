@@ -156,7 +156,7 @@
 - [x] Squash + sincronización contra `master`.
 - [x] PR #9 aprobado, rebase merge, CI post-merge #216 verde y cierre Jira.
 
-## URPE-10 — Expediente clínico base — EN CURSO
+## URPE-10 — Expediente clínico base — CERRADO
 
 - [x] Crear persistencia uno-a-uno entre paciente y expediente clínico base.
 - [x] Incorporar antecedentes médicos, prenatales/perinatales, del desarrollo y familiares.
@@ -173,11 +173,9 @@
 - [x] Agregar pruebas de persistencia, unicidad, validación, autorización, auditoría, SweetAlert y acceso desde ficha del paciente.
 - [x] Validación funcional local de creación, persistencia, actualización y acceso desde ficha confirmada.
 - [x] Actualizar ROADMAP, BUSINESS_RULES, CHANGELOG y TODO.
-- [ ] Confirmar CI final de rama verde después del Bloque 3.
-- [ ] Squash de todos los commits de URPE-10 en un único commit.
-- [ ] Rebase/sincronización contra `master` antes de PR.
-- [ ] CI verde sobre el commit final único.
-- [ ] PR aprobado, rebase merge, CI post-merge, limpieza de rama y cierre Jira.
+- [x] Commit consolidado `ee63f39` integrado en `master`.
+- [x] CI post-merge Test #239 verde en `master`.
+- [x] Cierre técnico confirmado.
 
 ## V1 — Backlog canónico
 
@@ -191,7 +189,7 @@
 - [ ] Agenda/calendario clínico.
 - [ ] Reglas de disponibilidad y colisiones.
 - [ ] Citas recurrentes, reprogramación y cancelación.
-- [x] Expediente clínico digital base. *(URPE-10 implementado; cierre técnico en curso)*
+- [x] Expediente clínico digital base. *(URPE-10 cerrado)*
 - [ ] Documentos, imágenes, radiografías y estudios vinculados al expediente.
 - [ ] Bitácoras/evolución de sesiones.
 - [ ] Dashboard operativo.
