@@ -54,7 +54,7 @@
 
 **BR-026.** Un bloqueo que termina exactamente cuando inicia una cita, o inicia exactamente cuando termina, no se considera traslape; los intervalos se evalúan con límites adyacentes permitidos.
 
-**BR-027.** El perfil operativo de terapeuta puede vincularse a una cuenta interna. Los usuarios con rol Terapeuta deben contar con su perfil operativo sincronizado, sin convertir el nombre del rol en la regla de autorización de las pantallas administrativas.
+**BR-027.** El perfil operativo de terapeuta conserva un vínculo técnico obligatorio con una cuenta interna mediante `therapists.user_id`. En el flujo normal de URPE, crear un terapeuta aprovisiona automáticamente su usuario y rol Terapeuta; la selección manual de "Usuario vinculado" deja de formar parte de la experiencia administrativa ordinaria.
 
 **BR-028.** La administración de perfiles, disponibilidad y bloqueos de terapeutas se autoriza mediante permisos granulares; `therapists.manage` es el permiso base de URPE-7.
 
@@ -86,7 +86,7 @@
 
 **BR-042.** La administración de pacientes se protege mediante permisos granulares `patients.view` y `patients.manage`; no se autoriza por nombre de rol dentro de controladores o vistas.
 
-**BR-043.** El rol Terapeuta no recibe acceso global a pacientes por defecto. El alcance clínico por cita o asignación se definirá en una etapa posterior.
+**BR-043.** El rol Terapeuta no recibe acceso global a pacientes por defecto. En URPE-16 el acceso clínico operativo a bitácoras se limita a citas donde el usuario autenticado se resuelve al terapeuta asignado o a un participante histórico válido de esa sesión.
 
 **BR-044.** Los cambios administrativos relevantes de pacientes y responsables deben ser auditables sin almacenar innecesariamente payloads sensibles completos.
 
@@ -96,11 +96,11 @@
 
 **BR-047.** El expediente clínico base se mantiene separado de los datos administrativos del paciente y de sus responsables; las notas administrativas no sustituyen ni duplican información clínica.
 
-**BR-048.** La evolución por sesión, actividades realizadas, respuesta del paciente, progreso, incidencias, recomendaciones domiciliarias y objetivos de próxima sesión no pertenecen al expediente clínico base y se implementarán en la bitácora/evolución por sesión.
+**BR-048.** La evolución por sesión, actividades realizadas, respuesta del paciente, progreso, incidencias, recomendaciones domiciliarias y objetivos de próxima sesión pertenecen a la bitácora clínica por cita y no al expediente clínico base.
 
 **BR-049.** El acceso al expediente clínico se autoriza mediante permisos granulares `clinical_records.view` y `clinical_records.manage`; no se autoriza por nombre de rol dentro de controladores o vistas.
 
-**BR-050.** El baseline otorga acceso clínico amplio a Administrador y Coordinación Clínica. El rol Terapeuta no recibe acceso clínico global por defecto; el alcance por asignación/cita se definirá posteriormente.
+**BR-050.** Administrador y Coordinación Clínica conservan acceso clínico amplio conforme a permisos granulares. El rol Terapeuta no recibe acceso clínico global; URPE-16 autoriza su bitácora por asignación/participación válida en la cita.
 
 **BR-051.** La creación y actualización del expediente clínico deben auditar actor, paciente y secciones afectadas sin duplicar en metadata de auditoría los textos clínicos sensibles completos.
 
@@ -142,16 +142,44 @@
 
 **BR-070.** Un horario solo se presenta como disponible para una terapia cuando existe capacidad simultánea de al menos `required_therapists` terapeutas activos durante todo el intervalo calculado.
 
+**BR-071.** Crear un terapeuta es una operación atómica de negocio: se crean el perfil profesional y la cuenta interna, se asigna el rol Terapeuta y se establece `therapists.user_id`. Si falla una parte, no debe persistir un perfil o usuario huérfano.
+
+**BR-072.** El correo del terapeuta funciona como identificador de acceso y debe ser único respecto de cuentas y perfiles existentes. Editar nombre, correo o estado del terapeuta mantiene sincronizada su cuenta interna.
+
+**BR-073.** La desactivación de un terapeuta desactiva también su acceso autenticado, pero no elimina citas, bitácoras, auditoría ni relaciones históricas.
+
+**BR-074.** Cada ocurrencia de cita puede tener como máximo una bitácora clínica canónica, separada del expediente clínico base y de las notas administrativas.
+
+**BR-075.** La bitácora clínica admite estado `draft` y `completed`. Una bitácora completada queda cerrada para edición normal en el baseline de URPE-16; cualquier mecanismo de corrección posterior deberá preservar el registro original y su trazabilidad.
+
+**BR-076.** La bitácora registra tratamiento/actividades realizadas, respuesta/evolución del paciente, observaciones/incidencias, recomendaciones para casa y objetivos de siguiente sesión, además de los terapeutas participantes.
+
+**BR-077.** Los terapeutas participantes de la bitácora deben ser un subconjunto de los terapeutas efectivamente asignados a la cita al momento de la captura. Un terapeuta no puede autoasignarse ni agregarse a una sesión desde la bitácora para obtener acceso.
+
+**BR-078.** El acceso de un terapeuta a una bitácora requiere simultáneamente permiso granular y una relación válida con la cita: asignación vigente o participación clínica histórica ya persistida. El rol Terapeuta por sí solo no basta.
+
+**BR-079.** Coordinación Clínica y Administrador pueden administrar bitácoras sin restricción por asignación mediante `session_logs.manage_all`; esta excepción sigue siendo permission-based y no depende de nombres de rol dentro de controladores.
+
+**BR-080.** Una sustitución de terapeuta de último momento solo puede ejecutarla un usuario con permiso para administrar agenda. Debe validar terapeuta activo, disponibilidad, bloqueos, traslapes y mantener la cantidad exacta de terapeutas requerida por la terapia.
+
+**BR-081.** Toda sustitución conserva historial de terapeuta removido, terapeuta agregado, actor, momento y motivo operativo opcional. La asignación efectiva cambia de inmediato, pero el historial anterior no se borra.
+
+**BR-082.** Después de una sustitución válida, el terapeuta sustituto obtiene acceso a la sesión por la nueva asignación y el terapeuta removido deja de tener acceso de edición por asignación, salvo que ya permanezca registrado como participante histórico de una bitácora existente y el acceso solicitado sea de consulta.
+
+**BR-083.** El contenido clínico completo de una bitácora no debe duplicarse en metadata de auditoría. Los eventos de auditoría registran identificadores, estado, participantes y timestamps suficientes para trazabilidad.
+
+**BR-084.** La ficha del paciente puede mostrar un historial cronológico de sesiones únicamente a usuarios con autorización clínica correspondiente; este historial no convierte el permiso de pacientes administrativos en permiso clínico.
+
 ## Decisiones abiertas
 
 Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:
 
-- **BR-P01:** edición de bitácora tras cierre/firma.
-- **BR-P02:** quién puede corregir información clínica y mediante qué mecanismo.
+- **BR-P01:** mecanismo de corrección/enmienda de bitácora después del cierre, preservando el registro original.
+- **BR-P02:** quién puede autorizar y firmar una corrección clínica posterior al cierre.
 - **BR-P04:** efecto de cambiar duración/configuración de terapia sobre citas ya existentes.
 - **BR-P05:** Pediasuit requiere exactamente 2 terapeutas o mínimo 2. *(URPE-11 adopta exactamente `required_therapists` como baseline; revisar solo si negocio cambia la semántica futura.)*
 - **BR-P06:** campos clínicos visibles para Recepción.
-- **BR-P07:** pacientes visibles para Terapeuta según cita/asignación.
+- **BR-P07:** alcance de datos administrativos del paciente visibles para Terapeuta fuera del contexto puntual de una cita/bitácora.
 - **BR-P08:** mecanismo y permisos para excepciones de citas fuera del horario operativo, si se aprueban.
-- **BR-P09:** asignación de terapeutas manual, automática o mixta. *(URPE-14 mantiene selección manual asistida por disponibilidad; revisar solo si se desea asignación totalmente automática.)*
+- **BR-P09:** asignación de terapeutas manual, automática o mixta. *(URPE-14 mantiene selección manual asistida por disponibilidad; URPE-16 agrega sustitución autorizada de último momento.)*
 - **BR-P10:** cualificaciones requeridas por terapia, si aplican.

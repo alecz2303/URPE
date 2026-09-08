@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Appointment;
 use App\Models\AppointmentSeries;
+use App\Models\AppointmentTherapistChange;
 use App\Models\Patient;
 use App\Models\Therapist;
 use App\Models\Therapy;
@@ -119,6 +120,62 @@ class AppointmentScheduler
             ], $actor);
 
             return $appointment->refresh()->load(['patient', 'therapy', 'therapists', 'series']);
+        });
+    }
+
+    public function substituteTherapist(
+        Appointment $appointment,
+        Therapist $removedTherapist,
+        Therapist $addedTherapist,
+        User $actor,
+        ?string $reason = null,
+    ): Appointment {
+        if ($appointment->isCancelled()) {
+            throw ValidationException::withMessages(['appointment' => 'No se puede sustituir terapeuta en una cita cancelada.']);
+        }
+
+        $appointment->loadMissing(['patient', 'therapy', 'therapists']);
+
+        if (! $appointment->therapists->contains('id', $removedTherapist->id)) {
+            throw ValidationException::withMessages(['removed_therapist_id' => 'El terapeuta a sustituir no está asignado actualmente a esta cita.']);
+        }
+
+        if ($removedTherapist->is($addedTherapist)) {
+            throw ValidationException::withMessages(['added_therapist_id' => 'Selecciona un terapeuta sustituto diferente.']);
+        }
+
+        $candidateIds = $appointment->therapists
+            ->pluck('id')
+            ->reject(fn (int $id) => $id === $removedTherapist->id)
+            ->push($addedTherapist->id)
+            ->values()
+            ->all();
+
+        [$validatedTherapists] = $this->validateSchedule(
+            $appointment->therapy,
+            $candidateIds,
+            CarbonImmutable::instance($appointment->starts_at),
+            [$appointment->id],
+        );
+
+        return DB::transaction(function () use ($appointment, $removedTherapist, $addedTherapist, $validatedTherapists, $actor, $reason): Appointment {
+            $appointment->therapists()->sync($validatedTherapists->pluck('id')->all());
+
+            AppointmentTherapistChange::query()->create([
+                'appointment_id' => $appointment->id,
+                'removed_therapist_id' => $removedTherapist->id,
+                'added_therapist_id' => $addedTherapist->id,
+                'changed_by_user_id' => $actor->id,
+                'reason' => $reason,
+            ]);
+
+            $this->audit->record('appointment.therapist_substituted', $appointment, [
+                'removed_therapist_id' => $removedTherapist->id,
+                'added_therapist_id' => $addedTherapist->id,
+                'reason_provided' => filled($reason),
+            ], $actor);
+
+            return $appointment->refresh()->load(['patient', 'therapy', 'therapists', 'therapistChanges']);
         });
     }
 

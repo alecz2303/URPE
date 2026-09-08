@@ -33,6 +33,35 @@
         </section>
     @endif
 
+    @if($assignedClinicalSessions->isNotEmpty() || (auth()->user()->hasPermission('session_logs.view') && auth()->user()->therapistProfile))
+        <section class="mt-6 overflow-hidden rounded-3xl border border-violet-100 bg-white shadow-sm">
+            <div class="border-b border-violet-100 bg-gradient-to-r from-violet-50 via-fuchsia-50 to-cyan-50 px-6 py-5">
+                <p class="text-xs font-extrabold uppercase tracking-[0.16em] text-violet-700">Mis sesiones de hoy</p>
+                <h2 class="mt-1 text-xl font-extrabold text-slate-950">Bitácoras clínicas asignadas</h2>
+                <p class="mt-1 text-sm text-slate-500">Solo aparecen las citas en las que tu perfil de terapeuta está asignado actualmente.</p>
+            </div>
+            <div class="divide-y divide-slate-100">
+                @forelse($assignedClinicalSessions as $appointment)
+                    <article class="relative grid gap-3 px-6 py-5 sm:grid-cols-[88px_minmax(0,1fr)_auto] sm:items-center">
+                        <span class="absolute inset-y-3 left-0 w-1.5 rounded-r-full" style="background-color: {{ $appointment->therapy->color ?: '#7c3aed' }}"></span>
+                        <div><p class="text-lg font-extrabold tabular-nums text-slate-950">{{ $appointment->starts_at->format('H:i') }}</p><p class="text-xs font-medium text-slate-400">{{ $appointment->ends_at->format('H:i') }}</p></div>
+                        <div class="min-w-0">
+                            <h3 class="truncate font-extrabold text-slate-900">{{ $appointment->patient->full_name }}</h3>
+                            <p class="mt-1 text-sm font-bold text-violet-700">{{ $appointment->therapy->name }}</p>
+                            <p class="mt-1 text-xs font-medium text-slate-400">{{ $appointment->therapists->pluck('name')->implode(' · ') }}</p>
+                        </div>
+                        <a href="{{ route('session-logs.show', $appointment) }}" class="rounded-xl px-3 py-2 text-sm font-bold {{ $appointment->clinicalSessionLog?->isCompleted() ? 'bg-emerald-50 text-emerald-700' : 'bg-violet-600 text-white' }}">{{ $appointment->clinicalSessionLog?->isCompleted() ? 'Ver bitácora' : ($appointment->clinicalSessionLog ? 'Continuar bitácora' : 'Capturar bitácora') }}</a>
+                    </article>
+                @empty
+                    <div class="px-6 py-12 text-center">
+                        <p class="font-bold text-slate-700">No tienes sesiones asignadas para hoy.</p>
+                        <p class="mt-1 text-sm text-slate-500">Cuando Coordinación te asigne una cita, aparecerá aquí automáticamente.</p>
+                    </div>
+                @endforelse
+            </div>
+        </section>
+    @endif
+
     @can('appointments.view')
         <section data-testid="agenda-dashboard-card" class="mt-6 overflow-hidden rounded-3xl border border-cyan-100 bg-white shadow-sm">
             <div class="flex flex-col gap-4 border-b border-cyan-100 bg-gradient-to-r from-cyan-50 via-white to-pink-50 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
@@ -45,11 +74,16 @@
                         <span class="absolute inset-y-3 left-0 w-1.5 rounded-r-full" style="background-color: {{ $appointment->therapy->color ?: '#0891b2' }}"></span>
                         <div><p class="text-lg font-extrabold tabular-nums text-slate-950">{{ $appointment->starts_at->format('H:i') }}</p><p class="text-xs font-medium text-slate-400">{{ $appointment->ends_at->format('H:i') }}</p></div>
                         <div class="min-w-0"><h3 class="truncate font-extrabold">{{ $appointment->patient->full_name }}</h3><p class="mt-1 text-sm font-bold" style="color: {{ $appointment->therapy->color ?: '#0891b2' }}">{{ $appointment->therapy->name }}</p><p class="mt-1 text-xs font-medium text-slate-400">{{ $appointment->therapists->pluck('name')->implode(' · ') }}</p></div>
-                        @can('appointments.manage')
-                            @if(! $appointment->isCancelled())
-                                <a href="{{ route('appointments.edit', $appointment) }}" class="text-sm font-bold text-slate-500 hover:text-cyan-700">Editar</a>
-                            @endif
-                        @endcan
+                        <div class="flex flex-wrap items-center gap-3">
+                            @can('session_logs.view')
+                                <a href="{{ route('session-logs.show', $appointment) }}" class="text-sm font-bold text-violet-700 hover:text-violet-900">Bitácora</a>
+                            @endcan
+                            @can('appointments.manage')
+                                @if(! $appointment->isCancelled())
+                                    <a href="{{ route('appointments.edit', $appointment) }}" class="text-sm font-bold text-slate-500 hover:text-cyan-700">Editar</a>
+                                @endif
+                            @endcan
+                        </div>
                     </article>
                 @empty
                     <div class="bg-gradient-to-br from-white via-cyan-50/40 to-pink-50/40 px-6 py-14 text-center">

@@ -17,26 +17,32 @@
     <div>
         <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Perfil operativo</p>
         <h2 class="mt-1 text-2xl font-bold">Datos del terapeuta</h2>
-        <p class="mt-2 text-sm text-slate-500">El vínculo con una cuenta interna es opcional y no duplica las credenciales del sistema.</p>
+        <p class="mt-2 text-sm text-slate-500">Cada terapeuta cuenta automáticamente con acceso al sistema. El correo del perfil funciona también como usuario de inicio de sesión.</p>
     </div>
 
-    <div class="mt-6 grid gap-5 md:grid-cols-2">
-        <label class="block">
-            <span class="text-sm font-semibold text-slate-700">Usuario vinculado</span>
-            <select name="user_id" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
-                <option value="">Sin vínculo</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}" @selected((string) old('user_id', $therapist->user_id ?? '') === (string) $user->id)>
-                        {{ $user->name }} · {{ $user->email }}
-                    </option>
-                @endforeach
-            </select>
-        </label>
+    @if($editing)
+        <div class="mt-5 rounded-2xl border border-cyan-200 bg-cyan-50 px-5 py-4">
+            <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.14em] text-cyan-700">Acceso al sistema</p>
+                    <p class="mt-1 text-sm font-semibold text-slate-900">
+                        {{ $therapist->user ? 'Cuenta vinculada automáticamente' : 'La cuenta se generará al guardar' }}
+                    </p>
+                </div>
+                @if($therapist->user)
+                    <span class="inline-flex w-fit rounded-full px-3 py-1 text-xs font-bold {{ $therapist->user->is_active ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700' }}">
+                        {{ $therapist->user->is_active ? 'Acceso activo' : 'Acceso desactivado' }}
+                    </span>
+                @endif
+            </div>
+        </div>
+    @endif
 
-        <label class="flex items-end gap-3 rounded-xl border border-slate-200 px-4 py-3">
+    <div class="mt-6 grid gap-5 md:grid-cols-2">
+        <label class="flex items-end gap-3 rounded-xl border border-slate-200 px-4 py-3 md:col-span-2">
             <input type="hidden" name="is_active" value="0">
             <input type="checkbox" name="is_active" value="1" @checked((bool) old('is_active', $therapist->is_active ?? true)) class="h-4 w-4 rounded border-slate-300 text-cyan-700 focus:ring-cyan-600">
-            <span class="text-sm font-semibold text-slate-700">Terapeuta activo para programación</span>
+            <span class="text-sm font-semibold text-slate-700">Terapeuta activo para programación y acceso al sistema</span>
         </label>
 
         <label class="block">
@@ -60,8 +66,9 @@
         </label>
 
         <label class="block md:col-span-2">
-            <span class="text-sm font-semibold text-slate-700">Correo electrónico</span>
-            <input type="email" name="email" value="{{ old('email', $therapist->email ?? '') }}" maxlength="255" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
+            <span class="text-sm font-semibold text-slate-700">Correo electrónico / usuario de acceso</span>
+            <input type="email" name="email" value="{{ old('email', $therapist->email ?? '') }}" required maxlength="255" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
+            <span class="mt-2 block text-xs text-slate-500">Debe ser único. Al crear el terapeuta se generará automáticamente una contraseña temporal.</span>
         </label>
 
         <label class="block md:col-span-2">

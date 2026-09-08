@@ -2,12 +2,15 @@
 
 use App\Http\Controllers\AppointmentAvailabilityController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\AppointmentTherapistSubstitutionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CenterConfigurationController;
 use App\Http\Controllers\ClinicalFileController;
 use App\Http\Controllers\ClinicalRecordController;
+use App\Http\Controllers\ClinicalSessionLogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\PatientSessionLogController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TherapistBlocksController;
 use App\Http\Controllers\TherapistController;
@@ -35,6 +38,12 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/agenda/citas/{appointment}/editar', [AppointmentController::class, 'edit'])->name('appointments.edit');
     Route::put('/agenda/citas/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
     Route::patch('/agenda/citas/{appointment}/cancelar', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
+    Route::patch('/agenda/citas/{appointment}/sustituir-terapeuta', AppointmentTherapistSubstitutionController::class)
+        ->name('appointments.therapists.substitute');
+
+    Route::get('/agenda/citas/{appointment}/bitacora', [ClinicalSessionLogController::class, 'show'])->name('session-logs.show');
+    Route::get('/agenda/citas/{appointment}/bitacora/capturar', [ClinicalSessionLogController::class, 'edit'])->name('session-logs.edit');
+    Route::put('/agenda/citas/{appointment}/bitacora', [ClinicalSessionLogController::class, 'update'])->name('session-logs.update');
 
     Route::get('/usuarios', [UserController::class, 'index'])->name('users.index');
     Route::get('/usuarios/crear', [UserController::class, 'create'])->name('users.create');
@@ -86,6 +95,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
         ->name('clinical-records.edit');
     Route::put('/pacientes/{patient}/expediente-clinico', [ClinicalRecordController::class, 'update'])
         ->name('clinical-records.update');
+    Route::get('/pacientes/{patient}/bitacoras', PatientSessionLogController::class)
+        ->name('session-logs.patient-history');
 
     Route::get('/archivos-clinicos/{clinicalFile}/descargar', [ClinicalFileController::class, 'download'])
         ->name('clinical-files.download');

@@ -88,6 +88,15 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Cobertura automatizada específica para recurrencia, rollback atómico, disponibilidad de horarios y capacidad de terapeutas.
 - Seeder opt-in `DemoSiteSeeder` para preparar un sitio de muestra con horario URPE lunes-viernes 09:00–14:00 y 16:00–18:00, terapias Vojta/Bipedestador/Pediasuit, Jonatham Zambrano, cuatro terapeutas genéricos, disponibilidad compatible y 12 pacientes ficticios.
 - Cobertura automatizada de creación e idempotencia del seeder de demostración.
+- Aprovisionamiento automático de cuenta interna al crear un terapeuta, con rol Terapeuta, vínculo `therapists.user_id`, contraseña temporal y sincronización de nombre/correo/estado.
+- Permisos granulares `session_logs.view`, `session_logs.manage` y `session_logs.manage_all` para la bitácora clínica.
+- Bitácora clínica por cita con estado borrador/completada, tratamiento realizado, respuesta/evolución, observaciones/incidencias, recomendaciones domiciliarias y objetivos de siguiente sesión.
+- Persistencia de los terapeutas que realmente participaron en cada sesión, separada de la asignación mutable de agenda.
+- Sustitución autorizada de terapeuta de último momento con validación de disponibilidad, bloqueos, traslapes y cantidad requerida de recursos.
+- Historial auditable de sustituciones con terapeuta removido/agregado, actor, timestamp y motivo operativo opcional.
+- Historial cronológico de sesiones clínicas accesible desde el contexto del paciente según autorización.
+- Dashboard del terapeuta con acceso directo a sus sesiones asignadas y captura de bitácora.
+- Cobertura automatizada de aprovisionamiento de acceso, autorización por asignación, bitácora, participantes reales y sustituciones de emergencia.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -110,3 +119,6 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-14 convierte la programación recurrente en una operación de dominio explícita y auditable, sin reemplazar las reglas de `AppointmentScheduler`.
 - El formulario de nueva cita deja de depender de prueba y error para encontrar disponibilidad y pasa a un flujo asistido por fecha, horarios válidos y terapeutas disponibles.
 - URPE-15 mantiene el contenido demo fuera del `DatabaseSeeder` normal para que las instalaciones reales no reciban datos ficticios de forma accidental.
+- URPE-16 elimina del flujo normal la selección manual de “Usuario vinculado”: crear un terapeuta ahora implica crear también su acceso al sistema de forma atómica.
+- URPE-16 limita el acceso del terapeuta a bitácoras mediante permiso + asignación/participación válida, sin otorgar acceso clínico global por pertenecer al rol Terapeuta.
+- URPE-16 separa la asignación operativa actual de agenda del registro histórico de quién participó realmente en la atención.

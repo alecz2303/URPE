@@ -51,4 +51,9 @@ class Therapist extends Model
     {
         return $this->belongsToMany(Appointment::class)->withTimestamps();
     }
+
+    public function clinicalSessionLogs(): BelongsToMany
+    {
+        return $this->belongsToMany(ClinicalSessionLog::class, 'clinical_session_log_therapist')->withTimestamps();
+    }
 }

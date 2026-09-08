@@ -9,6 +9,8 @@ use App\Services\CenterConfiguration;
 use App\Services\TherapistAvailability;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -31,7 +33,6 @@ class TherapistController extends Controller
         $this->authorize('therapists.manage');
 
         return view('therapists.create', [
-            'users' => User::query()->where('is_active', true)->orderBy('name')->get(),
             'days' => $this->days(),
             'centerHours' => $centerConfiguration->weeklyHours(),
         ]);
@@ -48,32 +49,50 @@ class TherapistController extends Controller
         $schedule = $availability->validateWeeklySchedule(
             $this->normalizeSchedule($validated['schedule'] ?? []),
         );
+        $temporaryPassword = Str::password(16);
 
-        $therapist = Therapist::query()->create([
-            'user_id' => $validated['user_id'] ?? null,
-            'name' => $validated['name'],
-            'professional_title' => $validated['professional_title'] ?? null,
-            'license_number' => $validated['license_number'] ?? null,
-            'phone' => $validated['phone'] ?? null,
-            'email' => $validated['email'] ?? null,
-            'is_active' => (bool) ($validated['is_active'] ?? false),
-            'notes' => $validated['notes'] ?? null,
-        ]);
+        $therapist = DB::transaction(function () use ($validated, $schedule, $temporaryPassword, $availability, $audit, $request): Therapist {
+            $user = User::query()->create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => $temporaryPassword,
+                'is_active' => (bool) ($validated['is_active'] ?? false),
+            ]);
+            $user->assignRole('therapist');
 
-        $availability->replaceWeeklySchedule(
-            $therapist,
-            $schedule,
-            $request->user(),
-            $audit,
-        );
+            $therapist = Therapist::query()->create([
+                'user_id' => $user->id,
+                'name' => $validated['name'],
+                'professional_title' => $validated['professional_title'] ?? null,
+                'license_number' => $validated['license_number'] ?? null,
+                'phone' => $validated['phone'] ?? null,
+                'email' => $validated['email'],
+                'is_active' => (bool) ($validated['is_active'] ?? false),
+                'notes' => $validated['notes'] ?? null,
+            ]);
 
-        $audit->record('therapist.created', $therapist, [
-            'user_id' => $therapist->user_id,
-            'is_active' => $therapist->is_active,
-        ], $request->user(), $request);
+            $availability->replaceWeeklySchedule(
+                $therapist,
+                $schedule,
+                $request->user(),
+                $audit,
+            );
+
+            $audit->record('therapist.created', $therapist, [
+                'user_id' => $therapist->user_id,
+                'is_active' => $therapist->is_active,
+                'access_account_created' => true,
+            ], $request->user(), $request);
+
+            return $therapist;
+        });
 
         return redirect()->route('therapists.edit', $therapist)
-            ->with('status', 'Terapeuta creado correctamente.');
+            ->with('status', 'Terapeuta y acceso al sistema creados correctamente.')
+            ->with('therapist_credentials', [
+                'email' => $validated['email'],
+                'password' => $temporaryPassword,
+            ]);
     }
 
     public function edit(Therapist $therapist, CenterConfiguration $centerConfiguration): View
@@ -81,8 +100,7 @@ class TherapistController extends Controller
         $this->authorize('therapists.manage');
 
         return view('therapists.edit', [
-            'therapist' => $therapist->load(['availabilityWindows', 'blocks' => fn ($query) => $query->latest('starts_at')]),
-            'users' => User::query()->where('is_active', true)->orderBy('name')->get(),
+            'therapist' => $therapist->load(['user', 'availabilityWindows', 'blocks' => fn ($query) => $query->latest('starts_at')]),
             'days' => $this->days(),
             'centerHours' => $centerConfiguration->weeklyHours(),
         ]);
@@ -100,54 +118,87 @@ class TherapistController extends Controller
         $schedule = $availability->validateWeeklySchedule(
             $this->normalizeSchedule($validated['schedule'] ?? []),
         );
+        $temporaryPassword = null;
 
-        $before = $therapist->only([
-            'user_id', 'name', 'professional_title', 'license_number', 'phone', 'email', 'is_active', 'notes',
-        ]);
-
-        $therapist->update([
-            'user_id' => $validated['user_id'] ?? null,
-            'name' => $validated['name'],
-            'professional_title' => $validated['professional_title'] ?? null,
-            'license_number' => $validated['license_number'] ?? null,
-            'phone' => $validated['phone'] ?? null,
-            'email' => $validated['email'] ?? null,
-            'is_active' => (bool) ($validated['is_active'] ?? false),
-            'notes' => $validated['notes'] ?? null,
-        ]);
-
-        $availability->replaceWeeklySchedule(
-            $therapist,
-            $schedule,
-            $request->user(),
-            $audit,
-        );
-
-        $audit->record('therapist.updated', $therapist, [
-            'before' => $before,
-            'after' => $therapist->only([
+        DB::transaction(function () use ($validated, $schedule, $therapist, $availability, $audit, $request, &$temporaryPassword): void {
+            $before = $therapist->only([
                 'user_id', 'name', 'professional_title', 'license_number', 'phone', 'email', 'is_active', 'notes',
-            ]),
-        ], $request->user(), $request);
+            ]);
 
-        return redirect()->route('therapists.edit', $therapist)
-            ->with('status', 'Terapeuta actualizado correctamente.');
+            $user = $therapist->user;
+
+            if (! $user) {
+                $temporaryPassword = Str::password(16);
+                $user = User::query()->create([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'password' => $temporaryPassword,
+                    'is_active' => (bool) ($validated['is_active'] ?? false),
+                ]);
+                $user->assignRole('therapist');
+                $therapist->user_id = $user->id;
+            } else {
+                $user->update([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'is_active' => (bool) ($validated['is_active'] ?? false),
+                ]);
+                $user->assignRole('therapist');
+            }
+
+            $therapist->fill([
+                'name' => $validated['name'],
+                'professional_title' => $validated['professional_title'] ?? null,
+                'license_number' => $validated['license_number'] ?? null,
+                'phone' => $validated['phone'] ?? null,
+                'email' => $validated['email'],
+                'is_active' => (bool) ($validated['is_active'] ?? false),
+                'notes' => $validated['notes'] ?? null,
+            ])->save();
+
+            $availability->replaceWeeklySchedule(
+                $therapist,
+                $schedule,
+                $request->user(),
+                $audit,
+            );
+
+            $audit->record('therapist.updated', $therapist, [
+                'before' => $before,
+                'after' => $therapist->only([
+                    'user_id', 'name', 'professional_title', 'license_number', 'phone', 'email', 'is_active', 'notes',
+                ]),
+                'access_account_created' => $temporaryPassword !== null,
+            ], $request->user(), $request);
+        });
+
+        $response = redirect()->route('therapists.edit', $therapist)
+            ->with('status', 'Terapeuta y acceso al sistema actualizados correctamente.');
+
+        if ($temporaryPassword !== null) {
+            $response->with('therapist_credentials', [
+                'email' => $validated['email'],
+                'password' => $temporaryPassword,
+            ]);
+        }
+
+        return $response;
     }
 
     private function rules(?Therapist $therapist = null): array
     {
         return [
-            'user_id' => [
-                'nullable',
-                'integer',
-                Rule::exists('users', 'id'),
-                Rule::unique('therapists', 'user_id')->ignore($therapist?->id),
-            ],
             'name' => ['required', 'string', 'max:255'],
             'professional_title' => ['nullable', 'string', 'max:255'],
             'license_number' => ['nullable', 'string', 'max:120'],
             'phone' => ['nullable', 'string', 'max:60'],
-            'email' => ['nullable', 'email', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($therapist?->user_id),
+                Rule::unique('therapists', 'email')->ignore($therapist?->id),
+            ],
             'is_active' => ['nullable', 'boolean'],
             'notes' => ['nullable', 'string', 'max:2000'],
             'schedule' => ['nullable', 'array'],
@@ -196,12 +247,8 @@ class TherapistController extends Controller
             'string' => 'El campo :attribute debe ser texto.',
             'max' => 'El campo :attribute no debe exceder :max caracteres.',
             'email' => 'Ingresa un correo electrónico válido.',
-            'integer' => 'El campo :attribute no es válido.',
-            'exists' => 'El :attribute seleccionado no es válido.',
-            'unique' => 'Ese :attribute ya está asociado a otro terapeuta.',
+            'unique' => 'Ese :attribute ya está asociado a otra cuenta o terapeuta.',
             'boolean' => 'El campo :attribute no es válido.',
-            'date' => 'El campo :attribute debe ser una fecha válida.',
-            'after' => 'El campo :attribute debe ser posterior al inicio.',
             'date_format' => 'El campo :attribute debe tener formato HH:MM.',
         ];
     }
@@ -209,7 +256,6 @@ class TherapistController extends Controller
     private function attributes(): array
     {
         return [
-            'user_id' => 'usuario',
             'name' => 'nombre',
             'professional_title' => 'título profesional',
             'license_number' => 'cédula profesional',

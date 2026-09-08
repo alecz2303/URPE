@@ -1,5 +1,8 @@
 <x-app-shell title="{{ $patient->full_name }}" eyebrow="Ficha del paciente">
     <x-slot:actions>
+        @can('session_logs.view')
+            <a href="{{ route('session-logs.patient-history', $patient) }}" class="rounded-xl border border-fuchsia-200 bg-fuchsia-50 px-4 py-2.5 text-sm font-bold text-fuchsia-800 shadow-sm hover:bg-fuchsia-100">Historial de sesiones</a>
+        @endcan
         @can('clinical_records.view')
             <a href="{{ route('clinical-records.show', $patient) }}" class="rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-bold text-violet-800 shadow-sm hover:bg-violet-100">Expediente clínico</a>
         @endcan
