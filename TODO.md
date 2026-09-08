@@ -234,7 +234,7 @@
 - [x] Consolidación a un commit, PR #14, aprobación de `aruedaboldr`, rebase merge y Test #376 post-merge verde.
 - [x] Jira URPE-13 cerrado en Listo.
 
-## URPE-14 — Citas recurrentes y disponibilidad asistida — EN CURSO
+## URPE-14 — Citas recurrentes y disponibilidad asistida — CERRADO
 
 - [x] Crear persistencia para series recurrentes y vínculo con ocurrencias individuales.
 - [x] Implementar recurrencia semanal acotada por fecha final y uno o varios días de semana.
@@ -249,12 +249,54 @@
 - [x] Validar atómicamente las operaciones masivas antes de modificar varias ocurrencias.
 - [x] Auditar creación y operaciones de serie sin duplicar contenido clínico sensible.
 - [x] Cubrir recurrencia, conflictos, rollback, disponibilidad y capacidad de terapeutas mediante tests.
-- [x] CI de implementación verde hasta Test #395.
 - [x] Actualizar ROADMAP, CHANGELOG, BUSINESS_RULES, DATABASE y TODO con el alcance real de URPE-14.
-- [ ] Completar auditoría final del diff y regresión UX.
-- [ ] Consolidar la rama a exactamente un commit sobre `master` actualizado.
-- [ ] Validar CI verde sobre el SHA consolidado y abrir PR.
-- [ ] Solicitar revisión de `aruedaboldr`, verificar CI del PR y dejar listo para aprobación humana.
+- [x] Completar auditoría final del diff y regresión UX.
+- [x] Consolidar la rama a exactamente un commit sobre `master` actualizado.
+- [x] Validar CI verde sobre el SHA consolidado y abrir PR.
+- [x] PR #15 aprobado por `aruedaboldr`, rebase merge y CI post-merge Test #403 verde.
+- [x] Jira URPE-14 cerrado en Listo.
+
+## URPE-15 — Seeder reutilizable para sitio demo — CERRADO
+
+- [x] Crear `DemoSiteSeeder` opt-in sin registrarlo en `DatabaseSeeder`.
+- [x] Sembrar horario demo lunes-viernes 09:00–14:00 y 16:00–18:00.
+- [x] Sembrar Vojta, Bipedestador y Pediasuit con duración y cantidad requerida de terapeutas.
+- [x] Sembrar Jonatham Zambrano y cuatro terapeutas genéricos con disponibilidad compatible.
+- [x] Crear cuentas demo vinculadas a cada terapeuta con rol Terapeuta.
+- [x] Sembrar 12 pacientes ficticios con folios URPE.
+- [x] Mantener idempotencia del seeder y configuración de contraseña demo compatible con `config:cache`.
+- [x] Actualizar README, CHANGELOG y `.env.example`.
+- [x] PR #16 aprobado por `aruedaboldr`, rebase merge y CI post-merge Test #435 verde.
+- [x] Jira URPE-15 cerrado en Listo.
+
+## URPE-16 — Acceso automático de terapeutas y bitácora clínica — EN CURSO
+
+- [x] Crear cuenta interna, rol Terapeuta y vínculo `therapists.user_id` automáticamente al crear terapeuta.
+- [x] Eliminar la selección manual de “Usuario vinculado” del flujo administrativo normal.
+- [x] Generar contraseña temporal segura y mostrarla únicamente en el flujo de alta.
+- [x] Mantener sincronizados nombre, correo y estado entre perfil profesional y cuenta interna.
+- [x] Desactivar el login al desactivar terapeuta sin borrar historia clínica ni agenda.
+- [x] Agregar permisos granulares `session_logs.view`, `session_logs.manage` y `session_logs.manage_all`.
+- [x] Implementar una bitácora clínica canónica por cita con estados borrador/completada.
+- [x] Capturar actividades, respuesta/evolución, observaciones/incidencias, recomendaciones y objetivos de siguiente sesión.
+- [x] Persistir terapeutas participantes reales por separado de la asignación mutable de agenda.
+- [x] Autorizar captura del terapeuta mediante permiso + asignación vigente, sin acceso clínico global por rol.
+- [x] Permitir consulta histórica al terapeuta participante removido sin conservar permiso de edición.
+- [x] Implementar sustitución autorizada de terapeuta de último momento.
+- [x] Validar terapeuta activo, disponibilidad, bloqueos, traslapes y cantidad requerida durante sustitución.
+- [x] Conservar historial de terapeuta removido/agregado, actor, momento y motivo operativo.
+- [x] Transferir de inmediato el acceso de captura al terapeuta sustituto.
+- [x] Agregar historial cronológico de sesiones desde el contexto del paciente.
+- [x] Agregar acceso directo a las sesiones asignadas desde el dashboard del terapeuta.
+- [x] Auditar bitácoras y sustituciones sin duplicar texto clínico sensible.
+- [x] Cubrir aprovisionamiento, permisos, bitácora, sustitución y acceso histórico con tests automatizados.
+- [x] Actualizar BUSINESS_RULES, DATABASE, SECURITY, ROADMAP, CHANGELOG y TODO.
+- [x] Auditar el diff funcional y corregir acceso histórico para que sea solo lectura.
+- [x] CI de rama verde con Test #473 sobre el último bloque funcional antes de consolidación.
+- [ ] Consolidar la rama a exactamente un commit sobre el `master` vigente.
+- [ ] Verificar CI verde sobre el SHA consolidado.
+- [ ] Crear PR y solicitar revisión de `aruedaboldr`.
+- [ ] Verificar CI del PR y dejar listo para aprobación humana.
 
 ## V1 — Backlog canónico
 
@@ -262,19 +304,20 @@
 - [x] Roles y permisos granulares.
 - [x] Auditoría base de acciones sensibles.
 - [x] Configuración general y horarios operativos. *(URPE-6 cerrado; presentación refinada en URPE-13)*
-- [x] Catálogo de terapeutas y disponibilidad. *(URPE-7 cerrado; acceso a bloqueos refinado en URPE-13)*
+- [x] Catálogo de terapeutas y disponibilidad. *(URPE-7 cerrado; acceso a bloqueos refinado en URPE-13; acceso automático en URPE-16)*
 - [x] Catálogo de terapias configurable. *(URPE-8 cerrado; presentación refinada en URPE-13)*
 - [x] Pacientes y tutores/responsables. *(URPE-9 cerrado; presentación refinada en URPE-13)*
 - [x] Agenda/calendario clínico base. *(URPE-11 cerrado; UX refinada en URPE-12 y URPE-13)*
-- [x] Reglas base de disponibilidad y colisiones. *(URPE-11)*
+- [x] Reglas base de disponibilidad y colisiones. *(URPE-11; sustituciones reutilizan reglas en URPE-16)*
 - [x] Citas recurrentes. *(URPE-14)*
 - [ ] Estados operativos ampliados.
 - [x] Reprogramación y cancelación base. *(URPE-11; alcance por serie en URPE-14)*
 - [x] Consulta asistida de horarios y terapeutas disponibles. *(URPE-14)*
 - [x] Expediente clínico digital base. *(URPE-10 cerrado; UX separada en URPE-12 y refinada en URPE-13)*
 - [ ] Documentos, imágenes, radiografías y estudios vinculados al expediente.
-- [ ] Bitácoras/evolución de sesiones.
-- [x] Dashboard operativo base rediseñado. *(URPE-12; sistema visual refinado en URPE-13)*
+- [x] Bitácoras/evolución de sesiones. *(URPE-16)*
+- [x] Historial cronológico básico de sesiones clínicas. *(URPE-16)*
+- [x] Dashboard operativo base rediseñado. *(URPE-12; sistema visual refinado en URPE-13; sesiones asignadas en URPE-16)*
 - [ ] Reportes operativos esenciales.
 - [ ] Hardening, pruebas de regresión y preparación de despliegue.
 

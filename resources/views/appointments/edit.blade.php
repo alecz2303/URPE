@@ -1,5 +1,10 @@
 <x-app-shell title="Editar cita" eyebrow="Agenda clínica">
-    <x-slot:actions><a href="{{ route('appointments.index', ['view' => 'day', 'date' => $appointment->starts_at->toDateString()]) }}" class="rounded-xl border border-cyan-200 bg-white px-4 py-2.5 text-sm font-bold text-cyan-800 shadow-sm hover:bg-cyan-50">Volver a agenda</a></x-slot:actions>
+    <x-slot:actions>
+        @can('session_logs.view')
+            <a href="{{ route('session-logs.show', $appointment) }}" class="rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-bold text-violet-800 shadow-sm hover:bg-violet-100">Bitácora clínica</a>
+        @endcan
+        <a href="{{ route('appointments.index', ['view' => 'day', 'date' => $appointment->starts_at->toDateString()]) }}" class="rounded-xl border border-cyan-200 bg-white px-4 py-2.5 text-sm font-bold text-cyan-800 shadow-sm hover:bg-cyan-50">Volver a agenda</a>
+    </x-slot:actions>
 
     <section class="max-w-5xl overflow-hidden rounded-3xl border border-fuchsia-100 bg-white shadow-sm">
         <div class="flex flex-wrap items-start justify-between gap-4 border-b border-fuchsia-100 bg-gradient-to-r from-fuchsia-50 via-violet-50 to-cyan-50 px-6 py-6 sm:px-8">
@@ -45,6 +50,44 @@
                 <button type="submit" class="rounded-xl bg-gradient-to-r from-fuchsia-600 to-violet-600 px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:from-fuchsia-700 hover:to-violet-700">Guardar cambios</button>
             </div>
         </form>
+
+        @can('appointments.manage')
+            @if(! $appointment->isCancelled())
+                <div class="border-t border-amber-100 bg-amber-50/45 p-6 sm:p-8">
+                    <div class="mb-4">
+                        <p class="text-sm font-black text-amber-900">Sustitución de terapeuta de último momento</p>
+                        <p class="mt-1 text-xs leading-5 text-amber-800/70">Úsala cuando un terapeuta asignado no pueda atender. El sustituto se valida contra disponibilidad, bloqueos, horario y traslapes; el cambio queda en historial y auditoría.</p>
+                    </div>
+                    <form method="POST" action="{{ route('appointments.therapists.substitute', $appointment) }}" class="grid gap-3 lg:grid-cols-[1fr_1fr_1.35fr_auto] lg:items-end" data-swal-confirm data-swal-title="¿Confirmar sustitución?" data-swal-text="El cambio quedará registrado en el historial de la cita." data-swal-confirm-text="Sí, sustituir">
+                        @csrf
+                        @method('PATCH')
+                        <label class="block">
+                            <span class="text-xs font-bold uppercase tracking-wide text-amber-800">Sustituir a</span>
+                            <select name="removed_therapist_id" required class="mt-1 w-full rounded-xl border-amber-200 bg-white text-sm">
+                                <option value="">Selecciona</option>
+                                @foreach($appointment->therapists as $assignedTherapist)
+                                    <option value="{{ $assignedTherapist->id }}">{{ $assignedTherapist->name }}</option>
+                                @endforeach
+                            </select>
+                        </label>
+                        <label class="block">
+                            <span class="text-xs font-bold uppercase tracking-wide text-amber-800">Nuevo terapeuta</span>
+                            <select name="added_therapist_id" required class="mt-1 w-full rounded-xl border-amber-200 bg-white text-sm">
+                                <option value="">Selecciona</option>
+                                @foreach($therapists as $candidateTherapist)
+                                    <option value="{{ $candidateTherapist->id }}">{{ $candidateTherapist->name }}</option>
+                                @endforeach
+                            </select>
+                        </label>
+                        <label class="block">
+                            <span class="text-xs font-bold uppercase tracking-wide text-amber-800">Motivo</span>
+                            <input type="text" name="reason" maxlength="500" placeholder="Ej. salida de emergencia" class="mt-1 w-full rounded-xl border-amber-200 bg-white text-sm">
+                        </label>
+                        <button type="submit" class="rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-amber-600">Sustituir</button>
+                    </form>
+                </div>
+            @endif
+        @endcan
 
         <div class="border-t border-rose-100 bg-rose-50/50 p-6 sm:p-8">
             <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">

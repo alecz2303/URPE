@@ -24,21 +24,31 @@ URPE procesará información clínica y datos personales; seguridad es requisito
 - Invalidación de la sesión y regeneración del token CSRF al cerrar sesión.
 - Errores de credenciales genéricos: no deben revelar si una cuenta existe.
 - Rutas para invitados y usuarios autenticados protegidas con middleware `guest` y `auth`.
-- No se implementan roles/permisos dentro de URPE-3; autorización granular es una tarea posterior.
-- Antes de producción se definirá rate limiting específico para autenticación y políticas finales de contraseña/recuperación.
+- La autorización granular se resuelve con permisos de primera parte y no mediante condicionales dispersos por nombre de rol.
+- Crear un terapeuta aprovisiona de forma atómica su cuenta interna, asigna el rol Terapeuta y conserva `therapists.user_id` como vínculo técnico de identidad.
+- La contraseña inicial del terapeuta es temporal, se genera de forma segura y se muestra únicamente en el flujo de alta; no se persiste en auditoría ni en metadata clínica.
+- Desactivar un terapeuta también desactiva su cuenta de acceso sin eliminar el usuario, el perfil profesional ni la historia clínica relacionada.
+- Antes de producción se definirá rate limiting específico para autenticación y políticas finales de contraseña/recuperación, incluido el flujo definitivo de cambio obligatorio de credencial inicial.
 
 ## Acceso por perfil
 
 - Administrador: gestión global sujeta a auditoría.
-- Coordinación clínica: acceso clínico amplio según permisos.
-- Terapeuta: acceso limitado a pacientes/casos autorizados; regla exacta pendiente de cerrar.
-- Recepción: acceso operativo/administrativo; acceso clínico mínimo por definir.
-- Consulta/Dirección: lectura restringida según permisos.
+- Coordinación clínica: acceso clínico amplio según permisos, incluido `session_logs.manage_all` en el baseline de URPE-16.
+- Terapeuta: acceso a bitácoras únicamente cuando su cuenta se resuelve al perfil profesional vinculado y existe asignación válida a la cita o participación histórica válida en esa sesión.
+- El rol Terapeuta por sí solo no concede acceso clínico global a pacientes ni permite autoasignarse a citas.
+- Una sustitución de terapeuta debe ser ejecutada por un usuario con permiso de gestión de agenda; la autorización clínica se actualiza según la asignación efectiva y el cambio queda auditado.
+- Recepción: acceso operativo/administrativo; no recibe acceso a bitácoras clínicas por defecto.
+- Consulta/Dirección: lectura restringida según permisos; no recibe acceso a bitácoras clínicas por defecto en URPE-16.
 
 ## Datos clínicos
 
 - No se borran silenciosamente.
 - Correcciones relevantes deben conservar trazabilidad.
+- La bitácora clínica se almacena separada del expediente clínico base y de los metadatos de agenda.
+- El contenido clínico completo de una bitácora no se replica en eventos de auditoría; se registran identificadores, estado, participantes y timestamps necesarios para trazabilidad.
+- Una bitácora completada queda cerrada para edición dentro del baseline de URPE-16.
+- Los terapeutas participantes se persisten en la sesión para que cambios posteriores de agenda no reescriban quién atendió realmente al paciente.
+- El historial de sustituciones conserva terapeuta removido, terapeuta agregado, actor, momento y motivo operativo opcional.
 - Adjuntos se almacenan fuera del directorio público.
 - Descargas requieren autorización en el momento de acceso.
 

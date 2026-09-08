@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Appointment extends Model
 {
@@ -60,6 +62,16 @@ class Appointment extends Model
     public function therapists(): BelongsToMany
     {
         return $this->belongsToMany(Therapist::class)->withTimestamps();
+    }
+
+    public function clinicalSessionLog(): HasOne
+    {
+        return $this->hasOne(ClinicalSessionLog::class);
+    }
+
+    public function therapistChanges(): HasMany
+    {
+        return $this->hasMany(AppointmentTherapistChange::class)->latest();
     }
 
     public function isCancelled(): bool

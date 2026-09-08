@@ -22,6 +22,7 @@ class DashboardController extends Controller
             'todayAppointmentsCount' => null,
             'activePatientsCount' => null,
             'activeTherapistsCount' => null,
+            'assignedClinicalSessions' => collect(),
         ];
 
         if ($user->can('appointments.view')) {
@@ -31,6 +32,16 @@ class DashboardController extends Controller
                 ->orderBy('starts_at')
                 ->get();
             $data['todayAppointmentsCount'] = $data['todayAppointments']->count();
+        }
+
+        if ($user->hasPermission('session_logs.view') && $user->therapistProfile) {
+            $data['assignedClinicalSessions'] = Appointment::query()
+                ->with(['patient', 'therapy', 'therapists', 'clinicalSessionLog'])
+                ->whereBetween('starts_at', [$today->startOfDay(), $today->endOfDay()])
+                ->where('status', '!=', Appointment::STATUS_CANCELLED)
+                ->whereHas('therapists', fn ($query) => $query->whereKey($user->therapistProfile->id))
+                ->orderBy('starts_at')
+                ->get();
         }
 
         if ($user->can('patients.view')) {

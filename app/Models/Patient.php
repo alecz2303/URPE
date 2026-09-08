@@ -59,6 +59,11 @@ class Patient extends Model
         return $this->hasMany(Appointment::class);
     }
 
+    public function clinicalSessionLogs(): HasMany
+    {
+        return $this->hasMany(ClinicalSessionLog::class);
+    }
+
     public function getFullNameAttribute(): string
     {
         return collect([
