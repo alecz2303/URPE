@@ -101,6 +101,8 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Línea longitudinal de evolución del paciente basada en las bitácoras existentes, con terapia, participantes, estado, resumen clínico e indicador de enmiendas.
 - Auditoría `clinical_session_log.amendment_created` sin duplicar el texto clínico de la enmienda en metadata.
 - Cobertura automatizada de inmutabilidad, autorización de enmiendas, orden cronológico, acceso histórico y timeline longitudinal.
+- Acciones clínicas contextuales desde la agenda diaria para capturar, continuar o consultar la bitácora según su estado y autorización.
+- Cobertura automatizada del flujo Agenda → Cita → Bitácora y del estado visual seleccionado en la disponibilidad de citas.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -128,3 +130,4 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-16 separa la asignación operativa actual de agenda del registro histórico de quién participó realmente en la atención.
 - URPE-17 mantiene las bitácoras completadas inmutables y sustituye cualquier corrección destructiva por enmiendas clínicas trazables.
 - URPE-17 convierte el historial básico de sesiones en una línea longitudinal de evolución sin duplicar registros clínicos ni ampliar permisos existentes.
+- URPE-18 corrige el contraste del horario seleccionado en nueva cita y convierte la agenda diaria en el punto operativo directo hacia captura, continuación o consulta de bitácoras, sin ampliar permisos clínicos existentes.

@@ -56,6 +56,17 @@
             </div>
             <div class="space-y-2">
                 @forelse($appointments as $appointment)
+                    @php
+                        $agendaUser = auth()->user();
+                        $agendaTherapist = $agendaUser->therapistProfile;
+                        $isCurrentTherapist = $agendaTherapist && $appointment->therapists->contains('id', $agendaTherapist->id);
+                        $isHistoricalParticipant = $agendaTherapist && $appointment->clinicalSessionLog?->participatingTherapists->contains('id', $agendaTherapist->id);
+                        $canViewSessionLog = $agendaUser->hasPermission('session_logs.view')
+                            && ($agendaUser->hasPermission('session_logs.manage_all') || $isCurrentTherapist || $isHistoricalParticipant);
+                        $canManageSessionLog = $agendaUser->hasPermission('session_logs.manage')
+                            && ($agendaUser->hasPermission('session_logs.manage_all') || $isCurrentTherapist);
+                        $sessionLog = $appointment->clinicalSessionLog;
+                    @endphp
                     <article class="relative grid gap-4 rounded-2xl border border-slate-100 bg-gradient-to-r from-white to-slate-50/60 py-4 pl-7 pr-4 shadow-sm sm:grid-cols-[90px_minmax(0,1fr)_auto] sm:items-start {{ $appointment->isCancelled() ? 'opacity-55' : '' }}">
                         <span class="absolute inset-y-3 left-0 w-1.5 rounded-r-full" style="background-color: {{ $appointment->therapy->color ?: '#0891b2' }}"></span>
                         <div>
@@ -66,22 +77,34 @@
                             <div class="flex flex-wrap items-center gap-2">
                                 <h3 class="font-extrabold text-slate-900">{{ $appointment->patient->full_name }}</h3>
                                 <span class="rounded-full px-2.5 py-1 text-[11px] font-bold {{ $appointment->isCancelled() ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700' }}">{{ $appointment->isCancelled() ? 'Cancelada' : 'Programada' }}</span>
+                                @if($sessionLog)
+                                    <span class="rounded-full px-2.5 py-1 text-[11px] font-bold {{ $sessionLog->isCompleted() ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">Bitácora {{ $sessionLog->isCompleted() ? 'completada' : 'pendiente' }}</span>
+                                @endif
                             </div>
                             <p class="mt-1 text-sm font-bold" style="color: {{ $appointment->therapy->color ?: '#0891b2' }}">{{ $appointment->therapy->name }} · {{ $appointment->duration_minutes }} min</p>
                             <p class="mt-1 text-xs font-medium text-slate-500">{{ $appointment->therapists->pluck('name')->implode(' · ') }}</p>
                         </div>
-                        @can('appointments.manage')
-                            @if(! $appointment->isCancelled())
-                                <div class="flex gap-3 sm:justify-end">
+                        <div class="flex flex-wrap items-center gap-3 sm:justify-end">
+                            @if($canViewSessionLog && ! $appointment->isCancelled())
+                                @if($sessionLog?->isCompleted())
+                                    <a data-testid="appointment-session-log-action" href="{{ route('session-logs.show', $appointment) }}" class="rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700 ring-1 ring-emerald-100 hover:bg-emerald-100">Ver bitácora</a>
+                                @elseif($canManageSessionLog)
+                                    <a data-testid="appointment-session-log-action" href="{{ route('session-logs.edit', $appointment) }}" class="rounded-xl bg-violet-600 px-3 py-2 text-sm font-bold text-white shadow-sm hover:bg-violet-700">{{ $sessionLog ? 'Continuar captura' : 'Capturar bitácora' }}</a>
+                                @else
+                                    <a data-testid="appointment-session-log-action" href="{{ route('session-logs.show', $appointment) }}" class="rounded-xl bg-violet-50 px-3 py-2 text-sm font-bold text-violet-700 ring-1 ring-violet-100 hover:bg-violet-100">Ver bitácora</a>
+                                @endif
+                            @endif
+                            @can('appointments.manage')
+                                @if(! $appointment->isCancelled())
                                     <a href="{{ route('appointments.edit', $appointment) }}" class="text-sm font-bold text-cyan-700">Editar</a>
                                     <form method="POST" action="{{ route('appointments.cancel', $appointment) }}" data-confirm="¿Cancelar esta cita?">
                                         @csrf
                                         @method('PATCH')
                                         <button class="text-sm font-bold text-rose-600">Cancelar</button>
                                     </form>
-                                </div>
-                            @endif
-                        @endcan
+                                @endif
+                            @endcan
+                        </div>
                     </article>
                 @empty
                     <div class="rounded-2xl bg-gradient-to-br from-cyan-50 to-pink-50 py-16 text-center">
