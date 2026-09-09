@@ -28,3 +28,18 @@
         @apply bg-pink-200 text-slate-950;
     }
 }
+
+@layer components {
+    /*
+     * Availability buttons are created dynamically and start with bg-white.
+     * Keep the selected state authoritative even when Tailwind's generated
+     * utility order places bg-white after bg-sky-600.
+     */
+    #availability_slots button.text-white {
+        @apply !border-sky-600 !bg-sky-600 !text-white;
+    }
+
+    #availability_slots button.text-white:hover {
+        @apply !bg-sky-700 !text-white;
+    }
+}
