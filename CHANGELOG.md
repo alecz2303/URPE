@@ -97,6 +97,10 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - Historial cronológico de sesiones clínicas accesible desde el contexto del paciente según autorización.
 - Dashboard del terapeuta con acceso directo a sus sesiones asignadas y captura de bitácora.
 - Cobertura automatizada de aprovisionamiento de acceso, autorización por asignación, bitácora, participantes reales y sustituciones de emergencia.
+- Enmiendas clínicas append-only para bitácoras completadas, con autor, fecha, motivo y contenido sin modificar la nota original.
+- Línea longitudinal de evolución del paciente basada en las bitácoras existentes, con terapia, participantes, estado, resumen clínico e indicador de enmiendas.
+- Auditoría `clinical_session_log.amendment_created` sin duplicar el texto clínico de la enmienda en metadata.
+- Cobertura automatizada de inmutabilidad, autorización de enmiendas, orden cronológico, acceso histórico y timeline longitudinal.
 
 ### Changed
 - URPE-1 cerrado e integrado en `master`.
@@ -122,3 +126,5 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-16 elimina del flujo normal la selección manual de “Usuario vinculado”: crear un terapeuta ahora implica crear también su acceso al sistema de forma atómica.
 - URPE-16 limita el acceso del terapeuta a bitácoras mediante permiso + asignación/participación válida, sin otorgar acceso clínico global por pertenecer al rol Terapeuta.
 - URPE-16 separa la asignación operativa actual de agenda del registro histórico de quién participó realmente en la atención.
+- URPE-17 mantiene las bitácoras completadas inmutables y sustituye cualquier corrección destructiva por enmiendas clínicas trazables.
+- URPE-17 convierte el historial básico de sesiones en una línea longitudinal de evolución sin duplicar registros clínicos ni ampliar permisos existentes.

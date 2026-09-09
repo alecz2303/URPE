@@ -33,22 +33,27 @@ URPE procesará información clínica y datos personales; seguridad es requisito
 ## Acceso por perfil
 
 - Administrador: gestión global sujeta a auditoría.
-- Coordinación clínica: acceso clínico amplio según permisos, incluido `session_logs.manage_all` en el baseline de URPE-16.
+- Coordinación clínica: acceso clínico amplio según permisos, incluido `session_logs.manage_all`.
 - Terapeuta: acceso a bitácoras únicamente cuando su cuenta se resuelve al perfil profesional vinculado y existe asignación válida a la cita o participación histórica válida en esa sesión.
 - El rol Terapeuta por sí solo no concede acceso clínico global a pacientes ni permite autoasignarse a citas.
+- La consulta histórica puede mantenerse para un terapeuta que quedó persistido como participante clínico de una sesión; ese vínculo histórico no concede por sí solo permiso para agregar enmiendas después de una sustitución.
+- Para agregar una enmienda, un terapeuta sin `session_logs.manage_all` debe conservar `session_logs.manage` y una asignación vigente a la cita.
 - Una sustitución de terapeuta debe ser ejecutada por un usuario con permiso de gestión de agenda; la autorización clínica se actualiza según la asignación efectiva y el cambio queda auditado.
 - Recepción: acceso operativo/administrativo; no recibe acceso a bitácoras clínicas por defecto.
-- Consulta/Dirección: lectura restringida según permisos; no recibe acceso a bitácoras clínicas por defecto en URPE-16.
+- Consulta/Dirección: lectura restringida según permisos; no recibe acceso a bitácoras clínicas por defecto.
 
 ## Datos clínicos
 
 - No se borran silenciosamente.
 - Correcciones relevantes deben conservar trazabilidad.
 - La bitácora clínica se almacena separada del expediente clínico base y de los metadatos de agenda.
-- El contenido clínico completo de una bitácora no se replica en eventos de auditoría; se registran identificadores, estado, participantes y timestamps necesarios para trazabilidad.
-- Una bitácora completada queda cerrada para edición dentro del baseline de URPE-16.
+- El contenido clínico completo de una bitácora o de una enmienda no se replica en eventos de auditoría; se registran identificadores, estado y contexto mínimo necesario para trazabilidad.
+- Una bitácora completada queda cerrada para edición. URPE-17 no la reabre: toda corrección o complemento posterior se agrega como una enmienda clínica independiente.
+- Cada enmienda conserva vínculo con la bitácora, autor, motivo, contenido y timestamp, y no dispone de eliminación destructiva dentro del flujo clínico normal.
+- La nota original y sus enmiendas se muestran como registros diferenciados para impedir que una corrección posterior parezca haber formado parte del texto original.
 - Los terapeutas participantes se persisten en la sesión para que cambios posteriores de agenda no reescriban quién atendió realmente al paciente.
 - El historial de sustituciones conserva terapeuta removido, terapeuta agregado, actor, momento y motivo operativo opcional.
+- La línea longitudinal del paciente reutiliza las mismas reglas de autorización de bitácoras y no crea una vía alternativa para ampliar acceso clínico.
 - Adjuntos se almacenan fuera del directorio público.
 - Descargas requieren autorización en el momento de acceso.
 

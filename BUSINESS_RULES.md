@@ -150,7 +150,7 @@
 
 **BR-074.** Cada ocurrencia de cita puede tener como máximo una bitácora clínica canónica, separada del expediente clínico base y de las notas administrativas.
 
-**BR-075.** La bitácora clínica admite estado `draft` y `completed`. Una bitácora completada queda cerrada para edición normal en el baseline de URPE-16; cualquier mecanismo de corrección posterior deberá preservar el registro original y su trazabilidad.
+**BR-075.** La bitácora clínica admite estado `draft` y `completed`. Una bitácora completada queda cerrada para edición normal; cualquier corrección posterior debe preservar el registro original y se realiza mediante una enmienda trazable.
 
 **BR-076.** La bitácora registra tratamiento/actividades realizadas, respuesta/evolución del paciente, observaciones/incidencias, recomendaciones para casa y objetivos de siguiente sesión, además de los terapeutas participantes.
 
@@ -170,12 +170,20 @@
 
 **BR-084.** La ficha del paciente puede mostrar un historial cronológico de sesiones únicamente a usuarios con autorización clínica correspondiente; este historial no convierte el permiso de pacientes administrativos en permiso clínico.
 
+**BR-085.** Una enmienda clínica sólo puede agregarse a una bitácora `completed`; no reabre, modifica ni reemplaza el texto original ni altera los terapeutas que participaron originalmente.
+
+**BR-086.** Cada enmienda debe conservar la bitácora relacionada, autor, fecha/hora, motivo y contenido de la corrección o complemento. Las enmiendas no se eliminan destructivamente como flujo clínico normal.
+
+**BR-087.** Un terapeuta sin acceso clínico global puede agregar una enmienda únicamente si conserva `session_logs.manage` y una asignación vigente a la cita. La participación histórica permite consulta cuando corresponda, pero no concede por sí sola capacidad de enmienda después de una sustitución.
+
+**BR-088.** La creación de una enmienda debe auditarse sin duplicar su contenido clínico ni su motivo clínico completo en metadata de auditoría; los identificadores y contexto mínimo son suficientes para trazabilidad técnica.
+
+**BR-089.** La línea longitudinal de evolución del paciente es una proyección de bitácoras, citas, terapias, participantes y enmiendas existentes. No crea una segunda copia clínica y sólo muestra registros que el usuario ya está autorizado a consultar.
+
 ## Decisiones abiertas
 
 Estas reglas deben cerrarse antes de desarrollar el recurso correspondiente:
 
-- **BR-P01:** mecanismo de corrección/enmienda de bitácora después del cierre, preservando el registro original.
-- **BR-P02:** quién puede autorizar y firmar una corrección clínica posterior al cierre.
 - **BR-P04:** efecto de cambiar duración/configuración de terapia sobre citas ya existentes.
 - **BR-P05:** Pediasuit requiere exactamente 2 terapeutas o mínimo 2. *(URPE-11 adopta exactamente `required_therapists` como baseline; revisar solo si negocio cambia la semántica futura.)*
 - **BR-P06:** campos clínicos visibles para Recepción.

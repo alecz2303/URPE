@@ -17,8 +17,14 @@ class PatientSessionLogController extends Controller
 
         $query = ClinicalSessionLog::query()
             ->where('patient_id', $patient->id)
-            ->with(['appointment', 'therapy', 'participatingTherapists'])
-            ->latest('created_at');
+            ->with(['appointment', 'therapy', 'participatingTherapists', 'amendments'])
+            ->whereHas('appointment')
+            ->orderByDesc(
+                \App\Models\Appointment::query()
+                    ->select('starts_at')
+                    ->whereColumn('appointments.id', 'clinical_session_logs.appointment_id')
+                    ->limit(1)
+            );
 
         if (! $user->hasPermission('session_logs.manage_all')) {
             $therapist = $user->therapistProfile;
