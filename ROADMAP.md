@@ -42,8 +42,8 @@
 2. [x] Diagnósticos, objetivos y observaciones basales. *(URPE-10)*
 3. [ ] Archivos clínicos protegidos vinculados al expediente.
 4. [x] Bitácora por sesión. *(URPE-16: una bitácora por cita, borrador/cierre, contenido clínico estructurado y participantes reales)*
-5. [x] Línea de tiempo clínica. *(URPE-16: historial cronológico de sesiones desde el contexto del paciente para usuarios autorizados)*
-6. [ ] Reglas de corrección posterior al cierre. *(URPE-16 cierra la bitácora completada para edición normal y deja la corrección clínica posterior como decisión específica futura.)*
+5. [x] Línea de tiempo clínica. *(URPE-16 aporta historial cronológico básico; URPE-17 lo convierte en una línea longitudinal de evolución con estado, terapia, participantes, resumen clínico e indicador de enmiendas.)*
+6. [x] Reglas de corrección posterior al cierre. *(URPE-17: la nota completada permanece inmutable y cualquier corrección posterior se agrega como enmienda clínica trazable.)*
 
 ## Fase 5 — Operación y cierre V1
 

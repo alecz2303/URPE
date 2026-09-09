@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ClinicalSessionLog extends Model
 {
@@ -62,6 +63,11 @@ class ClinicalSessionLog extends Model
     public function participatingTherapists(): BelongsToMany
     {
         return $this->belongsToMany(Therapist::class, 'clinical_session_log_therapist')->withTimestamps();
+    }
+
+    public function amendments(): HasMany
+    {
+        return $this->hasMany(ClinicalSessionLogAmendment::class)->oldest('created_at')->oldest('id');
     }
 
     public function isCompleted(): bool

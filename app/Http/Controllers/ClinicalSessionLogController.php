@@ -19,7 +19,15 @@ class ClinicalSessionLogController extends Controller
     {
         $this->authorizeAppointmentAccess($request->user(), $appointment, 'session_logs.view');
 
-        $appointment->load(['patient', 'therapy', 'therapists', 'clinicalSessionLog.participatingTherapists', 'therapistChanges.removedTherapist', 'therapistChanges.addedTherapist']);
+        $appointment->load([
+            'patient',
+            'therapy',
+            'therapists',
+            'clinicalSessionLog.participatingTherapists',
+            'clinicalSessionLog.amendments.author',
+            'therapistChanges.removedTherapist',
+            'therapistChanges.addedTherapist',
+        ]);
 
         return view('clinical-session-logs.show', [
             'appointment' => $appointment,

@@ -44,6 +44,7 @@ La suite automática usa SQLite `:memory:` por defecto mediante `phpunit.xml`, s
 - clinical_documents
 - clinical_session_logs
 - clinical_session_log_therapist
+- clinical_session_log_amendments
 
 ### Agenda — baseline URPE-11 + recurrencia URPE-14 + sustituciones URPE-16
 
@@ -102,7 +103,7 @@ Pendiente de fases posteriores:
 - no-show y finalización operativa
 - filtros y estados adicionales.
 
-### Evolución — baseline URPE-16
+### Evolución — baseline URPE-16 + enmiendas URPE-17
 
 #### `clinical_session_logs`
 - `id`
@@ -130,9 +131,19 @@ Cada cita puede tener como máximo una bitácora clínica canónica. El paciente
 
 Esta relación registra a los profesionales que efectivamente participaron en la sesión. Se mantiene separada de la asignación actual de agenda para que una modificación posterior no reescriba la autoría/participación clínica histórica.
 
+#### `clinical_session_log_amendments`
+- `id`
+- `clinical_session_log_id` FK restrict hacia la bitácora
+- `authored_by_user_id` nullable FK hacia `users`
+- `reason` máximo 500 caracteres
+- `content` texto clínico de la corrección o complemento
+- timestamps
+- índice por bitácora + fecha de creación
+
+URPE-17 no reabre ni sobrescribe una bitácora completada. Cada corrección posterior se persiste como un registro adicional en `clinical_session_log_amendments`, conservando autor y orden cronológico. No existe eliminación destructiva como flujo clínico normal. La línea longitudinal del paciente se proyecta desde `clinical_session_logs`, su cita, terapia, participantes y enmiendas; no duplica esos datos en una tabla paralela.
+
 Pendiente de fases posteriores:
-- adjuntos específicos de sesión, si se aprueban;
-- mecanismo versionado de corrección o enmienda posterior al cierre.
+- adjuntos específicos de sesión, si se aprueban.
 
 ## Reglas de persistencia
 
@@ -144,5 +155,6 @@ Pendiente de fases posteriores:
 - Una cita con bitácora clínica o historial de sustituciones no debe desaparecer mediante cascada destructiva.
 - Las series recurrentes son contenedores operativos; las ocurrencias siguen siendo citas individuales auditables.
 - Los participantes clínicos de una sesión permanecen persistidos independientemente de cambios posteriores en la asignación de agenda.
+- Las bitácoras completadas permanecen inmutables y sus correcciones posteriores se agregan mediante enmiendas trazables.
 - Los cambios de esquema solo entran mediante migraciones versionadas.
-- Índices deben cubrir búsquedas por paciente, terapeuta, intervalos de agenda, series recurrentes, bitácoras y auditoría según uso real.
+- Índices deben cubrir búsquedas por paciente, terapeuta, intervalos de agenda, series recurrentes, bitácoras, enmiendas y auditoría según uso real.

@@ -43,6 +43,56 @@
                 </article>
             @endforeach
         </section>
+
+        @if($sessionLog->isCompleted())
+            <section class="mt-6 rounded-3xl border border-violet-100 bg-white p-6 shadow-sm">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">Enmiendas clínicas</p>
+                        <p class="mt-1 text-sm text-slate-500">La nota original permanece inmutable. Toda corrección posterior queda agregada con autor y fecha.</p>
+                    </div>
+                    @if($sessionLog->amendments->isNotEmpty())
+                        <span class="rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-800">{{ $sessionLog->amendments->count() }} {{ $sessionLog->amendments->count() === 1 ? 'enmienda' : 'enmiendas' }}</span>
+                    @endif
+                </div>
+
+                <div class="mt-5 space-y-4">
+                    @forelse($sessionLog->amendments as $amendment)
+                        <article class="rounded-2xl border border-violet-100 bg-violet-50/50 p-4">
+                            <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                                <p class="font-bold text-slate-900">{{ $amendment->reason }}</p>
+                                <p class="text-xs font-medium text-slate-500">{{ $amendment->created_at->translatedFormat('d M Y · H:i') }}</p>
+                            </div>
+                            <p class="mt-1 text-xs font-semibold text-violet-700">{{ $amendment->author?->name ?: 'Usuario no disponible' }}</p>
+                            <p class="mt-3 whitespace-pre-line text-sm leading-6 text-slate-700">{{ $amendment->content }}</p>
+                        </article>
+                    @empty
+                        <div class="rounded-2xl border border-dashed border-violet-200 bg-violet-50/40 p-5 text-sm text-violet-800">Esta bitácora no tiene enmiendas.</div>
+                    @endforelse
+                </div>
+
+                @if($canManage)
+                    <form method="POST" action="{{ route('session-log-amendments.store', $appointment) }}" class="mt-6 border-t border-slate-100 pt-6">
+                        @csrf
+                        <p class="font-black text-slate-900">Agregar enmienda</p>
+                        <p class="mt-1 text-sm text-slate-500">Usa este espacio para corregir o complementar información sin alterar la nota clínica original.</p>
+                        <div class="mt-4 grid gap-4">
+                            <div>
+                                <label for="reason" class="text-sm font-bold text-slate-700">Motivo</label>
+                                <input id="reason" name="reason" type="text" maxlength="500" required value="{{ old('reason') }}" class="mt-1 w-full rounded-xl border-slate-200 focus:border-violet-400 focus:ring-violet-400" placeholder="Ej. Corrección de dato clínico o complemento posterior">
+                                @error('reason')<p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label for="content" class="text-sm font-bold text-slate-700">Contenido de la enmienda</label>
+                                <textarea id="content" name="content" rows="5" maxlength="10000" required class="mt-1 w-full rounded-xl border-slate-200 focus:border-violet-400 focus:ring-violet-400" placeholder="Describe únicamente la corrección o información complementaria.">{{ old('content') }}</textarea>
+                                @error('content')<p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p>@enderror
+                            </div>
+                        </div>
+                        <button type="submit" class="mt-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:from-violet-700 hover:to-fuchsia-700">Guardar enmienda</button>
+                    </form>
+                @endif
+            </section>
+        @endif
     @else
         <section class="rounded-3xl border border-dashed border-violet-200 bg-violet-50/60 p-8 text-center">
             <p class="text-lg font-black text-violet-900">Esta sesión todavía no tiene bitácora clínica.</p>
