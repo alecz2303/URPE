@@ -30,8 +30,8 @@
 7. [x] Prevención de traslapes. *(URPE-11; URPE-16 la conserva en sustituciones)*
 8. [x] Citas recurrentes. *(URPE-14: series semanales acotadas, ocurrencias individuales, validación atómica y edición/cancelación por alcance)*
 9. [x] Ausencias, bloqueos y descansos como restricciones de agenda. *(URPE-11 reutiliza baseline URPE-7; URPE-13 agrega acceso dedicado fuera de la edición del terapeuta)*
-10. [ ] Estados y filtros operativos ampliados.
-11. [x] Historial básico auditable de creación, reprogramación y cancelación. *(URPE-11; URPE-14 agrega auditoría de operaciones sobre series; URPE-16 agrega historial de sustituciones de terapeuta)*
+10. [x] Estados y filtros operativos ampliados. *(URPE-21: estados Programada/Confirmada/En atención/Completada/No asistió/Cancelada; filtros por estado, terapia, terapeuta y paciente preservados entre Día/Semana/Mes.)*
+11. [x] Historial básico auditable de creación, reprogramación y cancelación. *(URPE-11; URPE-14 agrega auditoría de operaciones sobre series; URPE-16 agrega historial de sustituciones de terapeuta; URPE-21 audita cambios de estado.)*
 12. [x] Presentación diferenciada: día cronológico, semana por columnas y mes en calendario. *(URPE-12)*
 13. [x] Navegación anterior/hoy/siguiente, selector de fecha y acceso de mes a día. *(URPE-13)*
 14. [x] Selector asistido de disponibilidad para nuevas citas. *(URPE-14: fecha → horarios válidos → terapeutas disponibles)*
