@@ -7,11 +7,13 @@ use App\Models\Patient;
 use App\Models\Therapist;
 use App\Models\Therapy;
 use App\Services\AppointmentScheduler;
+use App\Services\AppointmentStatusManager;
 use App\Services\RecurringAppointmentScheduler;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AppointmentController extends Controller
@@ -32,9 +34,31 @@ class AppointmentController extends Controller
             default => [$date->startOfWeek()->startOfDay(), $date->endOfWeek()->endOfDay()],
         };
 
+        $filters = [
+            'status' => array_key_exists($request->string('status')->toString(), Appointment::statuses())
+                ? $request->string('status')->toString()
+                : '',
+            'therapy_id' => max(0, $request->integer('therapy_id')),
+            'therapist_id' => max(0, $request->integer('therapist_id')),
+            'patient_id' => max(0, $request->integer('patient_id')),
+        ];
+
         $appointments = Appointment::query()
-            ->with(['patient', 'therapy', 'therapists', 'series'])
+            ->with([
+                'patient',
+                'therapy',
+                'therapists',
+                'series',
+                'clinicalSessionLog.participatingTherapists',
+            ])
             ->whereBetween('starts_at', [$rangeStart, $rangeEnd])
+            ->when($filters['status'] !== '', fn ($query) => $query->where('status', $filters['status']))
+            ->when($filters['therapy_id'] > 0, fn ($query) => $query->where('therapy_id', $filters['therapy_id']))
+            ->when($filters['patient_id'] > 0, fn ($query) => $query->where('patient_id', $filters['patient_id']))
+            ->when($filters['therapist_id'] > 0, fn ($query) => $query->whereHas(
+                'therapists',
+                fn ($therapists) => $therapists->whereKey($filters['therapist_id']),
+            ))
             ->orderBy('starts_at')
             ->get();
 
@@ -49,6 +73,13 @@ class AppointmentController extends Controller
             $calendarDays->push($cursor);
         }
 
+        $filterOptions = [
+            'statuses' => Appointment::statuses(),
+            'therapies' => Therapy::query()->orderBy('name')->get(['id', 'name']),
+            'therapists' => Therapist::query()->orderBy('name')->get(['id', 'name']),
+            'patients' => Patient::query()->orderBy('last_name')->orderBy('first_name')->get(),
+        ];
+
         return view('appointments.index', compact(
             'appointments',
             'mode',
@@ -57,6 +88,8 @@ class AppointmentController extends Controller
             'rangeEnd',
             'weekDays',
             'calendarDays',
+            'filters',
+            'filterOptions',
         ));
     }
 
@@ -183,6 +216,22 @@ class AppointmentController extends Controller
         return redirect()
             ->route('appointments.index', ['view' => 'day', 'date' => $startsAt->toDateString()])
             ->with('success', $message);
+    }
+
+    public function changeStatus(
+        Request $request,
+        Appointment $appointment,
+        AppointmentStatusManager $statusManager,
+    ): RedirectResponse {
+        Gate::authorize('appointments.manage');
+
+        $data = $request->validate([
+            'status' => ['required', 'string', Rule::in(array_keys(Appointment::statuses()))],
+        ]);
+
+        $statusManager->transition($appointment, $data['status'], $request->user());
+
+        return back()->with('success', 'Estado de la cita actualizado correctamente.');
     }
 
     public function cancel(

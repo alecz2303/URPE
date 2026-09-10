@@ -41,8 +41,8 @@ class ClinicalSessionLogController extends Controller
     {
         $this->authorizeAppointmentAccess($request->user(), $appointment, 'session_logs.manage');
 
-        if ($appointment->isCancelled()) {
-            abort(422, 'No se puede capturar bitácora de una cita cancelada.');
+        if (! $appointment->allowsSessionCapture()) {
+            abort(422, "No se puede capturar bitácora de una cita {$appointment->statusLabel()}.");
         }
 
         $appointment->load(['patient', 'therapy', 'therapists', 'clinicalSessionLog.participatingTherapists']);
@@ -75,8 +75,10 @@ class ClinicalSessionLogController extends Controller
     {
         $this->authorizeAppointmentAccess($request->user(), $appointment, 'session_logs.manage');
 
-        if ($appointment->isCancelled()) {
-            return response()->json(['message' => 'No se puede guardar una sesión cancelada.'], 422);
+        if (! $appointment->allowsSessionCapture()) {
+            return response()->json([
+                'message' => "No se puede guardar una sesión para una cita {$appointment->statusLabel()}.",
+            ], 422);
         }
 
         $appointment->load(['therapists', 'clinicalSessionLog.participatingTherapists']);
@@ -155,8 +157,10 @@ class ClinicalSessionLogController extends Controller
     {
         $this->authorizeAppointmentAccess($request->user(), $appointment, 'session_logs.manage');
 
-        if ($appointment->isCancelled()) {
-            throw ValidationException::withMessages(['appointment' => 'No se puede capturar bitácora de una cita cancelada.']);
+        if (! $appointment->allowsSessionCapture()) {
+            throw ValidationException::withMessages([
+                'appointment' => "No se puede capturar bitácora de una cita {$appointment->statusLabel()}.",
+            ]);
         }
 
         $appointment->load(['patient', 'therapy', 'therapists', 'clinicalSessionLog.participatingTherapists']);

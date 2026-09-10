@@ -39,6 +39,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/agenda/citas', [AppointmentController::class, 'store'])->name('appointments.store');
     Route::get('/agenda/citas/{appointment}/editar', [AppointmentController::class, 'edit'])->name('appointments.edit');
     Route::put('/agenda/citas/{appointment}', [AppointmentController::class, 'update'])->name('appointments.update');
+    Route::patch('/agenda/citas/{appointment}/estado', [AppointmentController::class, 'changeStatus'])->name('appointments.status');
     Route::patch('/agenda/citas/{appointment}/cancelar', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
     Route::patch('/agenda/citas/{appointment}/sustituir-terapeuta', AppointmentTherapistSubstitutionController::class)
         ->name('appointments.therapists.substitute');

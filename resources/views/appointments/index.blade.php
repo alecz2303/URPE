@@ -16,12 +16,18 @@
             'month' => $date->copy()->addMonth(),
             default => $date->copy()->addWeek(),
         };
+        $navFilters = array_filter($filters, fn ($value) => $value !== '' && $value !== 0);
+        $routeParams = fn (array $params = []) => array_merge($navFilters, $params);
+        $statusClasses = fn ($appointment) => match ($appointment->status) {
+            \App\Models\Appointment::STATUS_CONFIRMED => 'bg-cyan-100 text-cyan-800',
+            \App\Models\Appointment::STATUS_IN_PROGRESS => 'bg-violet-100 text-violet-800',
+            \App\Models\Appointment::STATUS_COMPLETED => 'bg-emerald-100 text-emerald-800',
+            \App\Models\Appointment::STATUS_NO_SHOW => 'bg-amber-100 text-amber-800',
+            \App\Models\Appointment::STATUS_CANCELLED => 'bg-rose-100 text-rose-700',
+            default => 'bg-sky-100 text-sky-800',
+        };
 
         $sessionLogAction = function ($appointment) {
-            if ($appointment->isCancelled()) {
-                return null;
-            }
-
             $user = auth()->user();
             $therapist = $user->therapistProfile;
             $log = $appointment->clinicalSessionLog;
@@ -36,6 +42,12 @@
                 return $canView ? ['label' => 'Ver bitácora', 'url' => route('session-logs.show', $appointment), 'completed' => true] : null;
             }
 
+            if (! $appointment->allowsSessionCapture()) {
+                return $log && $canView
+                    ? ['label' => 'Ver bitácora', 'url' => route('session-logs.show', $appointment), 'completed' => false]
+                    : null;
+            }
+
             if ($canManage) {
                 return ['label' => $log ? 'Continuar captura' : 'Capturar bitácora', 'url' => route('session-logs.edit', $appointment), 'completed' => false];
             }
@@ -48,31 +60,86 @@
         };
     @endphp
 
-    <section class="mb-6 overflow-hidden rounded-3xl border border-cyan-100 bg-gradient-to-r from-white via-cyan-50/80 to-pink-50/70 p-4 shadow-sm sm:p-5">
+    <section class="mb-4 overflow-hidden rounded-3xl border border-cyan-100 bg-gradient-to-r from-white via-cyan-50/80 to-pink-50/70 p-4 shadow-sm sm:p-5">
         <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <div>
                 <p class="text-sm font-extrabold text-slate-800">{{ $rangeStart->translatedFormat('d M Y') }} — {{ $rangeEnd->translatedFormat('d M Y') }}</p>
-                <p class="mt-1 text-xs font-medium text-slate-500">{{ $appointments->count() }} {{ $appointments->count() === 1 ? 'cita' : 'citas' }} en el periodo</p>
+                <p class="mt-1 text-xs font-medium text-slate-500">{{ $appointments->count() }} {{ $appointments->count() === 1 ? 'cita' : 'citas' }} con los filtros actuales</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-2">
-                <a href="{{ route('appointments.index', ['view' => $mode, 'date' => $previousDate->toDateString()]) }}" class="grid h-10 w-10 place-items-center rounded-xl border border-cyan-100 bg-white text-lg font-bold text-cyan-700 shadow-sm hover:bg-cyan-50" aria-label="Periodo anterior">‹</a>
-                <a href="{{ route('appointments.index', ['view' => $mode, 'date' => now()->toDateString()]) }}" class="rounded-xl border border-cyan-100 bg-white px-3.5 py-2.5 text-sm font-bold text-cyan-700 shadow-sm hover:bg-cyan-50">Hoy</a>
-                <a href="{{ route('appointments.index', ['view' => $mode, 'date' => $nextDate->toDateString()]) }}" class="grid h-10 w-10 place-items-center rounded-xl border border-cyan-100 bg-white text-lg font-bold text-cyan-700 shadow-sm hover:bg-cyan-50" aria-label="Periodo siguiente">›</a>
+                <a href="{{ route('appointments.index', $routeParams(['view' => $mode, 'date' => $previousDate->toDateString()])) }}" class="grid h-10 w-10 place-items-center rounded-xl border border-cyan-100 bg-white text-lg font-bold text-cyan-700 shadow-sm hover:bg-cyan-50" aria-label="Periodo anterior">‹</a>
+                <a href="{{ route('appointments.index', $routeParams(['view' => $mode, 'date' => now()->toDateString()])) }}" class="rounded-xl border border-cyan-100 bg-white px-3.5 py-2.5 text-sm font-bold text-cyan-700 shadow-sm hover:bg-cyan-50">Hoy</a>
+                <a href="{{ route('appointments.index', $routeParams(['view' => $mode, 'date' => $nextDate->toDateString()])) }}" class="grid h-10 w-10 place-items-center rounded-xl border border-cyan-100 bg-white text-lg font-bold text-cyan-700 shadow-sm hover:bg-cyan-50" aria-label="Periodo siguiente">›</a>
 
                 <form method="GET" action="{{ route('appointments.index') }}" class="flex items-center gap-2 rounded-xl border border-violet-100 bg-white p-1 shadow-sm">
                     <input type="hidden" name="view" value="{{ $mode }}">
+                    @foreach($navFilters as $filterName => $filterValue)
+                        <input type="hidden" name="{{ $filterName }}" value="{{ $filterValue }}">
+                    @endforeach
                     <input type="date" name="date" value="{{ $date->toDateString() }}" class="rounded-lg border-0 bg-transparent px-2 py-1.5 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-0">
                     <button class="rounded-lg bg-violet-500 px-3 py-2 text-xs font-bold text-white hover:bg-violet-600">Ir</button>
                 </form>
 
                 <div class="inline-flex rounded-xl border border-pink-100 bg-white p-1 shadow-sm">
                     @foreach(['day' => 'Día', 'week' => 'Semana', 'month' => 'Mes'] as $key => $label)
-                        <a href="{{ route('appointments.index', ['view' => $key, 'date' => $date->toDateString()]) }}" class="rounded-lg px-4 py-2 text-sm font-bold transition {{ $mode === $key ? 'bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white shadow-sm' : 'text-slate-600 hover:bg-pink-50 hover:text-pink-700' }}">{{ $label }}</a>
+                        <a href="{{ route('appointments.index', $routeParams(['view' => $key, 'date' => $date->toDateString()])) }}" class="rounded-lg px-4 py-2 text-sm font-bold transition {{ $mode === $key ? 'bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white shadow-sm' : 'text-slate-600 hover:bg-pink-50 hover:text-pink-700' }}">{{ $label }}</a>
                     @endforeach
                 </div>
             </div>
         </div>
+    </section>
+
+    <section class="mb-6 rounded-3xl border border-slate-100 bg-white p-4 shadow-sm">
+        <form method="GET" action="{{ route('appointments.index') }}" class="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
+            <input type="hidden" name="view" value="{{ $mode }}">
+            <input type="hidden" name="date" value="{{ $date->toDateString() }}">
+
+            <label class="block">
+                <span class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Estado</span>
+                <select name="status" class="w-full rounded-xl border-slate-200 text-sm font-semibold text-slate-700">
+                    <option value="">Todos</option>
+                    @foreach($filterOptions['statuses'] as $value => $label)
+                        <option value="{{ $value }}" @selected($filters['status'] === $value)>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </label>
+
+            <label class="block">
+                <span class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Terapia</span>
+                <select name="therapy_id" class="w-full rounded-xl border-slate-200 text-sm font-semibold text-slate-700">
+                    <option value="">Todas</option>
+                    @foreach($filterOptions['therapies'] as $therapy)
+                        <option value="{{ $therapy->id }}" @selected($filters['therapy_id'] === $therapy->id)>{{ $therapy->name }}</option>
+                    @endforeach
+                </select>
+            </label>
+
+            <label class="block">
+                <span class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Terapeuta</span>
+                <select name="therapist_id" class="w-full rounded-xl border-slate-200 text-sm font-semibold text-slate-700">
+                    <option value="">Todos</option>
+                    @foreach($filterOptions['therapists'] as $therapist)
+                        <option value="{{ $therapist->id }}" @selected($filters['therapist_id'] === $therapist->id)>{{ $therapist->name }}</option>
+                    @endforeach
+                </select>
+            </label>
+
+            <label class="block">
+                <span class="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-500">Paciente</span>
+                <select name="patient_id" class="w-full rounded-xl border-slate-200 text-sm font-semibold text-slate-700">
+                    <option value="">Todos</option>
+                    @foreach($filterOptions['patients'] as $patient)
+                        <option value="{{ $patient->id }}" @selected($filters['patient_id'] === $patient->id)>{{ $patient->full_name }}</option>
+                    @endforeach
+                </select>
+            </label>
+
+            <div class="flex items-end gap-2 md:col-span-2 xl:col-span-2">
+                <button class="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white hover:bg-slate-800">Aplicar filtros</button>
+                <a href="{{ route('appointments.index', ['view' => $mode, 'date' => $date->toDateString()]) }}" class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-50">Limpiar</a>
+            </div>
+        </form>
     </section>
 
     @if($mode === 'day')
@@ -89,8 +156,9 @@
                     @php
                         $sessionLog = $appointment->clinicalSessionLog;
                         $sessionAction = $sessionLogAction($appointment);
+                        $transitionTargets = \App\Models\Appointment::transitionTargets($appointment->status);
                     @endphp
-                    <article class="relative grid gap-4 rounded-2xl border border-slate-100 bg-gradient-to-r from-white to-slate-50/60 py-4 pl-7 pr-4 shadow-sm sm:grid-cols-[90px_minmax(0,1fr)_auto] sm:items-start {{ $appointment->isCancelled() ? 'opacity-55' : '' }}">
+                    <article class="relative grid gap-4 rounded-2xl border border-slate-100 bg-gradient-to-r from-white to-slate-50/60 py-4 pl-7 pr-4 shadow-sm sm:grid-cols-[90px_minmax(0,1fr)_auto] sm:items-start {{ $appointment->isClosed() ? 'opacity-65' : '' }}">
                         <span class="absolute inset-y-3 left-0 w-1.5 rounded-r-full" style="background-color: {{ $appointment->therapy->color ?: '#0891b2' }}"></span>
                         <div>
                             <p class="text-xl font-extrabold tabular-nums text-slate-950">{{ $appointment->starts_at->format('H:i') }}</p>
@@ -99,7 +167,7 @@
                         <div class="min-w-0">
                             <div class="flex flex-wrap items-center gap-2">
                                 <h3 class="font-extrabold text-slate-900">{{ $appointment->patient->full_name }}</h3>
-                                <span class="rounded-full px-2.5 py-1 text-[11px] font-bold {{ $appointment->isCancelled() ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700' }}">{{ $appointment->isCancelled() ? 'Cancelada' : 'Programada' }}</span>
+                                <span data-testid="appointment-status" class="rounded-full px-2.5 py-1 text-[11px] font-bold {{ $statusClasses($appointment) }}">{{ $appointment->statusLabel() }}</span>
                                 @if($sessionLog)
                                     <span class="rounded-full px-2.5 py-1 text-[11px] font-bold {{ $sessionLog->isCompleted() ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700' }}">Bitácora {{ $sessionLog->isCompleted() ? 'completada' : 'pendiente' }}</span>
                                 @endif
@@ -107,17 +175,29 @@
                             <p class="mt-1 text-sm font-bold" style="color: {{ $appointment->therapy->color ?: '#0891b2' }}">{{ $appointment->therapy->name }} · {{ $appointment->duration_minutes }} min</p>
                             <p class="mt-1 text-xs font-medium text-slate-500">{{ $appointment->therapists->pluck('name')->implode(' · ') }}</p>
                         </div>
-                        <div class="flex flex-wrap items-center gap-3 sm:justify-end">
+                        <div class="flex max-w-md flex-wrap items-center gap-2 sm:justify-end">
                             @if($sessionAction)
                                 <a data-testid="appointment-session-log-action" href="{{ $sessionAction['url'] }}" class="rounded-xl px-3 py-2 text-sm font-bold {{ $sessionAction['completed'] ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100 hover:bg-emerald-100' : 'bg-violet-600 text-white shadow-sm hover:bg-violet-700' }}">{{ $sessionAction['label'] }}</a>
                             @endif
                             @can('appointments.manage')
-                                @if(! $appointment->isCancelled())
-                                    <a href="{{ route('appointments.edit', $appointment) }}" class="text-sm font-bold text-cyan-700">Editar</a>
+                                @if($appointment->allowsScheduleChanges())
+                                    <a href="{{ route('appointments.edit', $appointment) }}" class="rounded-xl px-2 py-2 text-sm font-bold text-cyan-700 hover:bg-cyan-50">Editar</a>
+                                @endif
+
+                                @foreach($transitionTargets as $targetStatus)
+                                    <form method="POST" action="{{ route('appointments.status', $appointment) }}" data-confirm="¿Cambiar estado a {{ \App\Models\Appointment::statuses()[$targetStatus] }}?">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="hidden" name="status" value="{{ $targetStatus }}">
+                                        <button class="rounded-xl border border-slate-200 bg-white px-2.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50">{{ \App\Models\Appointment::statuses()[$targetStatus] }}</button>
+                                    </form>
+                                @endforeach
+
+                                @if($appointment->allowsScheduleChanges())
                                     <form method="POST" action="{{ route('appointments.cancel', $appointment) }}" data-confirm="¿Cancelar esta cita?">
                                         @csrf
                                         @method('PATCH')
-                                        <button class="text-sm font-bold text-rose-600">Cancelar</button>
+                                        <button class="rounded-xl px-2 py-2 text-sm font-bold text-rose-600 hover:bg-rose-50">Cancelar</button>
                                     </form>
                                 @endif
                             @endcan
@@ -127,7 +207,7 @@
                     <div class="rounded-2xl bg-gradient-to-br from-cyan-50 to-pink-50 py-16 text-center">
                         <div class="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-white text-xl shadow-sm">♡</div>
                         <h3 class="mt-4 font-bold">Sin citas para este día</h3>
-                        <p class="mt-1 text-sm text-slate-500">Elige otra fecha o programa una nueva cita.</p>
+                        <p class="mt-1 text-sm text-slate-500">Ajusta los filtros, elige otra fecha o programa una nueva cita.</p>
                     </div>
                 @endforelse
             </div>
@@ -146,9 +226,12 @@
                         <div class="space-y-3">
                             @forelse($dayAppointments as $appointment)
                                 @php($sessionAction = $sessionLogAction($appointment))
-                                <article class="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-3 pl-4 shadow-sm {{ $appointment->isCancelled() ? 'opacity-50' : '' }}">
+                                <article class="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-3 pl-4 shadow-sm {{ $appointment->isClosed() ? 'opacity-60' : '' }}">
                                     <span class="absolute inset-y-0 left-0 w-1.5" style="background-color: {{ $appointment->therapy->color ?: '#0891b2' }}"></span>
-                                    <p class="text-sm font-extrabold tabular-nums text-slate-900">{{ $appointment->starts_at->format('H:i') }}</p>
+                                    <div class="flex items-start justify-between gap-2">
+                                        <p class="text-sm font-extrabold tabular-nums text-slate-900">{{ $appointment->starts_at->format('H:i') }}</p>
+                                        <span class="rounded-full px-2 py-0.5 text-[9px] font-bold {{ $statusClasses($appointment) }}">{{ $appointment->statusLabel() }}</span>
+                                    </div>
                                     <p class="mt-1 truncate text-sm font-bold">{{ $appointment->patient->full_name }}</p>
                                     <p class="mt-1 truncate text-xs font-bold" style="color: {{ $appointment->therapy->color ?: '#0891b2' }}">{{ $appointment->therapy->name }}</p>
                                     <p class="mt-2 line-clamp-2 text-[11px] font-medium text-slate-400">{{ $appointment->therapists->pluck('name')->implode(', ') }}</p>
@@ -157,14 +240,14 @@
                                             <a data-testid="appointment-session-log-action-week" href="{{ $sessionAction['url'] }}" class="inline-flex text-xs font-bold {{ $sessionAction['completed'] ? 'text-emerald-700' : 'text-violet-700' }}">{{ $sessionAction['label'] }}</a>
                                         @endif
                                         @can('appointments.manage')
-                                            @if(! $appointment->isCancelled())
+                                            @if($appointment->allowsScheduleChanges())
                                                 <a href="{{ route('appointments.edit', $appointment) }}" class="inline-flex text-xs font-bold text-cyan-700">Editar</a>
                                             @endif
                                         @endcan
                                     </div>
                                 </article>
                             @empty
-                                <a href="{{ route('appointments.index', ['view' => 'day', 'date' => $weekDay->toDateString()]) }}" class="block rounded-xl border border-dashed border-slate-200 bg-slate-50/70 px-3 py-5 text-center text-xs font-medium text-slate-400 hover:border-cyan-200 hover:bg-cyan-50 hover:text-cyan-700">Sin citas</a>
+                                <a href="{{ route('appointments.index', $routeParams(['view' => 'day', 'date' => $weekDay->toDateString()])) }}" class="block rounded-xl border border-dashed border-slate-200 bg-slate-50/70 px-3 py-5 text-center text-xs font-medium text-slate-400 hover:border-cyan-200 hover:bg-cyan-50 hover:text-cyan-700">Sin citas</a>
                             @endforelse
                         </div>
                     </div>
@@ -185,7 +268,7 @@
                         @php($isToday = $calendarDay->isToday())
                         <div class="min-h-[150px] border-b border-r border-slate-100 p-3 {{ $calendarDay->month !== $date->month ? 'bg-slate-50/60 text-slate-400' : ($isToday ? 'bg-cyan-50/70' : 'bg-white') }}">
                             <div class="flex items-center justify-between gap-2">
-                                <a href="{{ route('appointments.index', ['view' => 'day', 'date' => $calendarDay->toDateString()]) }}" class="grid h-8 min-w-8 place-items-center rounded-full px-2 text-sm font-extrabold transition {{ $isToday ? 'bg-gradient-to-br from-pink-500 to-fuchsia-500 text-white shadow-sm' : 'hover:bg-cyan-100 hover:text-cyan-800' }}">{{ $calendarDay->format('d') }}</a>
+                                <a href="{{ route('appointments.index', $routeParams(['view' => 'day', 'date' => $calendarDay->toDateString()])) }}" class="grid h-8 min-w-8 place-items-center rounded-full px-2 text-sm font-extrabold transition {{ $isToday ? 'bg-gradient-to-br from-pink-500 to-fuchsia-500 text-white shadow-sm' : 'hover:bg-cyan-100 hover:text-cyan-800' }}">{{ $calendarDay->format('d') }}</a>
                                 @if($dayAppointments->isNotEmpty())
                                     <span class="rounded-full bg-violet-100 px-2 py-0.5 text-[10px] font-bold text-violet-600">{{ $dayAppointments->count() }}</span>
                                 @endif
@@ -193,22 +276,25 @@
                             <div class="mt-2 space-y-1.5">
                                 @foreach($dayAppointments->take(3) as $appointment)
                                     @php($sessionAction = $sessionLogAction($appointment))
-                                    <div class="rounded-lg border-l-4 bg-slate-50 px-2 py-1.5 shadow-sm {{ $appointment->isCancelled() ? 'opacity-50' : '' }}" style="border-left-color: {{ $appointment->therapy->color ?: '#0891b2' }}">
+                                    <div class="rounded-lg border-l-4 bg-slate-50 px-2 py-1.5 shadow-sm {{ $appointment->isClosed() ? 'opacity-60' : '' }}" style="border-left-color: {{ $appointment->therapy->color ?: '#0891b2' }}">
                                         <div class="truncate text-[11px] font-semibold">{{ $appointment->starts_at->format('H:i') }} · {{ $appointment->patient->full_name }}</div>
-                                        <div class="mt-1 flex flex-wrap gap-2">
-                                            @if($sessionAction)
-                                                <a data-testid="appointment-session-log-action-month" href="{{ $sessionAction['url'] }}" class="text-[10px] font-bold {{ $sessionAction['completed'] ? 'text-emerald-700' : 'text-violet-700' }}">{{ $sessionAction['label'] }}</a>
-                                            @endif
-                                            @can('appointments.manage')
-                                                @if(! $appointment->isCancelled())
-                                                    <a href="{{ route('appointments.edit', $appointment) }}" class="text-[10px] font-bold text-cyan-700">Editar</a>
+                                        <div class="mt-1 flex items-center justify-between gap-2">
+                                            <span class="rounded-full px-1.5 py-0.5 text-[8px] font-bold {{ $statusClasses($appointment) }}">{{ $appointment->statusLabel() }}</span>
+                                            <div class="flex flex-wrap gap-2">
+                                                @if($sessionAction)
+                                                    <a data-testid="appointment-session-log-action-month" href="{{ $sessionAction['url'] }}" class="text-[10px] font-bold {{ $sessionAction['completed'] ? 'text-emerald-700' : 'text-violet-700' }}">{{ $sessionAction['label'] }}</a>
                                                 @endif
-                                            @endcan
+                                                @can('appointments.manage')
+                                                    @if($appointment->allowsScheduleChanges())
+                                                        <a href="{{ route('appointments.edit', $appointment) }}" class="text-[10px] font-bold text-cyan-700">Editar</a>
+                                                    @endif
+                                                @endcan
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
                                 @if($dayAppointments->count() > 3)
-                                    <a href="{{ route('appointments.index', ['view' => 'day', 'date' => $calendarDay->toDateString()]) }}" class="inline-flex text-[11px] font-bold text-cyan-700">+ {{ $dayAppointments->count() - 3 }} más</a>
+                                    <a href="{{ route('appointments.index', $routeParams(['view' => 'day', 'date' => $calendarDay->toDateString()])) }}" class="inline-flex text-[11px] font-bold text-cyan-700">+ {{ $dayAppointments->count() - 3 }} más</a>
                                 @endif
                             </div>
                         </div>

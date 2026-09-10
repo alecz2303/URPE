@@ -81,8 +81,10 @@ class AppointmentScheduler
         User $actor,
         array $ignoreAppointmentIds = [],
     ): Appointment {
-        if ($appointment->isCancelled()) {
-            throw ValidationException::withMessages(['appointment' => 'Una cita cancelada no puede reprogramarse.']);
+        if (! $appointment->allowsScheduleChanges()) {
+            throw ValidationException::withMessages([
+                'appointment' => "Una cita {$appointment->statusLabel()} no puede reprogramarse.",
+            ]);
         }
 
         $appointment->loadMissing('patient');
@@ -130,8 +132,10 @@ class AppointmentScheduler
         User $actor,
         ?string $reason = null,
     ): Appointment {
-        if ($appointment->isCancelled()) {
-            throw ValidationException::withMessages(['appointment' => 'No se puede sustituir terapeuta en una cita cancelada.']);
+        if ($appointment->isClosed()) {
+            throw ValidationException::withMessages([
+                'appointment' => "No se puede sustituir terapeuta en una cita {$appointment->statusLabel()}.",
+            ]);
         }
 
         $appointment->loadMissing(['patient', 'therapy', 'therapists']);
@@ -185,6 +189,13 @@ class AppointmentScheduler
             return $appointment;
         }
 
+        if (! $appointment->allowsScheduleChanges()) {
+            throw ValidationException::withMessages([
+                'appointment' => "Una cita {$appointment->statusLabel()} no puede cancelarse.",
+            ]);
+        }
+
+        $previousStatus = $appointment->status;
         $appointment->update([
             'status' => Appointment::STATUS_CANCELLED,
             'cancellation_reason' => $reason,
@@ -192,6 +203,7 @@ class AppointmentScheduler
         ]);
 
         $this->audit->record('appointment.cancelled', $appointment, [
+            'previous_status' => $previousStatus,
             'reason_provided' => filled($reason),
             'cancelled_at' => $appointment->cancelled_at?->toIso8601String(),
         ], $actor);
@@ -245,7 +257,7 @@ class AppointmentScheduler
             }
 
             $overlap = Appointment::query()
-                ->where('status', '!=', Appointment::STATUS_CANCELLED)
+                ->whereNotIn('status', [Appointment::STATUS_CANCELLED, Appointment::STATUS_NO_SHOW])
                 ->when($ignoreAppointmentIds !== [], fn ($query) => $query->whereNotIn('id', $ignoreAppointmentIds))
                 ->where('starts_at', '<', $endsAt)
                 ->where('ends_at', '>', $start)
