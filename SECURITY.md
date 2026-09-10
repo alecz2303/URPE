@@ -60,8 +60,20 @@ URPE procesará información clínica y datos personales; seguridad es requisito
 - La línea longitudinal del paciente reutiliza las mismas reglas de autorización de bitácoras y no crea una vía alternativa para ampliar acceso clínico.
 - El contexto longitudinal mostrado durante la captura reutiliza únicamente sesiones completadas previas y se presenta como solo lectura; no ofrece una vía de edición histórica.
 - Las migraciones de backfill de permisos clínicos son aditivas: garantizan los grants baseline necesarios para roles del sistema sin eliminar permisos personalizados ya existentes.
-- Adjuntos se almacenan fuera del directorio público.
-- Descargas requieren autorización en el momento de acceso.
+
+## Archivos clínicos protegidos
+
+- Los adjuntos se almacenan fuera del directorio público mediante el disco `clinical`; el nombre físico es generado por el sistema y no depende del nombre original proporcionado por el usuario.
+- Se conserva hash SHA-256, MIME, extensión, tamaño y nombre original como metadata técnica para trazabilidad; el binario no se persiste en la base de datos.
+- URPE-22 vincula los archivos longitudinales al `ClinicalRecord` mediante la relación polimórfica `subject_type/subject_id`, reutilizando `ClinicalFileStorage` y evitando almacenes paralelos.
+- Carga y retiro desde el expediente requieren `clinical_records.manage` en servidor. Mostrar u ocultar botones en Blade no sustituye esta autorización.
+- La descarga de un archivo cuyo subject es `ClinicalRecord` requiere `clinical_records.view` en el momento de la solicitud. Conocer el UUID del archivo no concede acceso.
+- Archivos clínicos legacy sin subject de expediente conservan el permiso específico `clinical_files.download` para compatibilidad con la infraestructura de URPE-5.
+- El retiro normal de un archivo es lógico: se aplica soft delete al registro activo, se conservan bytes físicos y se registra `clinical_file.retired` para trazabilidad. No existe eliminación destructiva desde el flujo clínico ordinario.
+- Un archivo sólo puede retirarse desde el mismo paciente/expediente al que está vinculado; el backend valida explícitamente `subject_type` y `subject_id` para impedir operaciones cruzadas entre pacientes.
+- La auditoría de carga, descarga y retiro registra identificadores, hash y contexto técnico mínimo, pero no copia el contenido del archivo ni descripciones clínicas completas innecesarias.
+- La clasificación operativa de archivo (`document`, `image`, `radiograph`, `study`, `other`) y la descripción opcional se conservan en metadata; esa metadata no debe utilizarse para almacenar notas clínicas extensas.
+- El baseline V1 permite PDF, JPG, JPEG, PNG y WEBP, con límite de 20 MB por archivo validado en servidor.
 
 ## Antes de producción
 

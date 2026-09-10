@@ -15,7 +15,11 @@ class ClinicalRecordController extends Controller
     {
         $this->authorize('clinical_records.view');
 
-        $patient->load(['clinicalRecord.creator', 'clinicalRecord.updater']);
+        $patient->load([
+            'clinicalRecord.creator',
+            'clinicalRecord.updater',
+            'clinicalRecord.files.uploader',
+        ]);
 
         return view('clinical-records.show', [
             'patient' => $patient,

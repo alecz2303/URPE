@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class ClinicalRecord extends Model
 {
@@ -36,5 +37,10 @@ class ClinicalRecord extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function files(): MorphMany
+    {
+        return $this->morphMany(ClinicalFile::class, 'subject')->latest();
     }
 }
