@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Appointment;
 use App\Models\ClinicalSessionLog;
 use App\Models\Patient;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Therapist;
 use App\Models\Therapy;
 use App\Models\User;
@@ -60,6 +62,54 @@ class AppointmentClinicalWorkflowTest extends TestCase
             ->assertSee(route('session-logs.show', $appointment));
     }
 
+    public function test_manage_permission_without_view_still_exposes_capture_action(): void
+    {
+        $this->seed(AuthorizationSeeder::class);
+
+        $user = User::factory()->create();
+        $role = Role::query()->create([
+            'name' => 'Captura clínica',
+            'slug' => 'clinical-capture',
+            'description' => 'Rol de prueba con agenda y gestión clínica sin lectura explícita.',
+            'is_system' => false,
+        ]);
+        $role->permissions()->attach(
+            Permission::query()
+                ->whereIn('slug', ['appointments.view', 'session_logs.manage'])
+                ->pluck('id'),
+        );
+        $user->assignRole($role);
+
+        [$appointment] = $this->appointment($user);
+
+        $this->actingAs($user)
+            ->get(route('appointments.index', ['view' => 'day', 'date' => '2026-09-07']))
+            ->assertOk()
+            ->assertSee('Capturar bitácora')
+            ->assertSee(route('session-logs.edit', $appointment));
+    }
+
+    public function test_week_and_month_agenda_expose_session_log_actions(): void
+    {
+        $this->seed(AuthorizationSeeder::class);
+        $user = User::factory()->create();
+        $user->assignRole('administrator');
+
+        [$appointment] = $this->appointment($user);
+
+        $this->actingAs($user)
+            ->get(route('appointments.index', ['view' => 'week', 'date' => '2026-09-07']))
+            ->assertOk()
+            ->assertSee('data-testid="appointment-session-log-action-week"', false)
+            ->assertSee(route('session-logs.edit', $appointment));
+
+        $this->actingAs($user)
+            ->get(route('appointments.index', ['view' => 'month', 'date' => '2026-09-07']))
+            ->assertOk()
+            ->assertSee('data-testid="appointment-session-log-action-month"', false)
+            ->assertSee(route('session-logs.edit', $appointment));
+    }
+
     public function test_cancelled_appointment_does_not_expose_session_log_action(): void
     {
         $this->seed(AuthorizationSeeder::class);
@@ -103,6 +153,7 @@ class AppointmentClinicalWorkflowTest extends TestCase
             'is_active' => true,
         ]);
         $therapist = Therapist::query()->create([
+            'user_id' => $user->id,
             'name' => 'Terapeuta Flujo',
             'is_active' => true,
         ]);
