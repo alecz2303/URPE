@@ -7,6 +7,7 @@ use App\Models\ClinicalSessionLog;
 use App\Models\Therapist;
 use App\Models\User;
 use App\Services\AuditTrail;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -50,10 +51,103 @@ class ClinicalSessionLogController extends Controller
             abort(403, 'La bitácora completada está cerrada para edición.');
         }
 
+        $recentSessions = ClinicalSessionLog::query()
+            ->with(['therapy', 'participatingTherapists', 'amendments', 'appointment'])
+            ->where('clinical_session_logs.patient_id', $appointment->patient_id)
+            ->where('clinical_session_logs.appointment_id', '!=', $appointment->id)
+            ->where('clinical_session_logs.status', ClinicalSessionLog::STATUS_COMPLETED)
+            ->join('appointments', 'appointments.id', '=', 'clinical_session_logs.appointment_id')
+            ->select('clinical_session_logs.*')
+            ->orderByDesc('appointments.starts_at')
+            ->orderByDesc('clinical_session_logs.id')
+            ->limit(5)
+            ->get();
+
         return view('clinical-session-logs.edit', [
             'appointment' => $appointment,
             'sessionLog' => $appointment->clinicalSessionLog,
             'participants' => $appointment->therapists,
+            'recentSessions' => $recentSessions,
+        ]);
+    }
+
+    public function autosave(Request $request, Appointment $appointment, AuditTrail $audit): JsonResponse
+    {
+        $this->authorizeAppointmentAccess($request->user(), $appointment, 'session_logs.manage');
+
+        if ($appointment->isCancelled()) {
+            return response()->json(['message' => 'No se puede guardar una sesión cancelada.'], 422);
+        }
+
+        $appointment->load(['therapists', 'clinicalSessionLog.participatingTherapists']);
+
+        if ($appointment->clinicalSessionLog?->isCompleted()) {
+            return response()->json(['message' => 'La sesión ya fue completada y está cerrada.'], 403);
+        }
+
+        $data = $request->validate([
+            'treatment_activities' => ['nullable', 'string', 'max:10000'],
+            'patient_response' => ['nullable', 'string', 'max:10000'],
+            'observations_incidents' => ['nullable', 'string', 'max:10000'],
+            'home_recommendations' => ['nullable', 'string', 'max:10000'],
+            'next_session_objectives' => ['nullable', 'string', 'max:10000'],
+            'participant_ids' => ['nullable', 'array'],
+            'participant_ids.*' => ['integer', 'distinct', 'exists:therapists,id'],
+        ]);
+
+        $assignedIds = $appointment->therapists->pluck('id')->map(fn ($id) => (int) $id)->sort()->values();
+        $participantIds = collect($data['participant_ids'] ?? $assignedIds->all())
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->sort()
+            ->values();
+
+        if ($participantIds->isEmpty() || $participantIds->diff($assignedIds)->isNotEmpty()) {
+            return response()->json([
+                'message' => 'Los participantes deben corresponder a terapeutas actualmente asignados a la cita.',
+            ], 422);
+        }
+
+        $wasCreated = false;
+
+        $sessionLog = DB::transaction(function () use ($request, $appointment, $data, $participantIds, $audit, &$wasCreated): ClinicalSessionLog {
+            $log = ClinicalSessionLog::query()->firstOrNew(['appointment_id' => $appointment->id]);
+            $wasCreated = ! $log->exists;
+
+            $log->fill([
+                'patient_id' => $appointment->patient_id,
+                'therapy_id' => $appointment->therapy_id,
+                'authored_by_user_id' => $log->authored_by_user_id ?: $request->user()->id,
+                'status' => ClinicalSessionLog::STATUS_DRAFT,
+                'treatment_activities' => $data['treatment_activities'] ?? null,
+                'patient_response' => $data['patient_response'] ?? null,
+                'observations_incidents' => $data['observations_incidents'] ?? null,
+                'home_recommendations' => $data['home_recommendations'] ?? null,
+                'next_session_objectives' => $data['next_session_objectives'] ?? null,
+                'completed_at' => null,
+            ]);
+            $log->save();
+            $log->participatingTherapists()->sync($participantIds->all());
+
+            if ($wasCreated) {
+                $audit->record('clinical_session_log.created', $log, [
+                    'appointment_id' => $appointment->id,
+                    'patient_id' => $appointment->patient_id,
+                    'therapy_id' => $appointment->therapy_id,
+                    'participant_ids' => $participantIds->all(),
+                    'status' => ClinicalSessionLog::STATUS_DRAFT,
+                    'source' => 'autosave',
+                    'clinical_content_stored_in_audit' => false,
+                ], $request->user(), $request);
+            }
+
+            return $log;
+        });
+
+        return response()->json([
+            'saved' => true,
+            'session_log_id' => $sessionLog->id,
+            'saved_at' => now()->format('H:i:s'),
         ]);
     }
 
@@ -80,6 +174,7 @@ class ClinicalSessionLogController extends Controller
             'participant_ids' => ['required', 'array', 'min:1'],
             'participant_ids.*' => ['integer', 'distinct', 'exists:therapists,id'],
             'complete' => ['nullable', 'boolean'],
+            'save_and_exit' => ['nullable', 'boolean'],
         ]);
 
         $assignedIds = $appointment->therapists->pluck('id')->map(fn ($id) => (int) $id)->sort()->values();
@@ -137,6 +232,12 @@ class ClinicalSessionLogController extends Controller
 
             return $log;
         });
+
+        if (! $isCompleting && (bool) ($data['save_and_exit'] ?? false)) {
+            return redirect()
+                ->route('session-logs.index')
+                ->with('success', 'Borrador de sesión guardado correctamente.');
+        }
 
         return redirect()
             ->route('session-logs.show', $appointment)

@@ -5,10 +5,10 @@ URPE procesará información clínica y datos personales; seguridad es requisito
 ## Baseline
 
 - Contraseñas mediante hashing provisto por Laravel.
-- CSRF activo en formularios web.
+- CSRF activo en formularios web y solicitudes de autoguardado clínico.
 - Sesiones seguras y cookies adecuadas al ambiente.
 - Validación server-side.
-- Autorización server-side en cada operación sensible.
+- Autorización server-side en cada operación sensible, incluido autoguardado; la visibilidad de UI nunca sustituye esta validación.
 - Roles + permisos granulares.
 - Principio de mínimo privilegio.
 - Archivos clínicos privados y servidos solo tras autorización.
@@ -39,6 +39,7 @@ URPE procesará información clínica y datos personales; seguridad es requisito
 - La consulta histórica puede mantenerse para un terapeuta que quedó persistido como participante clínico de una sesión; ese vínculo histórico no concede por sí solo permiso para agregar enmiendas después de una sustitución.
 - Para agregar una enmienda, un terapeuta sin `session_logs.manage_all` debe conservar `session_logs.manage` y una asignación vigente a la cita.
 - Una sustitución de terapeuta debe ser ejecutada por un usuario con permiso de gestión de agenda; la autorización clínica se actualiza según la asignación efectiva y el cambio queda auditado.
+- El listado global de Sesiones clínicas aplica el mismo alcance: `session_logs.manage_all` permite alcance global; de lo contrario solo se incluyen sesiones con asignación actual o participación histórica válida.
 - Recepción: acceso operativo/administrativo; no recibe acceso a bitácoras clínicas por defecto.
 - Consulta/Dirección: lectura restringida según permisos; no recibe acceso a bitácoras clínicas por defecto.
 
@@ -48,12 +49,17 @@ URPE procesará información clínica y datos personales; seguridad es requisito
 - Correcciones relevantes deben conservar trazabilidad.
 - La bitácora clínica se almacena separada del expediente clínico base y de los metadatos de agenda.
 - El contenido clínico completo de una bitácora o de una enmienda no se replica en eventos de auditoría; se registran identificadores, estado y contexto mínimo necesario para trazabilidad.
+- El autoguardado de una sesión reutiliza el único borrador canónico de la cita, valida nuevamente permisos y participantes en servidor y no crea una nueva bitácora por cada cambio.
+- El primer autoguardado que materializa el borrador registra creación auditada sin incluir los textos clínicos; autoguardados posteriores no generan eventos repetitivos que dupliquen actividad clínica en metadata.
 - Una bitácora completada queda cerrada para edición. URPE-17 no la reabre: toda corrección o complemento posterior se agrega como una enmienda clínica independiente.
+- El endpoint de autoguardado también rechaza bitácoras completadas y citas canceladas, por lo que JavaScript no puede reabrir ni sobrescribir una sesión cerrada.
 - Cada enmienda conserva vínculo con la bitácora, autor, motivo, contenido y timestamp, y no dispone de eliminación destructiva dentro del flujo clínico normal.
 - La nota original y sus enmiendas se muestran como registros diferenciados para impedir que una corrección posterior parezca haber formado parte del texto original.
 - Los terapeutas participantes se persisten en la sesión para que cambios posteriores de agenda no reescriban quién atendió realmente al paciente.
 - El historial de sustituciones conserva terapeuta removido, terapeuta agregado, actor, momento y motivo operativo opcional.
 - La línea longitudinal del paciente reutiliza las mismas reglas de autorización de bitácoras y no crea una vía alternativa para ampliar acceso clínico.
+- El contexto longitudinal mostrado durante la captura reutiliza únicamente sesiones completadas previas y se presenta como solo lectura; no ofrece una vía de edición histórica.
+- Las migraciones de backfill de permisos clínicos son aditivas: garantizan los grants baseline necesarios para roles del sistema sin eliminar permisos personalizados ya existentes.
 - Adjuntos se almacenan fuera del directorio público.
 - Descargas requieren autorización en el momento de acceso.
 

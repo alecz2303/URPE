@@ -33,7 +33,7 @@ class ClinicalSessionLogTest extends TestCase
         $this->actingAs($therapistUser)
             ->get(route('session-logs.edit', $appointment))
             ->assertOk()
-            ->assertSee('Bitácora clínica')
+            ->assertSee('Sesión clínica')
             ->assertSee($appointment->patient->full_name);
 
         $this->actingAs($therapistUser)

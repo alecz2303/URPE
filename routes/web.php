@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CenterConfigurationController;
 use App\Http\Controllers\ClinicalFileController;
 use App\Http\Controllers\ClinicalRecordController;
+use App\Http\Controllers\ClinicalSessionIndexController;
 use App\Http\Controllers\ClinicalSessionLogAmendmentController;
 use App\Http\Controllers\ClinicalSessionLogController;
 use App\Http\Controllers\DashboardController;
@@ -42,8 +43,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::patch('/agenda/citas/{appointment}/sustituir-terapeuta', AppointmentTherapistSubstitutionController::class)
         ->name('appointments.therapists.substitute');
 
+    Route::get('/sesiones-clinicas', ClinicalSessionIndexController::class)->name('session-logs.index');
     Route::get('/agenda/citas/{appointment}/bitacora', [ClinicalSessionLogController::class, 'show'])->name('session-logs.show');
     Route::get('/agenda/citas/{appointment}/bitacora/capturar', [ClinicalSessionLogController::class, 'edit'])->name('session-logs.edit');
+    Route::post('/agenda/citas/{appointment}/bitacora/autoguardar', [ClinicalSessionLogController::class, 'autosave'])->name('session-logs.autosave');
     Route::put('/agenda/citas/{appointment}/bitacora', [ClinicalSessionLogController::class, 'update'])->name('session-logs.update');
     Route::post('/agenda/citas/{appointment}/bitacora/enmiendas', [ClinicalSessionLogAmendmentController::class, 'store'])
         ->name('session-log-amendments.store');

@@ -41,15 +41,16 @@
 1. [x] Historia clínica base. *(URPE-10; presentación y edición refinadas en URPE-12/URPE-13)*
 2. [x] Diagnósticos, objetivos y observaciones basales. *(URPE-10)*
 3. [ ] Archivos clínicos protegidos vinculados al expediente.
-4. [x] Bitácora por sesión. *(URPE-16: una bitácora por cita, borrador/cierre, contenido clínico estructurado y participantes reales)*
-5. [x] Línea de tiempo clínica. *(URPE-16 aporta historial cronológico básico; URPE-17 lo convierte en una línea longitudinal de evolución con estado, terapia, participantes, resumen clínico e indicador de enmiendas.)*
+4. [x] Bitácora por sesión. *(URPE-16: una bitácora por cita, borrador/cierre, contenido clínico estructurado y participantes reales; URPE-20 la convierte en un workspace de sesión con autoguardado, guardar y salir y acceso global.)*
+5. [x] Línea de tiempo clínica. *(URPE-16 aporta historial cronológico básico; URPE-17 lo convierte en una línea longitudinal de evolución con estado, terapia, participantes, resumen clínico e indicador de enmiendas; URPE-20 muestra contexto reciente durante la captura.)*
 6. [x] Reglas de corrección posterior al cierre. *(URPE-17: la nota completada permanece inmutable y cualquier corrección posterior se agrega como enmienda clínica trazable.)*
+7. [x] Localizador global de sesiones clínicas. *(URPE-20: búsqueda por paciente, filtros de fecha/terapia/terapeuta/estado y acciones contextuales según autorización.)*
 
 ## Fase 5 — Operación y cierre V1
 
-1. [x] Dashboard operativo y navegación clínica base. *(URPE-12; sistema visual refinado en URPE-13; URPE-16 agrega acceso del terapeuta a sus sesiones asignadas)*
+1. [x] Dashboard operativo y navegación clínica base. *(URPE-12; sistema visual refinado en URPE-13; URPE-16 agrega acceso del terapeuta a sus sesiones asignadas; URPE-20 agrega navegación global de Sesiones clínicas.)*
 2. [x] Shell autenticado con sidebar persistente y menú móvil. *(URPE-12; refinamiento visual URPE-13)*
-3. [x] Separación UX de listado, consulta y edición en recursos clínicos/administrativos principales. *(URPE-12)*
+3. [x] Separación UX de listado, consulta y edición en recursos clínicos/administrativos principales. *(URPE-12; URPE-20 extiende el patrón a Sesiones clínicas.)*
 4. [x] Sistema visual clínico consistente y más legible en agenda, pacientes, expediente, terapeutas, terapias, usuarios, roles y centro. *(URPE-13)*
 5. [ ] Reportes esenciales.
 6. [ ] Cobertura final de permisos y auditoría.
