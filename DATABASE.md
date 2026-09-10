@@ -41,12 +41,35 @@ La suite automática usa SQLite `:memory:` por defecto mediante `phpunit.xml`, s
 - patients
 - patient_guardians
 - clinical_records
-- clinical_documents
+- clinical_files
 - clinical_session_logs
 - clinical_session_log_therapist
 - clinical_session_log_amendments
 
-### Agenda — baseline URPE-11 + recurrencia URPE-14 + sustituciones URPE-16
+### Archivos clínicos — baseline URPE-5 + vínculo al expediente URPE-22
+
+#### `clinical_files`
+- `id`
+- `uuid` único usado como route key público no secuencial
+- `disk`
+- `path`
+- `original_name`
+- `mime_type` nullable
+- `extension` nullable
+- `size_bytes`
+- `sha256`
+- `uploaded_by` nullable FK hacia `users`
+- `subject_type` nullable
+- `subject_id` nullable
+- `metadata` JSON nullable
+- timestamps + `deleted_at` para retiro lógico
+- índice polimórfico por `subject_type + subject_id`
+
+URPE-22 reutiliza la relación polimórfica ya prevista por URPE-5: los archivos longitudinales del paciente se vinculan al registro `ClinicalRecord` mediante `subject_type/subject_id`; no se crea una segunda tabla de adjuntos ni se duplica el almacenamiento físico.
+
+`metadata` conserva clasificación operativa mínima (`document`, `image`, `radiograph`, `study`, `other`) y una descripción opcional. El contenido binario nunca se guarda en base de datos; permanece en el disco clínico privado. El retiro normal aplica soft delete al registro, conserva el archivo físico y mantiene trazabilidad de auditoría.
+
+### Agenda — baseline URPE-11 + recurrencia URPE-14 + sustituciones URPE-16 + estados URPE-21
 
 #### `appointments`
 - `id`
@@ -57,7 +80,7 @@ La suite automática usa SQLite `:memory:` por defecto mediante `phpunit.xml`, s
 - `starts_at`
 - `ends_at`
 - `duration_minutes`
-- `status` (`scheduled` / `cancelled` en baseline)
+- `status` (`scheduled`, `confirmed`, `in_progress`, `completed`, `no_show`, `cancelled`)
 - `cancellation_reason` nullable
 - `cancelled_at` nullable
 - timestamps
@@ -98,10 +121,7 @@ URPE-14 mantiene la recurrencia semanal acotada por `starts_on` y `ends_on`. Las
 
 URPE-16 agrega sustituciones operativas de terapeuta sin reemplazar destructivamente el contexto histórico: la asignación efectiva vive en `appointment_therapist` y cada cambio queda registrado en `appointment_therapist_changes`.
 
-Pendiente de fases posteriores:
-- historial de estados ampliado
-- no-show y finalización operativa
-- filtros y estados adicionales.
+URPE-21 amplía el snapshot operativo de `appointments.status` sin crear una segunda tabla de estados. Los cambios permitidos se validan por dominio y se auditan; los estados terminales no se reabren implícitamente.
 
 ### Evolución — baseline URPE-16 + enmiendas URPE-17
 
@@ -151,10 +171,12 @@ Pendiente de fases posteriores:
 - Fechas clínicas y de auditoría conservan precisión suficiente para trazabilidad.
 - Relaciones sensibles usan integridad referencial.
 - La eliminación física de información clínica no será comportamiento por defecto.
+- Los archivos clínicos vinculados al expediente usan `subject_type/subject_id` sobre `clinical_files`; no se duplica el binario ni se crea un almacén paralelo.
+- El retiro de un archivo clínico aplica soft delete a su metadata activa, mantiene bytes físicos y conserva auditoría.
 - Las citas se cancelan por estado; no se eliminan físicamente como flujo normal.
 - Una cita con bitácora clínica o historial de sustituciones no debe desaparecer mediante cascada destructiva.
 - Las series recurrentes son contenedores operativos; las ocurrencias siguen siendo citas individuales auditables.
 - Los participantes clínicos de una sesión permanecen persistidos independientemente de cambios posteriores en la asignación de agenda.
 - Las bitácoras completadas permanecen inmutables y sus correcciones posteriores se agregan mediante enmiendas trazables.
 - Los cambios de esquema solo entran mediante migraciones versionadas.
-- Índices deben cubrir búsquedas por paciente, terapeuta, intervalos de agenda, series recurrentes, bitácoras, enmiendas y auditoría según uso real.
+- Índices deben cubrir búsquedas por paciente, terapeuta, intervalos de agenda, series recurrentes, archivos clínicos, bitácoras, enmiendas y auditoría según uso real.

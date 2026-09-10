@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CenterConfigurationController;
 use App\Http\Controllers\ClinicalFileController;
 use App\Http\Controllers\ClinicalRecordController;
+use App\Http\Controllers\ClinicalRecordFileController;
 use App\Http\Controllers\ClinicalSessionIndexController;
 use App\Http\Controllers\ClinicalSessionLogAmendmentController;
 use App\Http\Controllers\ClinicalSessionLogController;
@@ -102,6 +103,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
         ->name('clinical-records.edit');
     Route::put('/pacientes/{patient}/expediente-clinico', [ClinicalRecordController::class, 'update'])
         ->name('clinical-records.update');
+    Route::post('/pacientes/{patient}/expediente-clinico/archivos', [ClinicalRecordFileController::class, 'store'])
+        ->name('clinical-record-files.store');
+    Route::delete('/pacientes/{patient}/expediente-clinico/archivos/{clinicalFile}', [ClinicalRecordFileController::class, 'destroy'])
+        ->name('clinical-record-files.destroy');
     Route::get('/pacientes/{patient}/bitacoras', PatientSessionLogController::class)
         ->name('session-logs.patient-history');
 

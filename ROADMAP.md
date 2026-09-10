@@ -40,7 +40,7 @@
 
 1. [x] Historia clínica base. *(URPE-10; presentación y edición refinadas en URPE-12/URPE-13)*
 2. [x] Diagnósticos, objetivos y observaciones basales. *(URPE-10)*
-3. [ ] Archivos clínicos protegidos vinculados al expediente.
+3. [x] Archivos clínicos protegidos vinculados al expediente. *(URPE-22: documentos, imágenes, radiografías y estudios; almacenamiento privado reutilizado de URPE-5, descarga contextual autorizada y retiro lógico con retención física.)*
 4. [x] Bitácora por sesión. *(URPE-16: una bitácora por cita, borrador/cierre, contenido clínico estructurado y participantes reales; URPE-20 la convierte en un workspace de sesión con autoguardado, guardar y salir y acceso global.)*
 5. [x] Línea de tiempo clínica. *(URPE-16 aporta historial cronológico básico; URPE-17 lo convierte en una línea longitudinal de evolución con estado, terapia, participantes, resumen clínico e indicador de enmiendas; URPE-20 muestra contexto reciente durante la captura.)*
 6. [x] Reglas de corrección posterior al cierre. *(URPE-17: la nota completada permanece inmutable y cualquier corrección posterior se agrega como enmienda clínica trazable.)*
