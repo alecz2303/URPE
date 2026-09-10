@@ -16,6 +16,36 @@
             'month' => $date->copy()->addMonth(),
             default => $date->copy()->addWeek(),
         };
+
+        $sessionLogAction = function ($appointment) {
+            if ($appointment->isCancelled()) {
+                return null;
+            }
+
+            $user = auth()->user();
+            $therapist = $user->therapistProfile;
+            $log = $appointment->clinicalSessionLog;
+            $isCurrentTherapist = $therapist && $appointment->therapists->contains('id', $therapist->id);
+            $isHistoricalParticipant = $therapist && $log?->participatingTherapists->contains('id', $therapist->id);
+            $canView = $user->hasPermission('session_logs.view')
+                && ($user->hasPermission('session_logs.manage_all') || $isCurrentTherapist || $isHistoricalParticipant);
+            $canManage = $user->hasPermission('session_logs.manage')
+                && ($user->hasPermission('session_logs.manage_all') || $isCurrentTherapist);
+
+            if ($log?->isCompleted()) {
+                return $canView ? ['label' => 'Ver bitácora', 'url' => route('session-logs.show', $appointment), 'completed' => true] : null;
+            }
+
+            if ($canManage) {
+                return ['label' => $log ? 'Continuar captura' : 'Capturar bitácora', 'url' => route('session-logs.edit', $appointment), 'completed' => false];
+            }
+
+            if ($log && $canView) {
+                return ['label' => 'Ver bitácora', 'url' => route('session-logs.show', $appointment), 'completed' => false];
+            }
+
+            return null;
+        };
     @endphp
 
     <section class="mb-6 overflow-hidden rounded-3xl border border-cyan-100 bg-gradient-to-r from-white via-cyan-50/80 to-pink-50/70 p-4 shadow-sm sm:p-5">
@@ -50,22 +80,15 @@
             <div class="mb-5 flex items-center justify-between gap-4 border-b border-sky-100 pb-4">
                 <div>
                     <p class="text-xs font-extrabold uppercase tracking-[0.16em] text-sky-600">Vista diaria</p>
-                    <h2 class="mt-1 text-xl font-extrabold text-slate-950">{{ $date->translatedFormat('l d \d\e F') }}</h2>
+                    <h2 class="mt-1 text-xl font-extrabold text-slate-950">{{ $date->translatedFormat('l d \\d\\e F') }}</h2>
                 </div>
                 <div class="hidden h-12 w-12 place-items-center rounded-2xl bg-yellow-100 text-2xl sm:grid">☀</div>
             </div>
             <div class="space-y-2">
                 @forelse($appointments as $appointment)
                     @php
-                        $agendaUser = auth()->user();
-                        $agendaTherapist = $agendaUser->therapistProfile;
-                        $isCurrentTherapist = $agendaTherapist && $appointment->therapists->contains('id', $agendaTherapist->id);
-                        $isHistoricalParticipant = $agendaTherapist && $appointment->clinicalSessionLog?->participatingTherapists->contains('id', $agendaTherapist->id);
-                        $canViewSessionLog = $agendaUser->hasPermission('session_logs.view')
-                            && ($agendaUser->hasPermission('session_logs.manage_all') || $isCurrentTherapist || $isHistoricalParticipant);
-                        $canManageSessionLog = $agendaUser->hasPermission('session_logs.manage')
-                            && ($agendaUser->hasPermission('session_logs.manage_all') || $isCurrentTherapist);
                         $sessionLog = $appointment->clinicalSessionLog;
+                        $sessionAction = $sessionLogAction($appointment);
                     @endphp
                     <article class="relative grid gap-4 rounded-2xl border border-slate-100 bg-gradient-to-r from-white to-slate-50/60 py-4 pl-7 pr-4 shadow-sm sm:grid-cols-[90px_minmax(0,1fr)_auto] sm:items-start {{ $appointment->isCancelled() ? 'opacity-55' : '' }}">
                         <span class="absolute inset-y-3 left-0 w-1.5 rounded-r-full" style="background-color: {{ $appointment->therapy->color ?: '#0891b2' }}"></span>
@@ -85,14 +108,8 @@
                             <p class="mt-1 text-xs font-medium text-slate-500">{{ $appointment->therapists->pluck('name')->implode(' · ') }}</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-3 sm:justify-end">
-                            @if($canViewSessionLog && ! $appointment->isCancelled())
-                                @if($sessionLog?->isCompleted())
-                                    <a data-testid="appointment-session-log-action" href="{{ route('session-logs.show', $appointment) }}" class="rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700 ring-1 ring-emerald-100 hover:bg-emerald-100">Ver bitácora</a>
-                                @elseif($canManageSessionLog)
-                                    <a data-testid="appointment-session-log-action" href="{{ route('session-logs.edit', $appointment) }}" class="rounded-xl bg-violet-600 px-3 py-2 text-sm font-bold text-white shadow-sm hover:bg-violet-700">{{ $sessionLog ? 'Continuar captura' : 'Capturar bitácora' }}</a>
-                                @else
-                                    <a data-testid="appointment-session-log-action" href="{{ route('session-logs.show', $appointment) }}" class="rounded-xl bg-violet-50 px-3 py-2 text-sm font-bold text-violet-700 ring-1 ring-violet-100 hover:bg-violet-100">Ver bitácora</a>
-                                @endif
+                            @if($sessionAction)
+                                <a data-testid="appointment-session-log-action" href="{{ $sessionAction['url'] }}" class="rounded-xl px-3 py-2 text-sm font-bold {{ $sessionAction['completed'] ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100 hover:bg-emerald-100' : 'bg-violet-600 text-white shadow-sm hover:bg-violet-700' }}">{{ $sessionAction['label'] }}</a>
                             @endif
                             @can('appointments.manage')
                                 @if(! $appointment->isCancelled())
@@ -128,17 +145,23 @@
                         </div>
                         <div class="space-y-3">
                             @forelse($dayAppointments as $appointment)
+                                @php($sessionAction = $sessionLogAction($appointment))
                                 <article class="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-3 pl-4 shadow-sm {{ $appointment->isCancelled() ? 'opacity-50' : '' }}">
                                     <span class="absolute inset-y-0 left-0 w-1.5" style="background-color: {{ $appointment->therapy->color ?: '#0891b2' }}"></span>
                                     <p class="text-sm font-extrabold tabular-nums text-slate-900">{{ $appointment->starts_at->format('H:i') }}</p>
                                     <p class="mt-1 truncate text-sm font-bold">{{ $appointment->patient->full_name }}</p>
                                     <p class="mt-1 truncate text-xs font-bold" style="color: {{ $appointment->therapy->color ?: '#0891b2' }}">{{ $appointment->therapy->name }}</p>
                                     <p class="mt-2 line-clamp-2 text-[11px] font-medium text-slate-400">{{ $appointment->therapists->pluck('name')->implode(', ') }}</p>
-                                    @can('appointments.manage')
-                                        @if(! $appointment->isCancelled())
-                                            <a href="{{ route('appointments.edit', $appointment) }}" class="mt-3 inline-flex text-xs font-bold text-cyan-700">Editar</a>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        @if($sessionAction)
+                                            <a data-testid="appointment-session-log-action-week" href="{{ $sessionAction['url'] }}" class="inline-flex text-xs font-bold {{ $sessionAction['completed'] ? 'text-emerald-700' : 'text-violet-700' }}">{{ $sessionAction['label'] }}</a>
                                         @endif
-                                    @endcan
+                                        @can('appointments.manage')
+                                            @if(! $appointment->isCancelled())
+                                                <a href="{{ route('appointments.edit', $appointment) }}" class="inline-flex text-xs font-bold text-cyan-700">Editar</a>
+                                            @endif
+                                        @endcan
+                                    </div>
                                 </article>
                             @empty
                                 <a href="{{ route('appointments.index', ['view' => 'day', 'date' => $weekDay->toDateString()]) }}" class="block rounded-xl border border-dashed border-slate-200 bg-slate-50/70 px-3 py-5 text-center text-xs font-medium text-slate-400 hover:border-cyan-200 hover:bg-cyan-50 hover:text-cyan-700">Sin citas</a>
@@ -169,11 +192,20 @@
                             </div>
                             <div class="mt-2 space-y-1.5">
                                 @foreach($dayAppointments->take(3) as $appointment)
-                                    @if(auth()->user()->can('appointments.manage') && ! $appointment->isCancelled())
-                                        <a href="{{ route('appointments.edit', $appointment) }}" class="block truncate rounded-lg border-l-4 bg-slate-50 px-2 py-1.5 text-[11px] font-semibold shadow-sm {{ $appointment->isCancelled() ? 'opacity-50' : '' }}" style="border-left-color: {{ $appointment->therapy->color ?: '#0891b2' }}">{{ $appointment->starts_at->format('H:i') }} · {{ $appointment->patient->full_name }}</a>
-                                    @else
-                                        <div class="block truncate rounded-lg border-l-4 bg-slate-50 px-2 py-1.5 text-[11px] font-semibold {{ $appointment->isCancelled() ? 'opacity-50' : '' }}" style="border-left-color: {{ $appointment->therapy->color ?: '#0891b2' }}">{{ $appointment->starts_at->format('H:i') }} · {{ $appointment->patient->full_name }}</div>
-                                    @endif
+                                    @php($sessionAction = $sessionLogAction($appointment))
+                                    <div class="rounded-lg border-l-4 bg-slate-50 px-2 py-1.5 shadow-sm {{ $appointment->isCancelled() ? 'opacity-50' : '' }}" style="border-left-color: {{ $appointment->therapy->color ?: '#0891b2' }}">
+                                        <div class="truncate text-[11px] font-semibold">{{ $appointment->starts_at->format('H:i') }} · {{ $appointment->patient->full_name }}</div>
+                                        <div class="mt-1 flex flex-wrap gap-2">
+                                            @if($sessionAction)
+                                                <a data-testid="appointment-session-log-action-month" href="{{ $sessionAction['url'] }}" class="text-[10px] font-bold {{ $sessionAction['completed'] ? 'text-emerald-700' : 'text-violet-700' }}">{{ $sessionAction['label'] }}</a>
+                                            @endif
+                                            @can('appointments.manage')
+                                                @if(! $appointment->isCancelled())
+                                                    <a href="{{ route('appointments.edit', $appointment) }}" class="text-[10px] font-bold text-cyan-700">Editar</a>
+                                                @endif
+                                            @endcan
+                                        </div>
+                                    </div>
                                 @endforeach
                                 @if($dayAppointments->count() > 3)
                                     <a href="{{ route('appointments.index', ['view' => 'day', 'date' => $calendarDay->toDateString()]) }}" class="inline-flex text-[11px] font-bold text-cyan-700">+ {{ $dayAppointments->count() - 3 }} más</a>

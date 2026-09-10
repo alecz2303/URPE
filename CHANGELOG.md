@@ -139,3 +139,5 @@ Todos los cambios relevantes de URPE Gestión Clínica se documentarán aquí.
 - URPE-20 evoluciona la bitácora por cita a una experiencia de `Sesiones clínicas` inspirada en el ciclo de Consultas de DocTotal, adaptada al dominio de rehabilitación y sin incorporar elementos médicos ajenos a URPE.
 - URPE-20 mantiene `draft/completed` como ciclo clínico canónico, conserva la inmutabilidad de sesiones completadas y las enmiendas append-only de URPE-17 como único mecanismo de corrección posterior.
 - Las instalaciones existentes reciben los permisos clínicos baseline mediante migración aditiva, eliminando la dependencia operativa de ejecutar manualmente `AuthorizationSeeder` tras actualizar y preservando permisos personalizados ya asignados.
+- URPE-19 alinea la Agenda con la autorización clínica real: `session_logs.manage` permite capturar/continuar sin exigir implícitamente `session_logs.view`, manteniendo la lectura como permiso independiente.
+- URPE-19 expone acciones de bitácora contextuales también en las vistas semanal y mensual, sin habilitarlas en citas canceladas ni ampliar el alcance clínico del usuario.
