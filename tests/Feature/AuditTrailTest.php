@@ -66,6 +66,29 @@ class AuditTrailTest extends TestCase
         ], $event->metadata);
     }
 
+    public function test_clinical_narrative_is_removed_recursively_from_audit_metadata(): void
+    {
+        $event = app(AuditTrail::class)->record('clinical.security.test', metadata: [
+            'patient_id' => 42,
+            'medical_history' => 'Sensitive medical history',
+            'nested' => [
+                'activities' => 'Sensitive activities',
+                'response_evolution' => 'Sensitive evolution',
+                'content' => 'Sensitive amendment text',
+                'status' => 'completed',
+            ],
+            'changed_sections' => ['diagnoses', 'therapeutic_objectives'],
+        ]);
+
+        $this->assertSame([
+            'patient_id' => 42,
+            'nested' => [
+                'status' => 'completed',
+            ],
+            'changed_sections' => ['diagnoses', 'therapeutic_objectives'],
+        ], $event->metadata);
+    }
+
     public function test_deleting_actor_does_not_delete_audit_history(): void
     {
         $actor = User::factory()->create();
