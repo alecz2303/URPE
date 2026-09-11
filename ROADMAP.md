@@ -52,7 +52,7 @@
 2. [x] Shell autenticado con sidebar persistente y menú móvil. *(URPE-12; refinamiento visual URPE-13)*
 3. [x] Separación UX de listado, consulta y edición en recursos clínicos/administrativos principales. *(URPE-12; URPE-20 extiende el patrón a Sesiones clínicas.)*
 4. [x] Sistema visual clínico consistente y más legible en agenda, pacientes, expediente, terapeutas, terapias, usuarios, roles y centro. *(URPE-13)*
-5. [ ] Reportes esenciales.
+5. [x] Reportes esenciales. *(URPE-23: reportes operativos por periodo con filtros de estado/terapia/terapeuta/paciente, KPIs de atención y metadatos de sesiones completadas sin exponer contenido clínico.)*
 6. [ ] Cobertura final de permisos y auditoría.
 7. [ ] Regresión, seguridad, rendimiento y respaldo.
 8. [ ] UAT y despliegue.

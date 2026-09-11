@@ -61,6 +61,17 @@ URPE procesará información clínica y datos personales; seguridad es requisito
 - El contexto longitudinal mostrado durante la captura reutiliza únicamente sesiones completadas previas y se presenta como solo lectura; no ofrece una vía de edición histórica.
 - Las migraciones de backfill de permisos clínicos son aditivas: garantizan los grants baseline necesarios para roles del sistema sin eliminar permisos personalizados ya existentes.
 
+## Reportes esenciales
+
+- El módulo de reportes requiere autorización server-side mediante `reports.view`; ocultar el acceso en el sidebar no sustituye la validación del controlador.
+- El baseline concede `reports.view` a Administrador, Coordinación Clínica y Consulta/Dirección. Recepción y Terapeuta no lo reciben por defecto.
+- Los reportes reutilizan datos operativos de citas y metadatos de sesiones completadas; no incluyen actividades, respuesta/evolución, observaciones, recomendaciones, objetivos ni texto de enmiendas clínicas.
+- Conocer la URL `/reportes` no concede acceso. Un usuario sin `reports.view` recibe 403 aunque tenga sesión autenticada.
+- Los filtros de rango, estado, terapia, terapeuta y paciente se aplican en servidor y los indicadores se calculan sobre el mismo conjunto filtrado mostrado al usuario.
+- La tasa de asistencia V1 usa únicamente citas cerradas como Completada o No asistió; las cancelaciones no forman parte del denominador.
+- URPE-23 no incorpora exportaciones descargables. Cualquier exportación futura debe revisar autorización, minimización de datos, auditoría y manejo seguro del archivo generado antes de habilitarse.
+- El backfill de `reports.view` es aditivo e idempotente y no elimina personalizaciones posteriores de permisos.
+
 ## Archivos clínicos protegidos
 
 - Los adjuntos se almacenan fuera del directorio público mediante el disco `clinical`; el nombre físico es generado por el sistema y no depende del nombre original proporcionado por el usuario.
