@@ -43,6 +43,17 @@ URPE procesará información clínica y datos personales; seguridad es requisito
 - Recepción: acceso operativo/administrativo; no recibe acceso a bitácoras clínicas por defecto.
 - Consulta/Dirección: lectura restringida según permisos; no recibe acceso a bitácoras clínicas por defecto.
 
+## Cobertura final de permisos y auditoría
+
+- URPE-27 fija mediante regresiones la matriz baseline V1 para Coordinación Clínica, Terapeuta, Recepción y Consulta/Dirección; cualquier ampliación futura debe ser explícita y revisada.
+- La denegación se valida en servidor y también para acceso por URL directa; la ausencia de un enlace en la UI no constituye un control de seguridad.
+- Recepción conserva pacientes y agenda operativa, sin expediente clínico, bitácoras ni reportes por defecto.
+- Consulta/Dirección conserva lectura de pacientes, agenda y reportes, sin capacidades de modificación clínica o administrativa por defecto.
+- Terapeuta conserva únicamente permisos de bitácora asignada; `session_logs.manage_all` sigue reservado a perfiles con grant explícito.
+- `AuditTrail` elimina de forma recursiva secretos y, como defensa adicional, campos conocidos de narrativa clínica antes de persistir metadata.
+- La sanitización defensiva no reemplaza la minimización en origen: cada evento debe enviar sólo identificadores, estados, nombres de secciones y contexto operativo necesario.
+- Los nombres de secciones clínicas pueden auditarse para indicar qué cambió; sus valores narrativos completos no deben persistirse en `audit_events`.
+
 ## Datos clínicos
 
 - No se borran silenciosamente.

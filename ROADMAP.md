@@ -53,7 +53,7 @@
 3. [x] Separación UX de listado, consulta y edición en recursos clínicos/administrativos principales. *(URPE-12; URPE-20 extiende el patrón a Sesiones clínicas.)*
 4. [x] Sistema visual clínico consistente y más legible en agenda, pacientes, expediente, terapeutas, terapias, usuarios, roles y centro. *(URPE-13)*
 5. [x] Reportes esenciales. *(URPE-23: reportes operativos por periodo con filtros de estado/terapia/terapeuta/paciente, KPIs de atención y metadatos de sesiones completadas sin exponer contenido clínico.)*
-6. [ ] Cobertura final de permisos y auditoría.
+6. [x] Cobertura final de permisos y auditoría. *(URPE-27: matriz baseline de mínimo privilegio fijada por regresiones, denegación server-side representativa y sanitización defensiva de narrativa clínica en auditoría.)*
 7. [ ] Regresión, seguridad, rendimiento y respaldo.
 8. [ ] UAT y despliegue.
 

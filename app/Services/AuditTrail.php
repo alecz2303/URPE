@@ -22,6 +22,19 @@ class AuditTrail
         'cookie',
         'api_key',
         'apikey',
+        // Clinical narrative must never be replicated into audit metadata.
+        'medical_history',
+        'prenatal_perinatal_history',
+        'developmental_history',
+        'family_history',
+        'diagnoses',
+        'therapeutic_objectives',
+        'general_observations',
+        'activities',
+        'response_evolution',
+        'observations_incidents',
+        'home_recommendations',
+        'next_session_objectives',
     ];
 
     public function record(
@@ -69,6 +82,12 @@ class AuditTrail
     private function isSensitiveKey(string $key): bool
     {
         $normalized = strtolower(trim($key));
+
+        // Amendment narrative uses the generic key `content`; match it exactly so
+        // safe metadata such as `sections_with_content` remains auditable.
+        if ($normalized === 'content') {
+            return true;
+        }
 
         foreach (self::SENSITIVE_KEYS as $sensitiveKey) {
             if ($normalized === $sensitiveKey || str_ends_with($normalized, '_'.$sensitiveKey)) {
