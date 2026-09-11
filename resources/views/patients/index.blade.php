@@ -7,7 +7,7 @@
 
     <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <p class="text-sm font-medium text-slate-500">Consulta rápida de pacientes, responsables y estado administrativo.</p>
-        <p class="w-fit rounded-full bg-cyan-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-cyan-700">{{ $patients->count() }} {{ $patients->count() === 1 ? 'paciente' : 'pacientes' }}</p>
+        <p class="w-fit rounded-full bg-cyan-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-cyan-700">{{ $patients->total() }} {{ $patients->total() === 1 ? 'paciente' : 'pacientes' }}</p>
     </div>
 
     <section class="overflow-hidden rounded-3xl border border-cyan-100 bg-white shadow-sm">
@@ -47,4 +47,10 @@
             @endforelse
         </div>
     </section>
+
+    @if($patients->hasPages())
+        <div class="mt-6">
+            {{ $patients->links() }}
+        </div>
+    @endif
 </x-app-shell>

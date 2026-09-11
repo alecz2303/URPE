@@ -54,7 +54,7 @@
 4. [x] Sistema visual clínico consistente y más legible en agenda, pacientes, expediente, terapeutas, terapias, usuarios, roles y centro. *(URPE-13)*
 5. [x] Reportes esenciales. *(URPE-23: reportes operativos por periodo con filtros de estado/terapia/terapeuta/paciente, KPIs de atención y metadatos de sesiones completadas sin exponer contenido clínico.)*
 6. [x] Cobertura final de permisos y auditoría. *(URPE-27: matriz baseline de mínimo privilegio fijada por regresiones, denegación server-side representativa y sanitización defensiva de narrativa clínica en auditoría.)*
-7. [ ] Regresión, seguridad, rendimiento y respaldo.
+7. [x] Regresión, seguridad, rendimiento y respaldo. *(URPE-28: hardening HTTP, paginación del listado de pacientes, regresiones de readiness y runbook de backup/restore para producción.)*
 8. [ ] UAT y despliegue.
 
 ## V1.x / V2
