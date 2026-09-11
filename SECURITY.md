@@ -54,6 +54,17 @@ URPE procesará información clínica y datos personales; seguridad es requisito
 - La sanitización defensiva no reemplaza la minimización en origen: cada evento debe enviar sólo identificadores, estados, nombres de secciones y contexto operativo necesario.
 - Los nombres de secciones clínicas pueden auditarse para indicar qué cambió; sus valores narrativos completos no deben persistirse en `audit_events`.
 
+## Hardening de producción y recuperación
+
+- URPE-28 agrega cabeceras HTTP de aplicación para `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` y `Permissions-Policy`; HSTS se envía únicamente cuando la solicitud ya llega por HTTPS.
+- Producción debe operar con `APP_ENV=production`, `APP_DEBUG=false`, URL HTTPS y `SESSION_SECURE_COOKIE=true`; `SESSION_HTTP_ONLY=true` y `SESSION_SAME_SITE=lax` se mantienen como baseline.
+- Las cabeceras de aplicación complementan, no reemplazan, TLS, configuración segura del reverse proxy/web server ni políticas adicionales que requiera la infraestructura.
+- El listado operativo de pacientes queda paginado para evitar cargas crecientes no acotadas; las relaciones de responsables continúan con eager loading.
+- Agenda, sesiones y reportes ya utilizan cargas acotadas/paginadas en sus superficies de listado. Cualquier cambio futuro debe evitar N+1 y colecciones globales innecesarias.
+- La recuperación V1 exige respaldar de forma consistente base de datos + `storage/app/clinical-private` + `.env` protegido y registrar el SHA desplegado.
+- Nunca se almacenan backups SQL o ZIP clínicos bajo `public/`; las copias deben protegerse con cifrado o controles equivalentes y acceso restringido.
+- Una copia sólo se considera confiable después de una restauración de prueba y el checklist definido en `docs/BACKUP_RESTORE.md`.
+
 ## Datos clínicos
 
 - No se borran silenciosamente.

@@ -22,7 +22,7 @@ class PatientController extends Controller
                 ->with(['guardians' => fn ($query) => $query->orderByPivot('is_primary', 'desc')])
                 ->orderBy('last_name')
                 ->orderBy('first_name')
-                ->get(),
+                ->paginate(25),
         ]);
     }
 
