@@ -55,7 +55,9 @@
 5. [x] Reportes esenciales. *(URPE-23: reportes operativos por periodo con filtros de estado/terapia/terapeuta/paciente, KPIs de atención y metadatos de sesiones completadas sin exponer contenido clínico.)*
 6. [x] Cobertura final de permisos y auditoría. *(URPE-27: matriz baseline de mínimo privilegio fijada por regresiones, denegación server-side representativa y sanitización defensiva de narrativa clínica en auditoría.)*
 7. [x] Regresión, seguridad, rendimiento y respaldo. *(URPE-28: hardening HTTP, paginación del listado de pacientes, regresiones de readiness y runbook de backup/restore para producción.)*
-8. [ ] UAT y despliegue.
+8. [x] Preparación de UAT y despliegue. *(URPE-29: preflight ejecutable de producción, matriz UAT, criterios Go/No-Go, smoke test y rollback. La ejecución humana de UAT y la puesta en producción deben documentarse sobre el SHA aprobado; no se consideran realizadas por el merge del ticket.)*
+
+**Estado V1:** desarrollo de ingeniería completo. El siguiente paso operativo es ejecutar UAT humana y desplegar el mismo SHA aprobado conforme a `docs/UAT_DEPLOYMENT.md`.
 
 ## V1.x / V2
 
