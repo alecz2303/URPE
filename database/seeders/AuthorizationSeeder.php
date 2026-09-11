@@ -30,6 +30,7 @@ class AuthorizationSeeder extends Seeder
             ['name' => 'Ver bitácoras clínicas asignadas', 'slug' => 'session_logs.view', 'description' => 'Consultar bitácoras de sesiones clínicas autorizadas.'],
             ['name' => 'Capturar bitácoras clínicas asignadas', 'slug' => 'session_logs.manage', 'description' => 'Crear y actualizar bitácoras de sesiones clínicas autorizadas.'],
             ['name' => 'Administrar todas las bitácoras clínicas', 'slug' => 'session_logs.manage_all', 'description' => 'Consultar y administrar bitácoras clínicas sin restricción por asignación de terapeuta.'],
+            ['name' => 'Ver reportes operativos y clínicos', 'slug' => 'reports.view', 'description' => 'Consultar reportes agregados y metadatos operativos autorizados.'],
         ])->mapWithKeys(function (array $permission): array {
             $model = Permission::query()->updateOrCreate(
                 ['slug' => $permission['slug']],
@@ -66,6 +67,7 @@ class AuthorizationSeeder extends Seeder
         foreach ([
             'therapies.manage', 'patients.view', 'patients.manage', 'clinical_records.view', 'clinical_records.manage',
             'appointments.view', 'appointments.manage', 'session_logs.view', 'session_logs.manage', 'session_logs.manage_all',
+            'reports.view',
         ] as $slug) {
             $coordinationPermissionIds[] = $permissions->get($slug)->id;
         }
@@ -87,7 +89,7 @@ class AuthorizationSeeder extends Seeder
 
         $consultationDirection = Role::query()->where('slug', 'consultation_direction')->firstOrFail();
         $directionPermissionIds = $consultationDirection->permissions()->pluck('permissions.id')->all();
-        foreach (['patients.view', 'appointments.view'] as $slug) {
+        foreach (['patients.view', 'appointments.view', 'reports.view'] as $slug) {
             $directionPermissionIds[] = $permissions->get($slug)->id;
         }
         $consultationDirection->permissions()->sync(array_values(array_unique($directionPermissionIds)));

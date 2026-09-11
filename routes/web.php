@@ -14,6 +14,7 @@ use App\Http\Controllers\ClinicalSessionLogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientSessionLogController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TherapistBlocksController;
 use App\Http\Controllers\TherapistController;
@@ -52,6 +53,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::put('/agenda/citas/{appointment}/bitacora', [ClinicalSessionLogController::class, 'update'])->name('session-logs.update');
     Route::post('/agenda/citas/{appointment}/bitacora/enmiendas', [ClinicalSessionLogAmendmentController::class, 'store'])
         ->name('session-log-amendments.store');
+
+    Route::get('/reportes', ReportController::class)->name('reports.index');
 
     Route::get('/usuarios', [UserController::class, 'index'])->name('users.index');
     Route::get('/usuarios/crear', [UserController::class, 'create'])->name('users.create');

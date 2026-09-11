@@ -38,6 +38,10 @@
                     <a href="{{ route('session-logs.index') }}" class="mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition {{ request()->routeIs('session-logs.*') ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white shadow-lg shadow-violet-950/20' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}"><span>✎</span> Sesiones clínicas</a>
                 @endcan
 
+                @can('reports.view')
+                    <a href="{{ route('reports.index') }}" class="mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition {{ request()->routeIs('reports.*') ? 'bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-lg shadow-sky-950/20' : 'text-slate-300 hover:bg-white/10 hover:text-white' }}"><span>▥</span> Reportes</a>
+                @endcan
+
                 <p class="mt-5 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200/50">Operación clínica</p>
 
                 @can('therapists.manage')
