@@ -1,1 +1,96 @@
 import './bootstrap';
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const revealElements = document.querySelectorAll('[data-reveal]');
+const header = document.querySelector('[data-motion="header"]');
+
+if (reducedMotion) {
+    revealElements.forEach((element) => element.classList.add('is-visible'));
+} else if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+        });
+    }, {
+        threshold: 0.16,
+        rootMargin: '0px 0px -8% 0px',
+    });
+
+    revealElements.forEach((element) => revealObserver.observe(element));
+} else {
+    revealElements.forEach((element) => element.classList.add('is-visible'));
+}
+
+const updateHeader = () => {
+    if (!header) return;
+    header.classList.toggle('is-scrolled', window.scrollY > 18);
+};
+
+updateHeader();
+window.addEventListener('scroll', updateHeader, { passive: true });
+
+const pageLoader = document.getElementById('urpe-loader');
+
+const dismissPageLoader = () => {
+    if (!pageLoader) return;
+
+    pageLoader.classList.add('is-leaving');
+    window.setTimeout(() => pageLoader.remove(), reducedMotion ? 0 : 520);
+};
+
+if (document.readyState === 'complete') {
+    dismissPageLoader();
+} else {
+    window.addEventListener('load', dismissPageLoader, { once: true });
+}
+
+
+const mobileMenu = document.querySelector('[data-mobile-menu]');
+
+if (mobileMenu) {
+    mobileMenu.querySelectorAll('a[href]').forEach((link) => {
+        link.addEventListener('click', () => {
+            mobileMenu.removeAttribute('open');
+        });
+    });
+
+    document.addEventListener('click', (event) => {
+        if (mobileMenu.open && !mobileMenu.contains(event.target)) {
+            mobileMenu.removeAttribute('open');
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && mobileMenu.open) {
+            mobileMenu.removeAttribute('open');
+            mobileMenu.querySelector('summary')?.focus();
+        }
+    });
+}
+
+
+const backToTopButton = document.getElementById('urpe-back-to-top');
+const pageFooter = document.querySelector('footer');
+
+const updateBackToTop = () => {
+    if (!backToTopButton) return;
+    const nearTop = window.scrollY < 420;
+    const footerVisible = pageFooter ? pageFooter.getBoundingClientRect().top < window.innerHeight : false;
+    const shouldShow = !nearTop && !footerVisible;
+    backToTopButton.classList.toggle('opacity-0', !shouldShow);
+    backToTopButton.classList.toggle('translate-y-4', !shouldShow);
+    backToTopButton.classList.toggle('pointer-events-none', !shouldShow);
+    backToTopButton.classList.toggle('opacity-100', shouldShow);
+    backToTopButton.classList.toggle('translate-y-0', shouldShow);
+};
+
+if (backToTopButton) {
+    backToTopButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' }));
+    updateBackToTop();
+    window.addEventListener('scroll', updateBackToTop, { passive: true });
+    window.addEventListener('resize', updateBackToTop, { passive: true });
+}
