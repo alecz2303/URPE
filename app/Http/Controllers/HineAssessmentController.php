@@ -147,6 +147,7 @@ class HineAssessmentController extends Controller
             'corrected_age' => ['sometimes', 'nullable', 'string', 'max:100'],
             'head_circumference' => ['sometimes', 'nullable', 'string', 'max:100'],
             'general_comments' => ['sometimes', 'nullable', 'string', 'max:5000'],
+            'return_step' => ['nullable', 'integer', 'min:0', 'max:7'],
             'responses' => ['nullable', 'array'],
             'responses.*.score' => ['nullable', 'numeric', 'in:0,0.5,1,1.5,2,2.5,3'],
             'responses.*.asymmetry' => ['nullable', 'boolean'],
@@ -257,7 +258,8 @@ class HineAssessmentController extends Controller
 
         return redirect()
             ->route('patients.hine-assessments.edit', [$patient, $assessment])
-            ->with('success', 'Borrador HINE guardado correctamente.');
+            ->with('success', 'Borrador HINE guardado correctamente.')
+            ->with('hine_step', (int) ($data['return_step'] ?? 0));
     }
 
 
