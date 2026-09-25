@@ -59,3 +59,29 @@
         cursor: not-allowed;
     }
 }
+
+
+@layer components {
+    .hine-source-crop {
+        height: 7rem;
+        margin-inline: auto;
+        background-image: url('/images/hine/scarf_sign.png');
+        background-repeat: no-repeat;
+        background-size: 641px 173px;
+    }
+
+    .hine-scarf-3 {
+        width: 255px;
+        background-position: 0 center;
+    }
+
+    .hine-scarf-1 {
+        width: 128px;
+        background-position: -255px center;
+    }
+
+    .hine-scarf-0 {
+        width: 258px;
+        background-position: -383px center;
+    }
+}
