@@ -57,8 +57,8 @@ class HineAssessmentDraftTest extends TestCase
         $slug = 'hine-'.uniqid();
         $role = Role::query()->create(['name' => 'HINE Test', 'slug' => $slug, 'is_system' => false]);
         $permissions = collect($permissionNames)->map(fn (string $name) => Permission::query()->firstOrCreate(
-            ['name' => $name],
-            ['label' => $name, 'group' => 'clinical_assessments']
+            ['slug' => $name],
+            ['name' => $name, 'description' => 'HINE test permission']
         ));
         $role->permissions()->sync($permissions->pluck('id'));
 
