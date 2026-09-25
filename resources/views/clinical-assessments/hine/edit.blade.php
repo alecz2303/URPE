@@ -136,7 +136,9 @@
                                                             <p class="mt-2">Ligeramente curvado o inclinado lateralmente</p>
                                                         </td>
                                                         <td class="px-3 py-3 text-center">
-                                                            <img src="{{ asset('images/hine/trunk_sitting_score_0.png') }}" alt="Tronco muy curvado, hiperextendido o inclinado lateralmente" class="mx-auto h-20 w-auto max-w-full object-contain">
+                                                            <div class="mx-auto h-20 w-full max-w-[260px] overflow-hidden">
+                                                                <img src="{{ asset('images/hine/trunk_sitting.png') }}" alt="Tronco muy curvado, hiperextendido o inclinado lateralmente" class="h-full max-w-none" style="width: 166.667%; transform: translateX(-40%); transform-origin: left center;">
+                                                            </div>
                                                             <p class="mt-2">Muy curvado · Hiperextendido · Inclinado lateralmente</p>
                                                         </td>
                                                     </tr>
