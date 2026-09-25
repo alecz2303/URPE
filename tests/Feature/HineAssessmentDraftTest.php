@@ -187,6 +187,9 @@ class HineAssessmentDraftTest extends TestCase
 
         $this->actingAs($user)->get(route('patients.hine-assessments.show', [$patient, $assessment]))
             ->assertOk()
+            ->assertSee('Detalle clínico')
+            ->assertSee('Hitos motores')
+            ->assertSee('Comportamiento')
             ->assertSee('Apoyo para la interpretación')
             ->assertSee('≥ 4')
             ->assertSee('3 meses')
