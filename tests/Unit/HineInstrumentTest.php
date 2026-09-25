@@ -195,7 +195,7 @@ class HineInstrumentTest extends TestCase
         $anchors = HineInstrument::clinicalAnchors();
 
         $this->assertSame('Resistencia superable', $anchors['passive_shoulder_elevation'][3]);
-        $this->assertArrayNotHasKey(2, $anchors['passive_shoulder_elevation']);
+        $this->assertSame('Dificultad para vencer la resistencia', $anchors['passive_shoulder_elevation'][2]);
         $this->assertSame('No existe resistencia', $anchors['passive_shoulder_elevation'][1]);
         $this->assertSame('Resistencia no superable', $anchors['passive_shoulder_elevation'][0]);
     }
@@ -215,10 +215,10 @@ class HineInstrumentTest extends TestCase
 
         $this->assertSame([
             3 => '(después de los 6 meses)',
-            0 => '(después de los 6 meses)',
+            1 => '(después de los 6 meses)',
         ], $anchors['parachute']);
         $this->assertArrayNotHasKey(2, $anchors['parachute']);
-        $this->assertArrayNotHasKey(1, $anchors['parachute']);
+        $this->assertArrayNotHasKey(0, $anchors['parachute']);
     }
 
     public function test_posture_hands_legs_and_feet_preserve_source_score_columns(): void
