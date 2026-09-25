@@ -91,12 +91,12 @@
 
         <section class="rounded-3xl border border-cyan-100 bg-white p-6 shadow-sm">
             <p class="text-xs font-bold uppercase tracking-[0.16em] text-cyan-700">Apoyo para la interpretación</p>
-            <h3 class="mt-1 text-lg font-black text-slate-900">Referencia del material HINE proporcionado</h3>
+            <h3 class="mt-1 text-lg font-black text-slate-900">{{ $interpretation['source_title'] }}</h3>
             <p class="mt-2 text-sm leading-6 text-slate-600">{{ $interpretation['note'] }}</p>
 
             <div class="mt-5 grid gap-4 lg:grid-cols-3">
                 <div class="rounded-2xl bg-slate-50 p-4">
-                    <p class="text-xs font-bold uppercase text-slate-500">Puntuación global</p>
+                    <p class="text-xs font-bold uppercase text-slate-500">{{ $interpretation['global_score_heading'] }}</p>
                     <div class="mt-3 flex flex-wrap gap-2">
                         @foreach($interpretation['global_score_ranges'] as $range)
                             <span class="rounded-full bg-white px-3 py-1.5 text-sm font-bold text-slate-700 ring-1 ring-slate-200">{{ $range['label'] }}</span>
@@ -104,12 +104,12 @@
                     </div>
                 </div>
                 <div class="rounded-2xl bg-amber-50 p-4">
-                    <p class="text-xs font-bold uppercase text-amber-700">Asimetrías</p>
+                    <p class="text-xs font-bold uppercase text-amber-700">{{ $interpretation['asymmetry_heading'] }}</p>
                     <p class="mt-3 text-2xl font-black text-amber-900">≥ {{ $interpretation['asymmetry_attention_threshold'] }}</p>
                     <p class="mt-1 text-xs text-amber-800">Referencia destacada en el apoyo de interpretación.</p>
                 </div>
                 <div class="rounded-2xl bg-violet-50 p-4">
-                    <p class="text-xs font-bold uppercase text-violet-700">Alto riesgo en PC según edad</p>
+                    <p class="text-xs font-bold uppercase text-violet-700">{{ $interpretation['high_risk_heading'] }}</p>
                     <div class="mt-3 grid grid-cols-2 gap-2 text-sm">
                         @foreach($interpretation['high_risk_cutoffs_by_age_months'] as $months => $cutoff)
                             <div class="rounded-xl bg-white px-3 py-2 font-semibold text-violet-900">{{ $months }} meses <strong class="float-right">{{ $cutoff }}</strong></div>
