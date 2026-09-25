@@ -38,6 +38,8 @@ class HinePersistenceSchemaTest extends TestCase
 
     public function test_hine_permissions_are_assigned_to_administrator_and_clinical_coordination(): void
     {
+        $this->seed(\Database\Seeders\AuthorizationSeeder::class);
+
         foreach (['administrator', 'clinical_coordination'] as $roleSlug) {
             $role = Role::query()->where('slug', $roleSlug)->firstOrFail();
             $permissionSlugs = $role->permissions()->pluck('slug')->all();
