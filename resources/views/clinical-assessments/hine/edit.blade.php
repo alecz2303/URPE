@@ -112,6 +112,38 @@
                                             </table>
                                             <p class="border-t border-slate-200 bg-cyan-50/50 px-3 py-2 text-[11px] font-semibold text-cyan-800">Referencia visual organizada según la proforma HINE fuente.</p>
                                         </div>
+                                    @elseif($item['key'] === 'trunk_sitting')
+                                        <div class="mt-4 overflow-x-auto rounded-2xl border border-slate-300 bg-white">
+                                            <table class="min-w-[760px] w-full table-fixed text-xs text-slate-700">
+                                                <caption class="sr-only">Referencia de la proforma HINE para Tronco en sedestación</caption>
+                                                <thead class="bg-slate-100 font-bold text-slate-900">
+                                                    <tr>
+                                                        <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 3</th>
+                                                        <th class="w-14 border-b border-r border-slate-300 px-2 py-2">2</th>
+                                                        <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 1</th>
+                                                        <th class="border-b border-slate-300 px-3 py-2">Puntuación 0</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="align-top">
+                                                        <td class="border-r border-slate-300 px-3 py-3 text-center">
+                                                            <img src="{{ asset('images/hine/trunk_sitting_score_3.png') }}" alt="Tronco recto en sedestación" class="mx-auto h-20 w-auto max-w-full object-contain">
+                                                            <p class="mt-2">Recto</p>
+                                                        </td>
+                                                        <td class="border-r border-slate-300"></td>
+                                                        <td class="border-r border-slate-300 px-3 py-3 text-center">
+                                                            <img src="{{ asset('images/hine/trunk_sitting_score_1.png') }}" alt="Tronco ligeramente curvado o inclinado lateralmente" class="mx-auto h-20 w-auto max-w-full object-contain">
+                                                            <p class="mt-2">Ligeramente curvado o inclinado lateralmente</p>
+                                                        </td>
+                                                        <td class="px-3 py-3 text-center">
+                                                            <img src="{{ asset('images/hine/trunk_sitting_score_0.png') }}" alt="Tronco muy curvado, hiperextendido o inclinado lateralmente" class="mx-auto h-20 w-auto max-w-full object-contain">
+                                                            <p class="mt-2">Muy curvado · Hiperextendido · Inclinado lateralmente</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <p class="border-t border-slate-200 bg-cyan-50/50 px-3 py-2 text-[11px] font-semibold text-cyan-800">Referencia visual organizada según la proforma HINE fuente.</p>
+                                        </div>
                                     @else
                                         @if(isset($anchors[$item['key']]))
                                             <div class="mt-3 grid gap-2 md:grid-cols-2">
