@@ -8,6 +8,8 @@ final class HineInstrument
 
     public const URPE_SCORES = [0, 0.5, 1, 1.5, 2, 2.5, 3];
 
+    public const SOURCE_SCORING_NOTE = 'A lo largo del examen, si la respuesta no es óptima, pero no lo suficientemente pobre como para dar una puntuación de 1, dé una puntuación de 2';
+
     public static function neurologicalSections(): array
     {
         return [
