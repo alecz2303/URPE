@@ -167,6 +167,39 @@ class HineAssessmentDraftTest extends TestCase
         ]);
     }
 
+    public function test_finalized_hine_result_renders_source_interpretation_without_age_interpolation(): void
+    {
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create(['first_name' => 'Paciente', 'last_name' => 'Resultado HINE', 'date_of_birth' => '2026-03-25']);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), ['examination_date' => '2026-09-25']);
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+
+        $responses = [];
+        foreach (\App\Support\HineInstrument::neurologicalSections() as $section) {
+            foreach ($section['items'] as $item) {
+                $responses[$item['key']] = ['score' => 2.5];
+            }
+        }
+
+        $this->actingAs($user)->put(route('patients.hine-assessments.update', [$patient, $assessment]), ['responses' => $responses]);
+        $this->actingAs($user)->post(route('patients.hine-assessments.finalize', [$patient, $assessment]));
+
+        $this->actingAs($user)->get(route('patients.hine-assessments.show', [$patient, $assessment]))
+            ->assertOk()
+            ->assertSee('Apoyo para la interpretación')
+            ->assertSee('≥ 4')
+            ->assertSee('3 meses')
+            ->assertSee('56')
+            ->assertSee('6 meses')
+            ->assertSee('59')
+            ->assertSee('9 meses')
+            ->assertSee('62')
+            ->assertSee('12 meses')
+            ->assertSee('65')
+            ->assertSee('no se interpolan');
+    }
+
     public function test_user_without_manage_permission_cannot_create_hine_draft(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view']);
