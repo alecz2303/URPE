@@ -215,6 +215,7 @@
                                             @php($visualColumns = \App\Support\HineInstrument::visualScoreColumns()[$item['key']] ?? [])
                                             @php($individualVisuals = [
                                                 'arm_protection' => [3 => 'arm_protection_score_3.png', 1 => 'arm_protection_score_1.png', 0 => 'arm_protection_score_0.png'],
+                                                'lateral_suspension' => [3 => 'lateral_suspension_score_3.png', 2 => 'lateral_suspension_score_2.png', 1 => 'lateral_suspension_score_1.png', 0 => 'lateral_suspension_score_0.png'],
                                                 'parachute' => [3 => 'parachute_score_3.png', 1 => 'parachute_score_1.png'],
                                             ])
                                             <div class="mt-4 overflow-x-auto rounded-2xl border border-slate-300 bg-white">
