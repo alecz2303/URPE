@@ -180,6 +180,10 @@ final class HineInstrument
                 1 => 'Una pierna patalea más o pataleo pobre',
                 0 => 'No patalea incluso si es estimulado, o adopta una posición "en tijera"',
             ],
+            'parachute' => [
+                3 => '(después de los 6 meses)',
+                0 => '(después de los 6 meses)',
+            ],
             'tendon_reflexes' => [
                 3 => 'Se obtienen con facilidad',
                 2 => 'Ligeramente exaltados',
