@@ -1,0 +1,101 @@
+<x-app-shell title="Captura HINE" eyebrow="{{ $patient->full_name }}">
+    <x-slot:actions>
+        <a href="{{ route('patients.hine-assessments.index', $patient) }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700">Historial HINE</a>
+    </x-slot:actions>
+
+    <form method="POST" action="{{ route('patients.hine-assessments.update', [$patient, $assessment]) }}" class="space-y-6">
+        @csrf
+        @method('PUT')
+
+        <section class="rounded-3xl border border-cyan-100 bg-gradient-to-r from-cyan-50 via-white to-violet-50 p-6 shadow-sm">
+            <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.16em] text-cyan-700">HINE {{ $assessment->instrument_version }}</p>
+                    <h2 class="mt-1 text-xl font-black text-slate-900">Evaluación neurológica</h2>
+                    <p class="mt-2 text-sm text-slate-600">Escala URPE: 0 a 3 en incrementos de 0.5. Los medios puntos representan juicio clínico y no agregan criterios que no estén en la fuente.</p>
+                </div>
+                <div class="rounded-2xl bg-white px-4 py-3 text-right ring-1 ring-slate-100">
+                    <p class="text-xs font-bold uppercase text-slate-400">Puntuación actual</p>
+                    <p class="text-2xl font-black text-violet-700">{{ $hine->global_score ?? '0.0' }} <span class="text-sm text-slate-400">/ 78</span></p>
+                    <p class="mt-1 text-xs font-semibold text-slate-500">{{ $hine->asymmetry_count }} asimetrías registradas</p>
+                </div>
+            </div>
+        </section>
+
+        @foreach($sections as $sectionKey => $section)
+            <section class="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm">
+                <div class="flex items-center justify-between gap-4 border-b border-slate-100 bg-slate-50/70 px-6 py-4">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-[0.14em] text-violet-600">Sección</p>
+                        <h3 class="mt-1 text-lg font-bold text-slate-900">{{ $section['label'] }}</h3>
+                        @isset($section['note'])<p class="mt-1 text-xs text-slate-500">{{ $section['note'] }}</p>@endisset
+                    </div>
+                    <span class="rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-800">Máx. {{ $section['maximum'] }}</span>
+                </div>
+
+                <div class="divide-y divide-slate-100">
+                    @foreach($section['items'] as $item)
+                        @php($response = $responses->get($item['key']))
+                        <article class="p-6">
+                            <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(320px,.8fr)]">
+                                <div>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <h4 class="font-bold text-slate-800">{{ $item['label'] }}</h4>
+                                        @if($item['laterality'] ?? false)<span class="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">D / I</span>@endif
+                                    </div>
+                                    @isset($item['instruction'])<p class="mt-1 text-sm text-slate-500">{{ $item['instruction'] }}</p>@endisset
+
+                                    @if(isset($anchors[$item['key']]))
+                                        <div class="mt-3 grid gap-2 sm:grid-cols-2">
+                                            @foreach($anchors[$item['key']] as $anchorScore => $anchorText)
+                                                <div class="rounded-xl bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-600"><strong class="text-slate-800">{{ $anchorScore }}:</strong> {{ $anchorText }}</div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                    @if(isset($visuals[$item['key']]))
+                                        <p class="mt-3 rounded-xl border border-dashed border-cyan-200 bg-cyan-50 px-3 py-2 text-xs font-semibold text-cyan-800">Referencia visual original HINE asociada. El activo fuente se incorporará sin sustituirlo por ilustraciones genéricas.</p>
+                                    @endif
+                                </div>
+
+                                <div class="space-y-3">
+                                    <fieldset>
+                                        <legend class="text-xs font-bold uppercase tracking-wide text-slate-500">Puntuación</legend>
+                                        <div class="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-7 lg:grid-cols-4 xl:grid-cols-7">
+                                            @foreach($scores as $score)
+                                                <label class="cursor-pointer">
+                                                    <input type="radio" name="responses[{{ $item['key'] }}][score]" value="{{ $score }}" class="peer sr-only" @checked((string) old('responses.'.$item['key'].'.score', $response?->score) === (string) $score)>
+                                                    <span class="block rounded-xl border border-slate-200 px-2 py-2 text-center text-sm font-bold text-slate-600 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 peer-checked:text-cyan-800">{{ $score }}</span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    </fieldset>
+
+                                    @if($item['laterality'] ?? false)
+                                        <label class="flex items-center gap-2 text-sm font-semibold text-amber-800">
+                                            <input type="hidden" name="responses[{{ $item['key'] }}][asymmetry]" value="0">
+                                            <input type="checkbox" name="responses[{{ $item['key'] }}][asymmetry]" value="1" class="rounded border-amber-300 text-amber-600" @checked((bool) old('responses.'.$item['key'].'.asymmetry', $response?->asymmetry))>
+                                            Registrar asimetría
+                                        </label>
+                                    @endif
+
+                                    <label class="block text-xs font-bold uppercase tracking-wide text-slate-500">Comentarios
+                                        <textarea name="responses[{{ $item['key'] }}][comments]" rows="2" maxlength="2000" class="mt-2 w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">{{ old('responses.'.$item['key'].'.comments', $response?->comments) }}</textarea>
+                                    </label>
+                                </div>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            </section>
+        @endforeach
+
+        @if($errors->any())
+            <div class="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">{{ $errors->first() }}</div>
+        @endif
+
+        <div class="sticky bottom-4 flex justify-end">
+            <button class="rounded-xl bg-gradient-to-r from-cyan-600 to-sky-600 px-6 py-3 text-sm font-bold text-white shadow-lg">Guardar borrador HINE</button>
+        </div>
+    </form>
+</x-app-shell>
