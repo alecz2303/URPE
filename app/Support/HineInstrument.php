@@ -111,8 +111,7 @@ final class HineInstrument
             ],
             'arms_rest' => [
                 3 => 'En posición neutra, centrados o ligeramente flexionados',
-                2 => 'Ligera rotación interna o rotación externa',
-                1 => 'Intermitente postura distónica',
+                1 => 'Ligera rotación interna o rotación externa; intermitente postura distónica',
                 0 => 'Marcada rotación interna o rotación externa o postura distónica; postura hemiparética',
             ],
             'hands' => [
