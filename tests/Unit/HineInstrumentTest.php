@@ -55,7 +55,7 @@ class HineInstrumentTest extends TestCase
             ['No puede mantenerse sentado', 'Con soporte en caderas', 'Se apoya', 'Sedestación estable', 'Pivota (rota)'],
             $milestones['sitting']['options']
         );
-        $this->assertSame('Normal a los 10m', $milestones['crawling']['normal_ages'][3]);
+        $this->assertSame('Normal a los 10m', $milestones['crawling']['normal_ages'][4]);
         $this->assertSame(
             ['Rebota (intenta botar)', 'Camina con apoyo', 'Camina independiente'],
             $milestones['walking']['options']
