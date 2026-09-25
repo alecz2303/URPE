@@ -224,6 +224,21 @@ final class HineInstrument
         ];
     }
 
+    /**
+     * Maps source-derived visual frames to the score column they illustrate.
+     * Only mappings that can be verified from the supplied HINE source belong here.
+     */
+    public static function visualScoreFrames(): array
+    {
+        return [
+            'head_sitting' => [
+                3 => ['head_sitting.png', 0, 2],
+                1 => ['head_sitting.png', 2, 4],
+                0 => ['head_sitting.png', 4, 5],
+            ],
+        ];
+    }
+
     public static function motorMilestones(): array
     {
         return [
