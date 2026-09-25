@@ -57,10 +57,10 @@ final class HineInstrument
                 'label'=>'Reflejos y reacciones','maximum'=>15,
                 'items'=>[
                     ['key'=>'arm_protection','label'=>'Protección del brazo','instruction'=>'Traccionar del niño por el brazo desde la posición supina para llevarlo hacia sentado (estabilizar la cadera contralateral) y observar la reacción del brazo libre.','laterality'=>true,'visual'=>true],
-                    ['key'=>'vertical_suspension','label'=>'Suspensión vertical','instruction'=>'Sostener al niño por debajo de las axilas asegurándose que las piernas no tocan ninguna superficie; puede hacer cosquillas en los pies para estimular el pataleo.','visual'=>true],
+                    ['key'=>'vertical_suspension','label'=>'Suspensión vertical','instruction'=>'Sostener al niño por debajo de las axilas asegurándose que las piernas no tocan ninguna superficie -puede "hacer cosquillas" en los pies para estimular el pataleo.','visual'=>true],
                     ['key'=>'lateral_suspension','label'=>'Suspensión lateral','instruction'=>'Describir el lado superior. Sostener al niño cerca de las caderas. Desde la vertical, inclinarlo a los lados hacia la horizontal. Observar la respuesta del tronco, columna, miembros y cabeza.','laterality'=>true,'visual'=>true],
-                    ['key'=>'parachute','label'=>'Paracaídas','instruction'=>'Sostener al niño verticalmente e inclinarlo rápidamente hacia delante. Observar la reacción/simetría de la respuesta de los brazos (después de los 6 meses).','visual'=>true],
-                    ['key'=>'tendon_reflexes','label'=>'Reflejos tendinosos','instruction'=>'Con el niño relajado, sentado o tumbado, usar un martillo. Bíceps, rodilla, tobillo.'],
+                    ['key'=>'parachute','label'=>'Paracaídas','instruction'=>'Sostener al niño verticalmente e inclinarlo rápidamente hacia delante. Observar la reacción/simetría de la respuesta de los brazos.','age_note'=>'Después de los 6 meses.','visual'=>true],
+                    ['key'=>'tendon_reflexes','label'=>'Reflejos tendinosos','instruction'=>'Con el niño relajado, sentado o tumbado -usar un martillo.','sites'=>['bíceps','rodilla','tobillo']],
                 ],
             ],
         ];
