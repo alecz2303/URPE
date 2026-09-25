@@ -106,6 +106,19 @@
                         <div>
                             <h4 class="font-bold text-slate-800">{{ $item['label'] }}</h4>
                             @isset($item['instruction'])<p class="mt-1 text-sm text-slate-500">{{ $item['instruction'] }}</p>@endisset
+                            @isset($item['options'])
+                                <div class="mt-3 space-y-2">
+                                    @foreach($item['options'] as $optionIndex => $option)
+                                        <div class="rounded-xl bg-emerald-50/60 px-3 py-2 text-xs leading-5 text-slate-700">
+                                            <span class="font-bold text-emerald-800">{{ $option }}</span>
+                                            @if(isset($item['normal_ages'][$optionIndex]))
+                                                <span class="ml-1 text-slate-500">· {{ $item['normal_ages'][$optionIndex] }}</span>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                    @isset($item['age_note'])<p class="text-xs font-semibold text-emerald-800">{{ $item['age_note'] }}</p>@endisset
+                                </div>
+                            @endisset
                             @if(isset($visuals[$item['key']]))<figure class="mt-3 rounded-2xl border border-cyan-100 bg-cyan-50/40 p-3">
                                 <img src="{{ asset('images/hine/'.$visuals[$item['key']]) }}" alt="Referencia visual HINE: {{ $item['label'] }}" class="max-h-48 w-auto max-w-full object-contain" loading="lazy" decoding="async">
                             </figure>@endif
@@ -165,6 +178,5 @@
     <form method="POST" action="{{ route('patients.hine-assessments.finalize', [$patient, $assessment]) }}" class="mt-3 flex justify-end" onsubmit="return confirm('¿Finalizar esta evaluación HINE? Después quedará cerrada para edición.');">
         @csrf
         <button class="rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-6 py-3 text-sm font-bold text-white shadow-lg">Finalizar evaluación HINE</button>
-    </form>
     </form>
 </x-app-shell>
