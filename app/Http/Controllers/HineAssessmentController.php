@@ -220,6 +220,58 @@ class HineAssessmentController extends Controller
             ->with('success', 'Borrador HINE guardado correctamente.');
     }
 
+
+    public function finalize(Request $request, Patient $patient, ClinicalAssessment $assessment, AuditTrail $audit, HineScoreCalculator $calculator): RedirectResponse
+    {
+        abort_unless($request->user()->hasPermission('clinical_assessments.manage'), 403);
+        $this->assertHineForPatient($patient, $assessment);
+        abort_if($assessment->status === ClinicalAssessment::STATUS_FINALIZED, 409, 'La evaluación HINE ya fue finalizada.');
+
+        $assessment->load('hine.responses');
+        $requiredItems = collect(HineInstrument::neurologicalSections())->flatMap(fn (array $section) => collect($section['items'])->pluck('key'));
+        $scored = $assessment->hine->responses->whereIn('item_key', $requiredItems)->whereNotNull('score')->keyBy('item_key');
+        $missing = $requiredItems->reject(fn (string $key) => $scored->has($key));
+
+        if ($missing->isNotEmpty()) {
+            return back()->withErrors(['finalize' => 'Faltan '. $missing->count() .' reactivos neurológicos por puntuar antes de finalizar.']);
+        }
+
+        $calculated = $calculator->calculate($scored->map(fn (HineResponse $response) => [
+            'section_key' => $response->section_key,
+            'score' => $response->score,
+            'asymmetry' => $response->asymmetry,
+        ])->values()->all());
+
+        DB::transaction(function () use ($request, $assessment, $calculated, $audit): void {
+            $assessment->hine->update([
+                'cranial_nerves_score' => $calculated['subtotals']['cranial_nerves'],
+                'posture_score' => $calculated['subtotals']['posture'],
+                'movements_score' => $calculated['subtotals']['movements'],
+                'tone_score' => $calculated['subtotals']['tone'],
+                'reflexes_reactions_score' => $calculated['subtotals']['reflexes_reactions'],
+                'global_score' => $calculated['global_score'],
+                'asymmetry_count' => $calculated['asymmetry_count'],
+            ]);
+
+            $assessment->update([
+                'status' => ClinicalAssessment::STATUS_FINALIZED,
+                'finalized_at' => now(),
+            ]);
+
+            $audit->record('clinical_assessment.finalized', $assessment, [
+                'patient_id' => $assessment->patient_id,
+                'type' => ClinicalAssessment::TYPE_HINE,
+                'status' => ClinicalAssessment::STATUS_FINALIZED,
+                'global_score' => $calculated['global_score'],
+                'asymmetry_count' => $calculated['asymmetry_count'],
+                'clinical_content_stored_in_audit' => false,
+            ], $request->user(), $request);
+        });
+
+        return redirect()->route('patients.hine-assessments.index', $patient)
+            ->with('success', 'Evaluación HINE finalizada y cerrada para edición.');
+    }
+
     private function assertHineForPatient(Patient $patient, ClinicalAssessment $assessment): void
     {
         abort_unless(
