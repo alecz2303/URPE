@@ -19,6 +19,21 @@
             </div>
         </section>
 
+        <section class="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
+            <p class="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Datos del examen</p>
+            <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-sm text-slate-600">
+                <p><strong class="text-slate-800">Nombre y apellidos:</strong><br>{{ $patient->full_name }}</p>
+                <p><strong class="text-slate-800">Fecha de nacimiento:</strong><br>{{ $patient->date_of_birth?->format('d/m/Y') ?: '—' }}</p>
+                <p><strong class="text-slate-800">Edad gestacional:</strong><br>{{ $hine->gestational_age ?: '—' }}</p>
+                <p><strong class="text-slate-800">Edad cronológica:</strong><br>{{ $hine->chronological_age ?: '—' }}</p>
+                <p><strong class="text-slate-800">Edad corregida:</strong><br>{{ $hine->corrected_age ?: '—' }}</p>
+                <p><strong class="text-slate-800">Perímetro cefálico:</strong><br>{{ $hine->head_circumference ?: '—' }}</p>
+                <p><strong class="text-slate-800">Puntuación de comportamiento:</strong><br>No puntúa; no forma parte de la puntuación óptima.</p>
+                <p><strong class="text-slate-800">Número de asimetrías:</strong><br>{{ $hine->asymmetry_count }}</p>
+            </div>
+            @if($hine->general_comments)<div class="mt-4 rounded-xl bg-slate-50 p-4 text-sm text-slate-600"><strong class="text-slate-800">Comentarios:</strong> {{ $hine->general_comments }}</div>@endif
+        </section>
+
         <section class="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
             @foreach($sections as $sectionKey => $section)
                 @php($field = match($sectionKey) {'cranial_nerves'=>'cranial_nerves_score','posture'=>'posture_score','movements'=>'movements_score','tone'=>'tone_score','reflexes_reactions'=>'reflexes_reactions_score'})
