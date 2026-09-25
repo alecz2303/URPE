@@ -247,6 +247,24 @@ class HineInstrumentTest extends TestCase
         $this->assertArrayNotHasKey(2, $anchors['feet']);
     }
 
+    public function test_verified_visual_score_columns_preserve_source_positions(): void
+    {
+        $columns = HineInstrument::visualScoreColumns();
+
+        $this->assertSame([3, 1, 0], $columns['passive_shoulder_elevation']);
+        $this->assertSame([3, 2, 1, 0], $columns['hip_adductors']);
+        $this->assertSame([3, 2, 1, 0], $columns['popliteal_angle']);
+        $this->assertSame([3, 2, 1, 0], $columns['ankle_dorsiflexion']);
+        $this->assertSame([3, 1, 0], $columns['arm_protection']);
+        $this->assertSame([3, 2, 1, 0], $columns['lateral_suspension']);
+        $this->assertSame([3, 1], $columns['parachute']);
+
+        $this->assertNotContains(2, $columns['passive_shoulder_elevation']);
+        $this->assertNotContains(2, $columns['arm_protection']);
+        $this->assertNotContains(2, $columns['parachute']);
+        $this->assertNotContains(0, $columns['parachute']);
+    }
+
     public function test_hine_visual_reference_dimensions_are_preserved(): void
     {
         $expected = [
