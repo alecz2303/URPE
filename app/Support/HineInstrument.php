@@ -162,7 +162,6 @@ final class HineInstrument
             ],
             'passive_shoulder_elevation' => [
                 3 => 'Resistencia superable',
-                2 => 'Dificultad para vencer la resistencia',
                 1 => 'No existe resistencia',
                 0 => 'Resistencia no superable',
             ],
