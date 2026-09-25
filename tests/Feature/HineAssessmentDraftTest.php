@@ -267,6 +267,111 @@ class HineAssessmentDraftTest extends TestCase
             ->assertSee('Por favor, anote la edad a la cual se consigue la máxima habilidad.');
     }
 
+    public function test_hine_end_to_end_flow_preserves_history_permissions_and_finalized_content(): void
+    {
+        $manager = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $viewer = $this->userWithPermissions(['clinical_assessments.view']);
+        $patient = Patient::query()->create([
+            'first_name' => 'Paciente',
+            'last_name' => 'Flujo Integral',
+            'date_of_birth' => '2026-03-25',
+        ]);
+
+        $this->actingAs($manager)->post(route('patients.hine-assessments.store', $patient), [
+            'examination_date' => '2026-09-25',
+            'gestational_age' => '38 semanas',
+            'chronological_age' => '6 meses',
+            'corrected_age' => '5 meses',
+            'head_circumference' => '42 cm',
+            'general_comments' => 'Evaluación integral',
+        ]);
+
+        $first = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+
+        $responses = [];
+        foreach (\App\Support\HineInstrument::neurologicalSections() as $section) {
+            foreach ($section['items'] as $item) {
+                $responses[$item['key']] = ['score' => 2.5];
+            }
+        }
+        $responses['scarf_sign']['asymmetry'] = 1;
+
+        $this->actingAs($manager)->put(route('patients.hine-assessments.update', [$patient, $first]), [
+            'responses' => $responses,
+            'motor' => [
+                'head_control' => [
+                    'observed' => 'Mantiene la posición erguida',
+                    'acquisition_age' => '5 meses',
+                    'comments' => 'Hito observado',
+                ],
+            ],
+            'behavior' => [
+                'consciousness' => ['option' => 5, 'comments' => 'Mantiene el interés'],
+            ],
+        ])->assertRedirect();
+
+        $this->actingAs($manager)
+            ->post(route('patients.hine-assessments.finalize', [$patient, $first]))
+            ->assertRedirect(route('patients.hine-assessments.index', $patient));
+
+        $first->refresh();
+        $this->assertSame('65.0', $first->hine->global_score);
+        $this->assertSame(1, $first->hine->asymmetry_count);
+
+        $this->actingAs($manager)->post(route('patients.hine-assessments.store', $patient), [
+            'examination_date' => '2026-10-25',
+        ])->assertRedirect();
+
+        $second = ClinicalAssessment::query()
+            ->where('patient_id', $patient->id)
+            ->whereKeyNot($first->id)
+            ->firstOrFail();
+
+        $this->actingAs($viewer)
+            ->get(route('patients.hine-assessments.index', $patient))
+            ->assertOk()
+            ->assertSee('25/09/2026')
+            ->assertSee('25/10/2026')
+            ->assertSee('Finalizada')
+            ->assertSee('Borrador');
+
+        $this->actingAs($viewer)
+            ->get(route('patients.hine-assessments.show', [$patient, $first]))
+            ->assertOk()
+            ->assertSee('65.0')
+            ->assertSee('Evaluación integral')
+            ->assertSee('Mantiene la posición erguida')
+            ->assertSee('Mantiene el interés');
+
+        $this->actingAs($viewer)
+            ->get(route('patients.hine-assessments.edit', [$patient, $second]))
+            ->assertForbidden();
+
+        $this->actingAs($manager)
+            ->get(route('patients.hine-assessments.edit', [$patient, $first]))
+            ->assertForbidden();
+    }
+
+    public function test_hine_assessment_cannot_be_accessed_through_another_patient(): void
+    {
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create(['first_name' => 'Paciente', 'last_name' => 'Uno', 'date_of_birth' => '2026-03-25']);
+        $other = Patient::query()->create(['first_name' => 'Paciente', 'last_name' => 'Dos', 'date_of_birth' => '2026-04-25']);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), ['examination_date' => '2026-09-25']);
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+
+        $this->actingAs($user)
+            ->get(route('patients.hine-assessments.show', [$other, $assessment]))
+            ->assertNotFound();
+
+        $this->actingAs($user)
+            ->put(route('patients.hine-assessments.update', [$other, $assessment]), [
+                'responses' => ['facial_appearance' => ['score' => 3]],
+            ])
+            ->assertNotFound();
+    }
+
     public function test_user_without_manage_permission_cannot_create_hine_draft(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view']);
