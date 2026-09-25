@@ -44,6 +44,43 @@ class HineAssessmentDraftTest extends TestCase
         ]);
     }
 
+    public function test_authorized_user_can_capture_half_point_neurological_scores_and_explicit_asymmetry(): void
+    {
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create([
+            'first_name' => 'Paciente',
+            'last_name' => 'Captura HINE',
+            'date_of_birth' => '2026-03-25',
+        ]);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), [
+            'examination_date' => '2026-09-25',
+        ]);
+
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+
+        $this->actingAs($user)->put(route('patients.hine-assessments.update', [$patient, $assessment]), [
+            'responses' => [
+                'facial_appearance' => ['score' => 2.5, 'comments' => 'Observación clínica'],
+                'scarf_sign' => ['score' => 1.5, 'asymmetry' => 1],
+            ],
+        ])->assertRedirect(route('patients.hine-assessments.edit', [$patient, $assessment]));
+
+        $assessment->refresh()->load('hine.responses');
+
+        $this->assertSame('4.0', $assessment->hine->global_score);
+        $this->assertSame(1, $assessment->hine->asymmetry_count);
+        $this->assertDatabaseHas('hine_responses', [
+            'hine_assessment_id' => $assessment->hine->id,
+            'item_key' => 'facial_appearance',
+            'score' => 2.5,
+        ]);
+        $this->assertDatabaseHas('audit_events', [
+            'event' => 'clinical_assessment.draft_updated',
+            'target_id' => (string) $assessment->id,
+        ]);
+    }
+
     public function test_user_without_manage_permission_cannot_create_hine_draft(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view']);
