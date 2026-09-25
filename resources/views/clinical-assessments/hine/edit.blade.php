@@ -88,7 +88,7 @@
                                         </div>
                                     @endif
 
-                                    @if(isset($visuals[$item['key']]) && !isset($visualScoreFrames[$item['key']]))
+                                    @if(isset($visuals[$item['key']]))
                                         <figure class="mt-4 rounded-2xl border border-cyan-100 bg-cyan-50/40 p-4">
                                             <img src="{{ asset('images/hine/'.$visuals[$item['key']]) }}" alt="Referencia visual HINE: {{ $item['label'] }}" class="max-h-52 w-auto max-w-full object-contain" loading="lazy" decoding="async">
                                             <figcaption class="mt-2 text-[11px] font-semibold text-cyan-800">Referencia visual del instrumento HINE.</figcaption>
@@ -105,12 +105,6 @@
                                                     <input type="radio" name="responses[{{ $item['key'] }}][score]" value="{{ $score }}" class="peer sr-only" @checked((float) old('responses.'.$item['key'].'.score', $response?->score) === (float) $score)>
                                                     <span class="block overflow-hidden rounded-xl border border-slate-200 text-center text-sm font-bold text-slate-600 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 peer-checked:text-cyan-800">
                                                         <span class="block px-2 py-2">{{ $score }}</span>
-                                                        @if(isset($visualScoreFrames[$item['key']][$score]))
-                                                            @php([$frameFile, $frameStart, $frameEnd] = $visualScoreFrames[$item['key']][$score])
-                                                            <span class="block border-t border-slate-100 bg-white p-1.5">
-                                                                <span class="block h-16 w-full bg-contain bg-center bg-no-repeat" style="background-image: url('{{ asset('images/hine/'.$frameFile) }}'); background-size: {{ ($frameEnd - $frameStart) > 0 ? (100 / (($frameEnd - $frameStart) / 5)) : 100 }}% auto; background-position-x: {{ $frameStart === 0 ? 0 : ($frameStart / 4) * 100 }}%;" aria-label="Referencia visual de la puntuación {{ $score }}"></span>
-                                                            </span>
-                                                        @endif
                                                     </span>
                                                 </label>
                                             @endforeach
