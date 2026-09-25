@@ -99,7 +99,8 @@ if (backToTopButton) {
 const hineWizard = document.querySelector('[data-hine-wizard]');
 
 if (hineWizard) {
-    let currentStep = 0;
+    let currentStep = Number.parseInt(hineWizard.dataset.hineInitialStep || '0', 10);
+    const returnStep = hineWizard.querySelector('[data-hine-return-step]');
     const steps = [...hineWizard.querySelectorAll('[data-hine-step]')];
     const navigation = [...hineWizard.querySelectorAll('[data-hine-go]')];
 
@@ -122,6 +123,7 @@ if (hineWizard) {
         const requested = Number(step);
         if (!Number.isInteger(requested) || !steps.some((panel) => Number(panel.dataset.hineStep) === requested)) return;
         currentStep = requested;
+        if (returnStep) returnStep.value = String(currentStep);
         renderHineStep();
         window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
     };
@@ -130,6 +132,7 @@ if (hineWizard) {
     hineWizard.querySelectorAll('[data-hine-prev]').forEach((button) => button.addEventListener('click', () => goToHineStep(currentStep - 1)));
     hineWizard.querySelectorAll('[data-hine-next]').forEach((button) => button.addEventListener('click', () => goToHineStep(currentStep + 1)));
 
+    if (returnStep) returnStep.value = String(currentStep);
     renderHineStep();
 }
 
