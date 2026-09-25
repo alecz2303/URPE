@@ -119,6 +119,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/pacientes/{patient}/evaluaciones/hine', [HineAssessmentController::class, 'store'])->name('patients.hine-assessments.store');
     Route::get('/pacientes/{patient}/evaluaciones/hine/{assessment}/editar', [HineAssessmentController::class, 'edit'])->name('patients.hine-assessments.edit');
     Route::put('/pacientes/{patient}/evaluaciones/hine/{assessment}', [HineAssessmentController::class, 'update'])->name('patients.hine-assessments.update');
+    Route::post('/pacientes/{patient}/evaluaciones/hine/{assessment}/finalizar', [HineAssessmentController::class, 'finalize'])->name('patients.hine-assessments.finalize');
 
     Route::get('/archivos-clinicos/{clinicalFile}/descargar', [ClinicalFileController::class, 'download'])
         ->name('clinical-files.download');
