@@ -128,9 +128,10 @@ class HineInstrumentTest extends TestCase
         $this->assertStringContainsString('ángulo entre el pie y la pierna', $tone['ankle_dorsiflexion']['instruction']);
         $this->assertStringContainsString('soportar la cabeza si es necesario', $tone['pull_to_sit']['instruction']);
         $this->assertStringContainsString('reacción del brazo libre', $reactions['arm_protection']['instruction']);
-        $this->assertStringContainsString('cosquillas en los pies', $reactions['vertical_suspension']['instruction']);
-        $this->assertStringContainsString('después de los 6 meses', $reactions['parachute']['instruction']);
-        $this->assertStringContainsString('Bíceps, rodilla, tobillo', $reactions['tendon_reflexes']['instruction']);
+        $this->assertStringContainsString('"hacer cosquillas" en los pies', $reactions['vertical_suspension']['instruction']);
+        $this->assertStringNotContainsString('después de los 6 meses', strtolower($reactions['parachute']['instruction']));
+        $this->assertSame('Después de los 6 meses.', $reactions['parachute']['age_note']);
+        $this->assertSame(['bíceps', 'rodilla', 'tobillo'], $reactions['tendon_reflexes']['sites']);
     }
 
     public function test_reaction_source_notes_remain_separate_from_examination_instruction(): void
