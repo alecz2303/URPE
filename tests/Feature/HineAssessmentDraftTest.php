@@ -130,6 +130,49 @@ class HineAssessmentDraftTest extends TestCase
         ]);
     }
 
+    public function test_cranial_nerves_draft_persists_all_five_scores_and_totals_ten(): void
+    {
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create([
+            'first_name' => 'Paciente',
+            'last_name' => 'Pares Craneales',
+            'date_of_birth' => '2026-03-25',
+        ]);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), [
+            'examination_date' => '2026-09-25',
+        ]);
+
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+        $scores = [
+            'facial_appearance' => 3,
+            'eye_movements' => 2.5,
+            'visual_response' => 2,
+            'auditory_response' => 1.5,
+            'sucking_swallowing' => 1,
+        ];
+
+        $payload = ['responses' => []];
+        foreach ($scores as $itemKey => $score) {
+            $payload['responses'][$itemKey] = ['score' => $score];
+        }
+
+        $this->actingAs($user)
+            ->put(route('patients.hine-assessments.update', [$patient, $assessment]), $payload)
+            ->assertRedirect(route('patients.hine-assessments.edit', [$patient, $assessment]));
+
+        $assessment->refresh()->load('hine.responses');
+
+        $this->assertSame('10.0', $assessment->hine->global_score);
+        $this->assertSame('10.0', $assessment->hine->cranial_nerves_score);
+
+        foreach ($scores as $itemKey => $score) {
+            $stored = $assessment->hine->responses->firstWhere('item_key', $itemKey);
+            $this->assertNotNull($stored);
+            $this->assertSame(number_format($score, 1, '.', ''), $stored->score);
+        }
+    }
+
     public function test_motor_milestones_and_behavior_are_persisted_without_changing_global_score(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
