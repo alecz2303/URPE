@@ -81,6 +81,40 @@ class HineAssessmentDraftTest extends TestCase
         ]);
     }
 
+    public function test_motor_milestones_and_behavior_are_persisted_without_changing_global_score(): void
+    {
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create([
+            'first_name' => 'Paciente',
+            'last_name' => 'Hitos HINE',
+            'date_of_birth' => '2026-03-25',
+        ]);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), [
+            'examination_date' => '2026-09-25',
+        ]);
+
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+
+        $this->actingAs($user)->put(route('patients.hine-assessments.update', [$patient, $assessment]), [
+            'responses' => ['facial_appearance' => ['score' => 3]],
+            'motor' => [
+                'head_control' => ['observed' => 'Observado', 'acquisition_age' => '3 meses'],
+            ],
+            'behavior' => [
+                'consciousness' => ['option' => 5],
+            ],
+        ])->assertRedirect();
+
+        $assessment->refresh()->load('hine.responses');
+
+        $this->assertSame('3.0', $assessment->hine->global_score);
+        $this->assertSame('Observado', $assessment->hine->responses->firstWhere('item_key', 'head_control')->response_data['observed']);
+        $this->assertSame(5, $assessment->hine->responses->firstWhere('item_key', 'consciousness')->response_data['option']);
+        $this->assertNull($assessment->hine->responses->firstWhere('item_key', 'head_control')->score);
+        $this->assertNull($assessment->hine->responses->firstWhere('item_key', 'consciousness')->score);
+    }
+
     public function test_user_without_manage_permission_cannot_create_hine_draft(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view']);
