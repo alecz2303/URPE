@@ -90,6 +90,64 @@
             </section>
         @endforeach
 
+        <section class="overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm">
+            <div class="border-b border-emerald-100 bg-emerald-50/70 px-6 py-4">
+                <p class="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">Sección 2 · No puntúa</p>
+                <h3 class="mt-1 text-lg font-bold text-slate-900">Hitos motores</h3>
+                <p class="mt-1 text-sm text-slate-500">Registrar lo observado y la edad de adquisición. Observe las asimetrías según las indicaciones del instrumento.</p>
+            </div>
+            <div class="divide-y divide-slate-100">
+                @foreach($motorMilestones as $item)
+                    @php($response = $responses->get($item['key']))
+                    <article class="grid gap-4 p-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+                        <div>
+                            <h4 class="font-bold text-slate-800">{{ $item['label'] }}</h4>
+                            @isset($item['instruction'])<p class="mt-1 text-sm text-slate-500">{{ $item['instruction'] }}</p>@endisset
+                            @if(isset($visuals[$item['key']]))<p class="mt-2 text-xs font-semibold text-cyan-700">Incluye referencia visual original HINE.</p>@endif
+                        </div>
+                        <div class="grid gap-3 sm:grid-cols-2">
+                            <label class="text-xs font-bold uppercase tracking-wide text-slate-500">Observado
+                                <input type="text" name="motor[{{ $item['key'] }}][observed]" maxlength="500" value="{{ old('motor.'.$item['key'].'.observed', data_get($response?->response_data, 'observed')) }}" class="mt-2 w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">
+                            </label>
+                            <label class="text-xs font-bold uppercase tracking-wide text-slate-500">Edad de adquisición
+                                <input type="text" name="motor[{{ $item['key'] }}][acquisition_age]" maxlength="100" value="{{ old('motor.'.$item['key'].'.acquisition_age', data_get($response?->response_data, 'acquisition_age')) }}" class="mt-2 w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">
+                            </label>
+                            <label class="text-xs font-bold uppercase tracking-wide text-slate-500 sm:col-span-2">Comentarios
+                                <textarea name="motor[{{ $item['key'] }}][comments]" rows="2" maxlength="2000" class="mt-2 w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">{{ old('motor.'.$item['key'].'.comments', $response?->comments) }}</textarea>
+                            </label>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+        </section>
+
+        <section class="overflow-hidden rounded-3xl border border-amber-100 bg-white shadow-sm">
+            <div class="border-b border-amber-100 bg-amber-50/70 px-6 py-4">
+                <p class="text-xs font-bold uppercase tracking-[0.14em] text-amber-700">Sección 3 · No puntúa</p>
+                <h3 class="mt-1 text-lg font-bold text-slate-900">Comportamiento</h3>
+                <p class="mt-1 text-sm text-slate-500">Estas respuestas se registran sin incorporarse a la puntuación neurológica global.</p>
+            </div>
+            <div class="divide-y divide-slate-100">
+                @foreach($behaviorItems as $item)
+                    @php($response = $responses->get($item['key']))
+                    <article class="p-6">
+                        <h4 class="font-bold text-slate-800">{{ $item['label'] }}</h4>
+                        <div class="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+                            @foreach($item['options'] as $optionIndex => $option)
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="behavior[{{ $item['key'] }}][option]" value="{{ $optionIndex }}" class="peer sr-only" @checked((string) old('behavior.'.$item['key'].'.option', data_get($response?->response_data, 'option')) === (string) $optionIndex)>
+                                    <span class="block h-full rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-600 peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:font-semibold peer-checked:text-amber-900">{{ $option }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                        <label class="mt-3 block text-xs font-bold uppercase tracking-wide text-slate-500">Comentarios
+                            <textarea name="behavior[{{ $item['key'] }}][comments]" rows="2" maxlength="2000" class="mt-2 w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">{{ old('behavior.'.$item['key'].'.comments', $response?->comments) }}</textarea>
+                        </label>
+                    </article>
+                @endforeach
+            </div>
+        </section>
+
         @if($errors->any())
             <div class="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">{{ $errors->first() }}</div>
         @endif
