@@ -237,7 +237,7 @@ final class HineInstrument
             [
                 'key'=>'sitting','label'=>'Sedestación','visual'=>true,
                 'options'=>['No puede mantenerse sentado','Con soporte en caderas','Se apoya','Sedestación estable','Pivota (rota)'],
-                'normal_ages'=>['Normal a los 4m','Normal a los 6m','Normal a los 7-8m','Normal a los 9m'],
+                'normal_ages'=>[1=>'Normal a los 4m',2=>'Normal a los 6m',3=>'Normal a los 7-8m',4=>'Normal a los 9m'],
             ],
             [
                 'key'=>'voluntary_grasp','label'=>'Agarre voluntario','instruction'=>'Observe el lado.',
@@ -246,22 +246,22 @@ final class HineInstrument
             [
                 'key'=>'supine_kicking','label'=>'Habilidad para patalear en supino','visual'=>true,
                 'options'=>['No patalea','Patalea horizontalmente pero no eleva las piernas','Eleva las piernas (verticalmente)','Se toca las piernas','Se toca los dedos'],
-                'normal_ages'=>['Normal a los 3m','Normal a los 4-5m','Normal a los 5-6m'],
+                'normal_ages'=>[2=>'Normal a los 3m',3=>'Normal a los 4-5m',4=>'Normal a los 5-6m'],
             ],
             [
                 'key'=>'rolling','label'=>'Volteo','instruction'=>'Observe hacia qué lado(s).',
                 'options'=>['No voltea','Voltea hacia un lado','De prono a supino','De supino a prono'],
-                'normal_ages'=>['Normal a los 4m','Normal a los 6m','Normal a los 6m'],
+                'normal_ages'=>[1=>'Normal a los 4m',2=>'Normal a los 6m',3=>'Normal a los 6m'],
             ],
             [
                 'key'=>'crawling','label'=>'Gateo','instruction'=>'Observe si arrastra las nalgas.','visual'=>true,
                 'options'=>['No levanta la cabeza','Sobre los codos','Sobre las manos extendidas','Gatea arrastrándose sobre el abdomen','Gatea sobre manos y rodillas'],
-                'normal_ages'=>['Normal a los 3m','Normal a los 4m','Normal a los 8m','Normal a los 10m'],
+                'normal_ages'=>[1=>'Normal a los 3m',2=>'Normal a los 4m',3=>'Normal a los 8m',4=>'Normal a los 10m'],
             ],
             [
                 'key'=>'standing','label'=>'Bipedestación',
                 'options'=>['No soporta el peso','Soporta su peso','Se mantiene de pie con soporte','Se mantiene de pie sin ayuda'],
-                'normal_ages'=>['Normal a los 4m','Normal a los 7m','Normal a los 12m'],
+                'normal_ages'=>[1=>'Normal a los 4m',2=>'Normal a los 7m',3=>'Normal a los 12m'],
             ],
             [
                 'key'=>'walking','label'=>'Marcha',
