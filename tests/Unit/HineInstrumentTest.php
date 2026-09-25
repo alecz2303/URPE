@@ -55,4 +55,32 @@ class HineInstrumentTest extends TestCase
         $this->assertSame('Contento y sonriente', $items[1]['options'][4]);
         $this->assertSame('Amistoso', $items[2]['options'][3]);
     }
+    public function test_visual_reference_map_covers_every_catalog_item_marked_as_visual(): void
+    {
+        $map = HineInstrument::visualReferenceMap();
+        $required = [];
+
+        foreach (HineInstrument::neurologicalSections() as $section) {
+            foreach ($section['items'] as $item) {
+                if ($item['visual'] ?? false) {
+                    $required[] = $item['key'];
+                }
+            }
+        }
+
+        foreach (HineInstrument::motorMilestones() as $item) {
+            if ($item['visual'] ?? false) {
+                $required[] = $item['key'];
+            }
+        }
+
+        sort($required);
+        $mapped = array_keys($map);
+        sort($mapped);
+
+        $this->assertSame($required, $mapped);
+        $this->assertSame(['img-017.png','img-018.png','img-019.png','img-020.png'], $map['scarf_sign']);
+        $this->assertSame(['img-055.png','img-056.png'], $map['parachute']);
+        $this->assertSame(['img-064.png','img-065.png','img-066.png','img-067.png'], $map['crawling']);
+    }
 }
