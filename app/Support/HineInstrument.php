@@ -296,6 +296,10 @@ final class HineInstrument
                 9 => 62,
                 12 => 65,
             ],
+            'source_title' => 'Hammersmith Infant Neurological Examination',
+            'global_score_heading' => 'Puntuación global',
+            'asymmetry_heading' => 'Número de asimetrías',
+            'high_risk_heading' => 'Puntuaciones de Corte para el Alto Riesgo en PC',
             'note' => 'Apoyo para la interpretación. Las puntuaciones de corte son una referencia del material proporcionado y no constituyen por sí solas un diagnóstico.',
             'age_rule' => 'Sólo se muestran los puntos de corte explícitos para 3, 6, 9 y 12 meses; no se interpolan edades intermedias.',
         ];
