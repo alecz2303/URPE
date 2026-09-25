@@ -97,6 +97,10 @@ class HineAssessmentController extends Controller
             'assessment' => $assessment,
             'hine' => $assessment->hine,
             'sections' => HineInstrument::neurologicalSections(),
+            'anchors' => HineInstrument::clinicalAnchors(),
+            'responses' => $assessment->hine->responses->keyBy('item_key'),
+            'motorMilestones' => HineInstrument::motorMilestones(),
+            'behaviorItems' => HineInstrument::behaviorItems(),
             'interpretation' => HineInstrument::interpretationAid(),
         ]);
     }
