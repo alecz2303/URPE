@@ -203,6 +203,21 @@ class HineAssessmentDraftTest extends TestCase
             ->assertSee('no se interpolan');
     }
 
+    public function test_hine_result_keeps_source_instructions_and_separate_notes_visible(): void
+    {
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create(['first_name' => 'Paciente', 'last_name' => 'Fuente HINE', 'date_of_birth' => '2026-03-25']);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), ['examination_date' => '2026-09-25']);
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+
+        $this->actingAs($user)->get(route('patients.hine-assessments.show', [$patient, $assessment]))
+            ->assertOk()
+            ->assertSee('Después de los 6 meses.')
+            ->assertSee('bíceps · rodilla · tobillo')
+            ->assertSee('Por favor, anote la edad a la cual se consigue la máxima habilidad.');
+    }
+
     public function test_user_without_manage_permission_cannot_create_hine_draft(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view']);
