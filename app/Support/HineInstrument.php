@@ -223,14 +223,51 @@ final class HineInstrument
     public static function motorMilestones(): array
     {
         return [
-            ['key'=>'head_control','label'=>'Control cefálico'],
-            ['key'=>'sitting','label'=>'Sedestación','visual'=>true],
-            ['key'=>'voluntary_grasp','label'=>'Agarre voluntario','instruction'=>'Observe el lado.'],
-            ['key'=>'supine_kicking','label'=>'Habilidad para patalear en supino','visual'=>true],
-            ['key'=>'rolling','label'=>'Volteo','instruction'=>'Observe hacia qué lado(s).'],
-            ['key'=>'crawling','label'=>'Gateo','instruction'=>'Observe si arrastra las nalgas.','visual'=>true],
-            ['key'=>'standing','label'=>'Bipedestación'],
-            ['key'=>'walking','label'=>'Marcha'],
+            [
+                'key'=>'head_control',
+                'label'=>'Control cefálico',
+                'options'=>[
+                    'Incapaz de mantener la cabeza erguida',
+                    'Tambaleante',
+                    'Mantiene la posición erguida todo el tiempo',
+                ],
+                'normal_ages'=>['Normal antes de los 3m','Normal hasta los 4m','Normal desde los 5m'],
+                'age_note'=>'Por favor, anote la edad a la cual se consigue la máxima habilidad.',
+            ],
+            [
+                'key'=>'sitting','label'=>'Sedestación','visual'=>true,
+                'options'=>['No puede mantenerse sentado','Con soporte en caderas','Se apoya','Sedestación estable','Pivota (rota)'],
+                'normal_ages'=>['Normal a los 4m','Normal a los 6m','Normal a los 7-8m','Normal a los 9m'],
+            ],
+            [
+                'key'=>'voluntary_grasp','label'=>'Agarre voluntario','instruction'=>'Observe el lado.',
+                'options'=>['No agarra','Usa toda la mano','Dedo índice y pulgar pero agarre inmaduro','Agarre con pinza'],
+            ],
+            [
+                'key'=>'supine_kicking','label'=>'Habilidad para patalear en supino','visual'=>true,
+                'options'=>['No patalea','Patalea horizontalmente pero no eleva las piernas','Eleva las piernas (verticalmente)','Se toca las piernas','Se toca los dedos'],
+                'normal_ages'=>['Normal a los 3m','Normal a los 4-5m','Normal a los 5-6m'],
+            ],
+            [
+                'key'=>'rolling','label'=>'Volteo','instruction'=>'Observe hacia qué lado(s).',
+                'options'=>['No voltea','Voltea hacia un lado','De prono a supino','De supino a prono'],
+                'normal_ages'=>['Normal a los 4m','Normal a los 6m','Normal a los 6m'],
+            ],
+            [
+                'key'=>'crawling','label'=>'Gateo','instruction'=>'Observe si arrastra las nalgas.','visual'=>true,
+                'options'=>['No levanta la cabeza','Sobre los codos','Sobre las manos extendidas','Gatea arrastrándose sobre el abdomen','Gatea sobre manos y rodillas'],
+                'normal_ages'=>['Normal a los 3m','Normal a los 4m','Normal a los 8m','Normal a los 10m'],
+            ],
+            [
+                'key'=>'standing','label'=>'Bipedestación',
+                'options'=>['No soporta el peso','Soporta su peso','Se mantiene de pie con soporte','Se mantiene de pie sin ayuda'],
+                'normal_ages'=>['Normal a los 4m','Normal a los 7m','Normal a los 12m'],
+            ],
+            [
+                'key'=>'walking','label'=>'Marcha',
+                'options'=>['Rebota (intenta botar)','Camina con apoyo','Camina independiente'],
+                'normal_ages'=>['Normal a los 6m','Normal a los 12m','Normal a los 15m'],
+            ],
         ];
     }
 
