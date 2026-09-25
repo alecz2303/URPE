@@ -105,6 +105,11 @@ final class HineInstrument
                 1 => 'Ligeramente inclinada hacia un lado o hacia atrás o delante',
                 0 => 'Marcadamente inclinada hacia un lado o atrás o delante',
             ],
+            'trunk_sitting' => [
+                3 => 'Recto',
+                1 => 'Ligeramente curvado o inclinado lateralmente',
+                0 => 'Muy curvado; hiper-extendido; inclinado lateralmente',
+            ],
             'arms_rest' => [
                 3 => 'En posición neutra, centrados o ligeramente flexionados',
                 2 => 'Ligera rotación interna o rotación externa',
@@ -116,6 +121,17 @@ final class HineInstrument
                 1 => 'Intermitente pulgar aducto o manos cerradas',
                 0 => 'Persistente pulgar aducto o manos cerradas',
             ],
+            'legs' => [
+                3 => 'En sedestación: capacidad para mantenerse sentado con la espalda recta o ligeramente inclinada (sedestación con las piernas estiradas). En supino y bipedestación: piernas en posición neutra rectas o ligeramente dobladas.',
+                2 => 'En supino y bipedestación: ligera rotación interna o rotación externa.',
+                1 => 'En sedestación: capacidad para mantenerse sentado con la espalda recta pero las rodillas flexionadas 15-20%. En supino y bipedestación: rotación interna o rotación externa de caderas.',
+                0 => 'En sedestación: incapacidad para mantenerse sentado a menos que las rodillas queden marcadamente flexionadas (no mantiene la sedestación con las piernas estiradas). En supino y bipedestación: marcada rotación interna o rotación externa o extensión o flexión fija o contracturas en caderas y rodillas.',
+            ],
+            'feet' => [
+                3 => 'Centrados en posición neutra. Dedos de los pies rectos, entre flexión y extensión.',
+                1 => 'Ligera rotación interna o rotación externa. Intermitente tendencia a mantenerse de puntillas o a extender o flexionar los dedos.',
+                0 => 'Marcada rotación interna o rotación externa de tobillo. Persistente tendencia a mantenerse de puntillas o a extender o flexionar los dedos.',
+            ],
             'quantity' => [
                 3 => 'Normales',
                 1 => 'Excesivos o lentos',
@@ -126,6 +142,24 @@ final class HineInstrument
                 2 => 'Bruscos, entrecortados',
                 1 => 'Ligero temblor',
                 0 => 'Espasmódicos y sincrónicos; espasmos extensores; atetoides; atáxicos; muy temblorosos; espasmos mioclónicos; movimientos distónicos',
+            ],
+            'hip_adductors' => [
+                3 => 'Rango: 150°-80°',
+                2 => '150-160°',
+                1 => '>170°',
+                0 => '<80°',
+            ],
+            'popliteal_angle' => [
+                3 => 'Rango: 150°-100°',
+                2 => '150-160°',
+                1 => '~90° o >170°',
+                0 => '<80°',
+            ],
+            'ankle_dorsiflexion' => [
+                3 => 'Rango: 30°-85°',
+                2 => '20-30°',
+                1 => '<20° o 90°',
+                0 => '>90°',
             ],
             'passive_shoulder_elevation' => [
                 3 => 'Resistencia superable',
@@ -142,6 +176,7 @@ final class HineInstrument
                 3 => 'Brazo y mano extendidos',
                 2 => 'Brazo semiflexionado',
                 1 => 'Brazo completamente flexionado',
+                0 => 'Brazo completamente flexionado',
             ],
             'vertical_suspension' => [
                 3 => 'Pataleo simétrico y alternante',
