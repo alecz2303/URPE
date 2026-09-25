@@ -123,6 +123,7 @@ class HineAssessmentController extends Controller
             'scores' => HineInstrument::URPE_SCORES,
             'anchors' => HineInstrument::clinicalAnchors(),
             'visuals' => HineInstrument::visualReferenceMap(),
+            'visualScoreFrames' => HineInstrument::visualScoreFrames(),
             'responses' => $assessment->hine->responses->keyBy('item_key'),
             'motorMilestones' => HineInstrument::motorMilestones(),
             'behaviorItems' => HineInstrument::behaviorItems(),
