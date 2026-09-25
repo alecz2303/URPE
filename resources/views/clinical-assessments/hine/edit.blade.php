@@ -22,6 +22,21 @@
             </div>
         </section>
 
+        <section class="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-black text-slate-900">Datos del examen</h3>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div class="rounded-xl bg-slate-50 p-3 text-sm"><span class="font-bold">Nombre y apellidos:</span> {{ $patient->full_name }}</div>
+                <div class="rounded-xl bg-slate-50 p-3 text-sm"><span class="font-bold">Fecha de nacimiento:</span> {{ $patient->date_of_birth?->format('d/m/Y') ?: '—' }}</div>
+                <label class="text-sm font-bold text-slate-700">Fecha de examen<input type="date" name="examination_date" required value="{{ old('examination_date', $assessment->examination_date->toDateString()) }}" class="mt-2 w-full rounded-xl border-slate-200"></label>
+                <label class="text-sm font-bold text-slate-700">Edad gestacional<input type="text" name="gestational_age" maxlength="100" value="{{ old('gestational_age', $hine->gestational_age) }}" class="mt-2 w-full rounded-xl border-slate-200"></label>
+                <label class="text-sm font-bold text-slate-700">Edad cronológica<input type="text" name="chronological_age" maxlength="100" value="{{ old('chronological_age', $hine->chronological_age) }}" class="mt-2 w-full rounded-xl border-slate-200"></label>
+                <label class="text-sm font-bold text-slate-700">Edad corregida<input type="text" name="corrected_age" maxlength="100" value="{{ old('corrected_age', $hine->corrected_age) }}" class="mt-2 w-full rounded-xl border-slate-200"></label>
+                <label class="text-sm font-bold text-slate-700">Perímetro cefálico<input type="text" name="head_circumference" maxlength="100" value="{{ old('head_circumference', $hine->head_circumference) }}" class="mt-2 w-full rounded-xl border-slate-200"></label>
+                <label class="text-sm font-bold text-slate-700 sm:col-span-2 lg:col-span-3">Comentarios<textarea name="general_comments" rows="3" maxlength="5000" class="mt-2 w-full rounded-xl border-slate-200">{{ old('general_comments', $hine->general_comments) }}</textarea></label>
+            </div>
+            <p class="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-900">{{ \App\Support\HineInstrument::SOURCE_SCORING_NOTE }}</p>
+        </section>
+
         @foreach($sections as $sectionKey => $section)
             <section class="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm">
                 <div class="flex items-center justify-between gap-4 border-b border-slate-100 bg-slate-50/70 px-6 py-4">
