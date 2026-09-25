@@ -67,8 +67,8 @@
                 <div class="divide-y divide-slate-100">
                     @foreach($section['items'] as $item)
                         @php($response = $responses->get($item['key']))
-                        <article class="p-6">
-                            <div class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(320px,.8fr)]">
+                        <article class="p-5 sm:p-6">
+                            <div class="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)]">
                                 <div>
                                     <div class="flex flex-wrap items-center gap-2">
                                         <h4 class="font-bold text-slate-800">{{ $item['label'] }}</h4>
@@ -79,7 +79,7 @@
                                     @isset($item['sites'])<p class="mt-1 text-xs font-semibold text-slate-600">{{ implode(' · ', $item['sites']) }}</p>@endisset
 
                                     @if(isset($anchors[$item['key']]))
-                                        <div class="mt-3 grid gap-2 sm:grid-cols-2">
+                                        <div class="mt-3 grid gap-2 md:grid-cols-2">
                                             @foreach($anchors[$item['key']] as $anchorScore => $anchorText)
                                                 <div class="rounded-xl bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-600"><strong class="text-slate-800">{{ $anchorScore }}:</strong> {{ $anchorText }}</div>
                                             @endforeach
@@ -87,17 +87,17 @@
                                     @endif
 
                                     @if(isset($visuals[$item['key']]))
-                                        <figure class="mt-3 rounded-2xl border border-cyan-100 bg-cyan-50/40 p-3">
+                                        <figure class="mt-4 rounded-2xl border border-cyan-100 bg-cyan-50/40 p-4">
                                             <img src="{{ asset('images/hine/'.$visuals[$item['key']]) }}" alt="Referencia visual HINE: {{ $item['label'] }}" class="max-h-52 w-auto max-w-full object-contain" loading="lazy" decoding="async">
                                             <figcaption class="mt-2 text-[11px] font-semibold text-cyan-800">Referencia visual del instrumento HINE.</figcaption>
                                         </figure>
                                     @endif
                                 </div>
 
-                                <div class="space-y-3">
+                                <div class="space-y-4 rounded-2xl border border-slate-100 bg-slate-50/50 p-4">
                                     <fieldset>
                                         <legend class="text-xs font-bold uppercase tracking-wide text-slate-500">Puntuación</legend>
-                                        <div class="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-7 lg:grid-cols-4 xl:grid-cols-7">
+                                        <div class="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-7">
                                             @foreach($scores as $score)
                                                 <label class="cursor-pointer">
                                                     <input type="radio" name="responses[{{ $item['key'] }}][score]" value="{{ $score }}" class="peer sr-only" @checked((string) old('responses.'.$item['key'].'.score', $response?->score) === (string) $score)>
@@ -115,9 +115,12 @@
                                         </label>
                                     @endif
 
-                                    <label class="block text-xs font-bold uppercase tracking-wide text-slate-500">Comentarios
-                                        <textarea name="responses[{{ $item['key'] }}][comments]" rows="2" maxlength="2000" class="mt-2 w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">{{ old('responses.'.$item['key'].'.comments', $response?->comments) }}</textarea>
-                                    </label>
+                                    <details class="group rounded-xl border border-slate-200 bg-white" @if(old('responses.'.$item['key'].'.comments', $response?->comments)) open @endif>
+                                        <summary class="cursor-pointer list-none px-3 py-2 text-xs font-bold text-slate-600">+ Agregar observación clínica</summary>
+                                        <div class="border-t border-slate-100 p-3">
+                                            <textarea name="responses[{{ $item['key'] }}][comments]" rows="2" maxlength="2000" placeholder="Observaciones de este reactivo…" class="w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">{{ old('responses.'.$item['key'].'.comments', $response?->comments) }}</textarea>
+                                        </div>
+                                    </details>
                                 </div>
                             </div>
                         </article>
