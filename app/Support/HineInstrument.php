@@ -174,8 +174,7 @@ final class HineInstrument
             ],
             'arm_protection' => [
                 3 => 'Brazo y mano extendidos',
-                2 => 'Brazo semiflexionado',
-                1 => 'Brazo completamente flexionado',
+                1 => 'Brazo semiflexionado',
                 0 => 'Brazo completamente flexionado',
             ],
             'vertical_suspension' => [
