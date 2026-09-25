@@ -133,6 +133,17 @@ class HineInstrumentTest extends TestCase
         $this->assertStringContainsString('Bíceps, rodilla, tobillo', $reactions['tendon_reflexes']['instruction']);
     }
 
+    public function test_reaction_source_notes_remain_separate_from_examination_instruction(): void
+    {
+        $sections = HineInstrument::neurologicalSections();
+        $items = collect($sections['reflexes_reactions']['items'])->keyBy('key');
+
+        $this->assertSame('Después de los 6 meses.', $items['parachute']['age_note']);
+        $this->assertStringNotContainsString('después de los 6 meses', strtolower($items['parachute']['instruction']));
+        $this->assertSame(['bíceps', 'rodilla', 'tobillo'], $items['tendon_reflexes']['sites']);
+        $this->assertStringContainsString('-puede "hacer cosquillas"', $items['vertical_suspension']['instruction']);
+    }
+
     public function test_source_anchor_columns_preserve_blank_cells_and_verified_ranges(): void
     {
         $anchors = HineInstrument::clinicalAnchors();
