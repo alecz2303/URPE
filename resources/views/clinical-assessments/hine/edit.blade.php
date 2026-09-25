@@ -4,6 +4,7 @@
     </x-slot:actions>
 
     <form method="POST" action="{{ route('patients.hine-assessments.update', [$patient, $assessment]) }}" class="space-y-6" data-hine-wizard>
+        <input type="hidden" name="return_step" value="0" data-hine-return-step>
         @csrf
         @method('PUT')
 
@@ -101,7 +102,7 @@
                                         <div class="mt-2 grid grid-cols-4 gap-2 sm:grid-cols-7">
                                             @foreach($scores as $score)
                                                 <label class="cursor-pointer">
-                                                    <input type="radio" name="responses[{{ $item['key'] }}][score]" value="{{ $score }}" class="peer sr-only" @checked((string) old('responses.'.$item['key'].'.score', $response?->score) === (string) $score)>
+                                                    <input type="radio" name="responses[{{ $item['key'] }}][score]" value="{{ $score }}" class="peer sr-only" @checked((float) old('responses.'.$item['key'].'.score', $response?->score) === (float) $score)>
                                                     <span class="block rounded-xl border border-slate-200 px-2 py-2 text-center text-sm font-bold text-slate-600 peer-checked:border-cyan-500 peer-checked:bg-cyan-50 peer-checked:text-cyan-800">{{ $score }}</span>
                                                 </label>
                                             @endforeach
