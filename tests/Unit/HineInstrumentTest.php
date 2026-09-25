@@ -190,6 +190,18 @@ class HineInstrumentTest extends TestCase
         $this->assertSame([3 => 'Rango: 30°-85°', 2 => '20-30°', 1 => '<20° o 90°', 0 => '>90°'], $anchors['ankle_dorsiflexion']);
     }
 
+    public function test_parachute_source_columns_are_preserved_without_invented_criteria(): void
+    {
+        $anchors = HineInstrument::clinicalAnchors();
+
+        $this->assertSame([
+            3 => '(después de los 6 meses)',
+            0 => '(después de los 6 meses)',
+        ], $anchors['parachute']);
+        $this->assertArrayNotHasKey(2, $anchors['parachute']);
+        $this->assertArrayNotHasKey(1, $anchors['parachute']);
+    }
+
     public function test_every_visual_reference_has_a_real_public_asset(): void
     {
         foreach (HineInstrument::visualReferenceMap() as $image) {
