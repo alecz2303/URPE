@@ -102,6 +102,8 @@ class HineAssessmentController extends Controller
             'anchors' => HineInstrument::clinicalAnchors(),
             'visuals' => HineInstrument::visualReferenceMap(),
             'responses' => $assessment->hine->responses->keyBy('item_key'),
+            'motorMilestones' => HineInstrument::motorMilestones(),
+            'behaviorItems' => HineInstrument::behaviorItems(),
         ]);
     }
 
@@ -121,11 +123,29 @@ class HineAssessmentController extends Controller
             'responses.*.score' => ['nullable', 'numeric', 'in:0,0.5,1,1.5,2,2.5,3'],
             'responses.*.asymmetry' => ['nullable', 'boolean'],
             'responses.*.comments' => ['nullable', 'string', 'max:2000'],
+            'motor' => ['nullable', 'array'],
+            'motor.*.observed' => ['nullable', 'string', 'max:500'],
+            'motor.*.acquisition_age' => ['nullable', 'string', 'max:100'],
+            'motor.*.comments' => ['nullable', 'string', 'max:2000'],
+            'behavior' => ['nullable', 'array'],
+            'behavior.*.option' => ['nullable', 'integer'],
+            'behavior.*.comments' => ['nullable', 'string', 'max:2000'],
         ]);
 
         $submitted = collect($data['responses'] ?? [])->only($catalog->keys()->all());
+        $motorCatalog = collect(HineInstrument::motorMilestones())->keyBy('key');
+        $behaviorCatalog = collect(HineInstrument::behaviorItems())->keyBy('key');
+        $motor = collect($data['motor'] ?? [])->only($motorCatalog->keys()->all());
+        $behavior = collect($data['behavior'] ?? [])->only($behaviorCatalog->keys()->all());
 
-        DB::transaction(function () use ($request, $assessment, $submitted, $catalog, $calculator, $audit): void {
+        foreach ($behavior as $itemKey => $response) {
+            $option = $response['option'] ?? null;
+            if ($option !== null && ($option < 0 || $option >= $behaviorCatalog[$itemKey]['option_count'])) {
+                abort(422, 'La opción de comportamiento seleccionada no pertenece al instrumento HINE.');
+            }
+        }
+
+        DB::transaction(function () use ($request, $assessment, $submitted, $catalog, $motor, $behavior, $calculator, $audit): void {
             foreach ($submitted as $itemKey => $response) {
                 $definition = $catalog[$itemKey];
 
@@ -135,6 +155,35 @@ class HineAssessmentController extends Controller
                         'section_key' => $definition['section'],
                         'score' => array_key_exists('score', $response) && $response['score'] !== null ? $response['score'] : null,
                         'asymmetry' => $definition['laterality'] ? (bool) ($response['asymmetry'] ?? false) : null,
+                        'comments' => $response['comments'] ?? null,
+                    ],
+                );
+            }
+
+            foreach ($motor as $itemKey => $response) {
+                HineResponse::query()->updateOrCreate(
+                    ['hine_assessment_id' => $assessment->hine->id, 'item_key' => $itemKey],
+                    [
+                        'section_key' => 'motor_milestones',
+                        'score' => null,
+                        'asymmetry' => null,
+                        'response_data' => [
+                            'observed' => $response['observed'] ?? null,
+                            'acquisition_age' => $response['acquisition_age'] ?? null,
+                        ],
+                        'comments' => $response['comments'] ?? null,
+                    ],
+                );
+            }
+
+            foreach ($behavior as $itemKey => $response) {
+                HineResponse::query()->updateOrCreate(
+                    ['hine_assessment_id' => $assessment->hine->id, 'item_key' => $itemKey],
+                    [
+                        'section_key' => 'behavior',
+                        'score' => null,
+                        'asymmetry' => null,
+                        'response_data' => ['option' => $response['option'] ?? null],
                         'comments' => $response['comments'] ?? null,
                     ],
                 );
