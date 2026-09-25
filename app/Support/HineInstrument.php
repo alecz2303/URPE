@@ -187,10 +187,10 @@ final class HineInstrument
                 0 => '(después de los 6 meses)',
             ],
             'tendon_reflexes' => [
-                3 => 'Se obtienen con facilidad',
-                2 => 'Ligeramente exaltados',
-                1 => 'Exaltados',
-                0 => 'Clono o ausencia',
+                3 => 'Se obtienen con facilidad · bíceps · rodilla · tobillo',
+                2 => 'Ligeramente exaltados · bíceps · rodilla · tobillo',
+                1 => 'Exaltados · bíceps · rodilla · tobillo',
+                0 => 'Clono o ausencia · bíceps · rodilla · tobillo',
             ],
         ];
     }
