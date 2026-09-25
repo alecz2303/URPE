@@ -228,6 +228,40 @@ class HineInstrumentTest extends TestCase
         $this->assertArrayNotHasKey(2, $anchors['feet']);
     }
 
+    public function test_hine_visual_reference_dimensions_are_preserved(): void
+    {
+        $expected = [
+            'ankle_dorsiflexion.png' => [804, 62],
+            'arm_protection.png' => [689, 130],
+            'crawling.png' => [1064, 119],
+            'head_sitting.png' => [843, 167],
+            'hip_adductors.png' => [966, 182],
+            'lateral_suspension.png' => [1052, 111],
+            'legs.png' => [415, 161],
+            'parachute.png' => [615, 104],
+            'passive_shoulder_elevation.png' => [301, 139],
+            'popliteal_angle.png' => [1039, 85],
+            'pull_to_sit.png' => [796, 137],
+            'scarf_sign.png' => [641, 173],
+            'sitting.png' => [648, 154],
+            'supine_kicking.png' => [511, 110],
+            'trunk_sitting.png' => [668, 177],
+            'ventral_suspension.png' => [842, 103],
+            'vertical_suspension.png' => [800, 184],
+        ];
+
+        $this->assertCount(17, HineInstrument::visualReferenceMap());
+
+        foreach ($expected as $filename => [$width, $height]) {
+            $path = public_path('images/hine/'.$filename);
+            $size = getimagesize($path);
+
+            $this->assertNotFalse($size, $filename.' must remain a readable image.');
+            $this->assertSame($width, $size[0], $filename.' width changed.');
+            $this->assertSame($height, $size[1], $filename.' height changed.');
+        }
+    }
+
     public function test_every_visual_reference_has_a_real_public_asset(): void
     {
         foreach (HineInstrument::visualReferenceMap() as $image) {
