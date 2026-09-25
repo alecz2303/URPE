@@ -44,6 +44,8 @@
                                         @if($item['laterality'] ?? false)<span class="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-bold text-amber-700">D / I</span>@endif
                                     </div>
                                     @isset($item['instruction'])<p class="mt-1 text-sm text-slate-500">{{ $item['instruction'] }}</p>@endisset
+                                    @isset($item['age_note'])<p class="mt-1 text-xs font-semibold text-violet-700">{{ $item['age_note'] }}</p>@endisset
+                                    @isset($item['sites'])<p class="mt-1 text-xs font-semibold text-slate-600">{{ implode(' · ', $item['sites']) }}</p>@endisset
 
                                     @if(isset($anchors[$item['key']]))
                                         <div class="mt-3 grid gap-2 sm:grid-cols-2">
