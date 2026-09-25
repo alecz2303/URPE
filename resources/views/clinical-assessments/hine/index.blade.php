@@ -26,6 +26,8 @@
                         @endif
                         @if($assessment->status !== 'finalized')
                             <a href="{{ route('patients.hine-assessments.edit', [$patient, $assessment]) }}" class="rounded-xl bg-cyan-600 px-3 py-1.5 text-xs font-bold text-white">Continuar</a>
+                        @else
+                            <a href="{{ route('patients.hine-assessments.show', [$patient, $assessment]) }}" class="rounded-xl bg-violet-600 px-3 py-1.5 text-xs font-bold text-white">Ver resultado</a>
                         @endif
                     </div>
                 </article>
