@@ -3,7 +3,7 @@
         <a href="{{ route('patients.hine-assessments.index', $patient) }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700">Historial HINE</a>
     </x-slot:actions>
 
-    <form method="POST" action="{{ route('patients.hine-assessments.update', [$patient, $assessment]) }}" class="space-y-6" x-data="{ step: 0 }">
+    <form method="POST" action="{{ route('patients.hine-assessments.update', [$patient, $assessment]) }}" class="space-y-6" data-hine-wizard>
         @csrf
         @method('PUT')
 
@@ -25,16 +25,16 @@
         @php($stepLabels = collect($sections)->pluck('label')->values()->all())
         <nav class="sticky top-3 z-20 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-lg backdrop-blur">
             <div class="flex gap-2 overflow-x-auto pb-1">
-                <button type="button" @click="step = 0" :class="step === 0 ? 'bg-cyan-600 text-white' : 'bg-slate-100 text-slate-600'" class="shrink-0 rounded-xl px-3 py-2 text-xs font-bold">Datos</button>
+                <button type="button" data-hine-go="0" data-hine-active-class="bg-cyan-600 text-white" data-hine-inactive-class="bg-slate-100 text-slate-600" class="shrink-0 rounded-xl px-3 py-2 text-xs font-bold">Datos</button>
                 @foreach($stepLabels as $stepIndex => $stepLabel)
-                    <button type="button" @click="step = {{ $stepIndex + 1 }}" :class="step === {{ $stepIndex + 1 }} ? 'bg-violet-600 text-white' : 'bg-slate-100 text-slate-600'" class="shrink-0 rounded-xl px-3 py-2 text-xs font-bold">{{ $stepIndex + 1 }}. {{ $stepLabel }}</button>
+                    <button type="button" data-hine-go="{{ $stepIndex + 1 }}" data-hine-active-class="bg-violet-600 text-white" data-hine-inactive-class="bg-slate-100 text-slate-600" class="shrink-0 rounded-xl px-3 py-2 text-xs font-bold">{{ $stepIndex + 1 }}. {{ $stepLabel }}</button>
                 @endforeach
-                <button type="button" @click="step = {{ count($stepLabels) + 1 }}" :class="step === {{ count($stepLabels) + 1 }} ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'" class="shrink-0 rounded-xl px-3 py-2 text-xs font-bold">Hitos</button>
-                <button type="button" @click="step = {{ count($stepLabels) + 2 }}" :class="step === {{ count($stepLabels) + 2 }} ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-600'" class="shrink-0 rounded-xl px-3 py-2 text-xs font-bold">Comportamiento</button>
+                <button type="button" data-hine-go="{{ count($stepLabels) + 1 }}" data-hine-active-class="bg-emerald-600 text-white" data-hine-inactive-class="bg-slate-100 text-slate-600" class="shrink-0 rounded-xl px-3 py-2 text-xs font-bold">Hitos</button>
+                <button type="button" data-hine-go="{{ count($stepLabels) + 2 }}" data-hine-active-class="bg-amber-500 text-white" data-hine-inactive-class="bg-slate-100 text-slate-600" class="shrink-0 rounded-xl px-3 py-2 text-xs font-bold">Comportamiento</button>
             </div>
         </nav>
 
-        <div x-show="step === 0" x-cloak>
+        <div data-hine-step="0">
         <section class="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
             <h3 class="text-lg font-black text-slate-900">Datos del examen</h3>
             <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -49,11 +49,11 @@
             </div>
             <p class="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-900">{{ \App\Support\HineInstrument::SOURCE_SCORING_NOTE }}</p>
         </section>
-        <div class="mt-4 flex justify-end"><button type="button" @click="step = 1; window.scrollTo({top: 0, behavior: 'smooth'})" class="rounded-xl bg-cyan-600 px-5 py-2.5 text-sm font-bold text-white">Comenzar evaluación →</button></div>
+        <div class="mt-4 flex justify-end"><button type="button" data-hine-go="1" class="rounded-xl bg-cyan-600 px-5 py-2.5 text-sm font-bold text-white">Comenzar evaluación →</button></div>
         </div>
 
         @foreach($sections as $sectionKey => $section)
-            <div x-show="step === {{ $loop->iteration }}" x-cloak>
+            <div data-hine-step="{{ $loop->iteration }}">
             <section class="overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm">
                 <div class="flex items-center justify-between gap-4 border-b border-slate-100 bg-slate-50/70 px-6 py-4">
                     <div>
@@ -128,13 +128,13 @@
                 </div>
             </section>
             <div class="mt-4 flex justify-between gap-3">
-                <button type="button" @click="step--; window.scrollTo({top: 0, behavior: 'smooth'})" class="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700">← Anterior</button>
-                <button type="button" @click="step++; window.scrollTo({top: 0, behavior: 'smooth'})" class="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white">Siguiente →</button>
+                <button type="button" data-hine-prev class="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700">← Anterior</button>
+                <button type="button" data-hine-next class="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white">Siguiente →</button>
             </div>
             </div>
         @endforeach
 
-        <div x-show="step === {{ count($stepLabels) + 1 }}" x-cloak>
+        <div data-hine-step="{{ count($stepLabels) + 1 }}">
         <section class="overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm">
             <div class="border-b border-emerald-100 bg-emerald-50/70 px-6 py-4">
                 <p class="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">Sección 2 · No puntúa</p>
@@ -181,12 +181,12 @@
             </div>
         </section>
         <div class="mt-4 flex justify-between gap-3">
-            <button type="button" @click="step--; window.scrollTo({top: 0, behavior: 'smooth'})" class="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700">← Anterior</button>
-            <button type="button" @click="step++; window.scrollTo({top: 0, behavior: 'smooth'})" class="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white">Comportamiento →</button>
+            <button type="button" data-hine-prev class="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700">← Anterior</button>
+            <button type="button" data-hine-next class="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white">Comportamiento →</button>
         </div>
         </div>
 
-        <div x-show="step === {{ count($stepLabels) + 2 }}" x-cloak>
+        <div data-hine-step="{{ count($stepLabels) + 2 }}">
         <section class="overflow-hidden rounded-3xl border border-amber-100 bg-white shadow-sm">
             <div class="border-b border-amber-100 bg-amber-50/70 px-6 py-4">
                 <p class="text-xs font-bold uppercase tracking-[0.14em] text-amber-700">Sección 3 · No puntúa</p>
@@ -213,7 +213,7 @@
                 @endforeach
             </div>
         </section>
-        <div class="mt-4 flex justify-start"><button type="button" @click="step--; window.scrollTo({top: 0, behavior: 'smooth'})" class="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700">← Anterior</button></div>
+        <div class="mt-4 flex justify-start"><button type="button" data-hine-prev class="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700">← Anterior</button></div>
         </div>
 
         @if($errors->any())
