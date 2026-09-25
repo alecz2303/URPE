@@ -106,6 +106,22 @@ class HineInstrumentTest extends TestCase
             $this->assertMatchesRegularExpression('/^[a-z0-9_]+\\.png$/', $image);
         }
     }
+    public function test_source_examination_instructions_are_preserved_for_tone_and_reactions(): void
+    {
+        $sections = HineInstrument::neurologicalSections();
+        $tone = collect($sections['tone']['items'])->keyBy('key');
+        $reactions = collect($sections['reflexes_reactions']['items'])->keyBy('key');
+
+        $this->assertStringContainsString('posición del codo con relación a la línea media', $tone['scarf_sign']['instruction']);
+        $this->assertStringContainsString('pronación y supinación de antebrazo', $tone['pronation_supination']['instruction']);
+        $this->assertStringContainsString('ángulo entre el pie y la pierna', $tone['ankle_dorsiflexion']['instruction']);
+        $this->assertStringContainsString('soportar la cabeza si es necesario', $tone['pull_to_sit']['instruction']);
+        $this->assertStringContainsString('reacción del brazo libre', $reactions['arm_protection']['instruction']);
+        $this->assertStringContainsString('cosquillas en los pies', $reactions['vertical_suspension']['instruction']);
+        $this->assertStringContainsString('después de los 6 meses', $reactions['parachute']['instruction']);
+        $this->assertStringContainsString('Bíceps, rodilla, tobillo', $reactions['tendon_reflexes']['instruction']);
+    }
+
     public function test_source_anchor_columns_preserve_blank_cells_and_verified_ranges(): void
     {
         $anchors = HineInstrument::clinicalAnchors();
