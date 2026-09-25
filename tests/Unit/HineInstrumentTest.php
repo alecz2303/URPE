@@ -181,6 +181,15 @@ class HineInstrumentTest extends TestCase
         $this->assertSame('Brazo completamente flexionado', $anchors['arm_protection'][0]);
     }
 
+    public function test_tone_numeric_anchor_ranges_match_the_source(): void
+    {
+        $anchors = HineInstrument::clinicalAnchors();
+
+        $this->assertSame([3 => 'Rango: 150°-80°', 2 => '150-160°', 1 => '>170°', 0 => '<80°'], $anchors['hip_adductors']);
+        $this->assertSame([3 => 'Rango: 150°-100°', 2 => '150-160°', 1 => '~90° o >170°', 0 => '<80°'], $anchors['popliteal_angle']);
+        $this->assertSame([3 => 'Rango: 30°-85°', 2 => '20-30°', 1 => '<20° o 90°', 0 => '>90°'], $anchors['ankle_dorsiflexion']);
+    }
+
     public function test_every_visual_reference_has_a_real_public_asset(): void
     {
         foreach (HineInstrument::visualReferenceMap() as $image) {
