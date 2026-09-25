@@ -3,7 +3,7 @@
         <a href="{{ route('patients.hine-assessments.index', $patient) }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700">Historial HINE</a>
     </x-slot:actions>
 
-    <form method="POST" action="{{ route('patients.hine-assessments.update', [$patient, $assessment]) }}" class="space-y-6" data-hine-wizard>
+    <form method="POST" action="{{ route('patients.hine-assessments.update', [$patient, $assessment]) }}" class="space-y-6" data-hine-wizard data-hine-initial-step="{{ session('hine_step', 0) }}">
         <input type="hidden" name="return_step" value="0" data-hine-return-step>
         @csrf
         @method('PUT')
