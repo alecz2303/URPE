@@ -24,6 +24,9 @@
                         @if($assessment->hine?->global_score !== null)
                             <span class="rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-800">{{ $assessment->hine->global_score }} / 78</span>
                         @endif
+                        @if($assessment->status !== 'finalized')
+                            <a href="{{ route('patients.hine-assessments.edit', [$patient, $assessment]) }}" class="rounded-xl bg-cyan-600 px-3 py-1.5 text-xs font-bold text-white">Continuar</a>
+                        @endif
                     </div>
                 </article>
             @empty
