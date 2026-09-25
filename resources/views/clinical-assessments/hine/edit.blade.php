@@ -86,7 +86,6 @@
                                                 <caption class="sr-only">Referencia de la proforma HINE para Cabeza en sedestación</caption>
                                                 <thead class="bg-slate-100 font-bold text-slate-900">
                                                     <tr>
-                                                        <th class="border-b border-r border-slate-300 px-3 py-2 text-left">Referencia HINE</th>
                                                         <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 3</th>
                                                         <th class="w-14 border-b border-r border-slate-300 px-2 py-2">2</th>
                                                         <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 1</th>
@@ -95,7 +94,6 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr class="align-top">
-                                                        <th class="border-r border-slate-300 px-3 py-3 text-left font-bold text-slate-900">Cabeza<br><span class="font-normal">en sedestación</span></th>
                                                         <td class="border-r border-slate-300 px-3 py-3 text-center">
                                                             <div class="mx-auto h-20 w-20 overflow-hidden">
                                                                 <img src="{{ asset('images/hine/head_sitting.png') }}" alt="" class="h-full max-w-none" style="width: 500%; transform: translateX(0%); transform-origin: left center;">
