@@ -152,8 +152,14 @@
             <div class="rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">{{ $errors->first() }}</div>
         @endif
 
-        <div class="sticky bottom-4 flex justify-end">
-            <button class="rounded-xl bg-gradient-to-r from-cyan-600 to-sky-600 px-6 py-3 text-sm font-bold text-white shadow-lg">Guardar borrador HINE</button>
+        <div class="sticky bottom-4 flex flex-wrap justify-end gap-3 rounded-2xl bg-white/90 p-3 shadow-lg backdrop-blur">
+            <button class="rounded-xl border border-cyan-200 bg-white px-6 py-3 text-sm font-bold text-cyan-800">Guardar borrador</button>
         </div>
+    </form>
+
+    <form method="POST" action="{{ route('patients.hine-assessments.finalize', [$patient, $assessment]) }}" class="mt-3 flex justify-end" onsubmit="return confirm('¿Finalizar esta evaluación HINE? Después quedará cerrada para edición.');">
+        @csrf
+        <button class="rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-6 py-3 text-sm font-bold text-white shadow-lg">Finalizar evaluación HINE</button>
+    </form>
     </form>
 </x-app-shell>
