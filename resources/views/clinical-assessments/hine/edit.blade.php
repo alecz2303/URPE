@@ -15,9 +15,10 @@
                     <p class="mt-2 text-sm text-slate-600">Escala URPE: 0 a 3 en incrementos de 0.5. Los medios puntos representan juicio clínico y no agregan criterios que no estén en la fuente.</p>
                 </div>
                 <div class="rounded-2xl bg-white px-4 py-3 text-right ring-1 ring-slate-100">
-                    <p class="text-xs font-bold uppercase text-slate-400">Puntuación actual</p>
-                    <p class="text-2xl font-black text-violet-700">{{ $hine->global_score ?? '0.0' }} <span class="text-sm text-slate-400">/ 78</span></p>
-                    <p class="mt-1 text-xs font-semibold text-slate-500">{{ $hine->asymmetry_count }} asimetrías registradas</p>
+                    <p class="text-xs font-bold uppercase text-slate-400" data-hine-score-label>Puntuación actual</p>
+                    <p class="text-2xl font-black text-violet-700"><span data-hine-live-score>{{ number_format((float) ($hine->global_score ?? 0), 1) }}</span> <span class="text-sm text-slate-400">/ 78</span></p>
+                    <p class="mt-1 text-xs font-semibold text-slate-500"><span data-hine-live-asymmetries>{{ $hine->asymmetry_count }}</span> asimetrías registradas</p>
+                    <p class="mt-1 hidden text-[11px] font-semibold text-amber-700" data-hine-provisional>Provisional · guarda el borrador para registrar los cambios</p>
                 </div>
             </div>
         </section>
