@@ -204,9 +204,12 @@ class HineInstrumentTest extends TestCase
         $this->assertSame(['<40', '40–60', '>60'], array_column($aid['global_score_ranges'], 'label'));
         $this->assertSame(4, $aid['asymmetry_attention_threshold']);
         $this->assertSame([3 => 56, 6 => 59, 9 => 62, 12 => 65], $aid['high_risk_cutoffs_by_age_months']);
-        $this->assertSame('Puntuación global', $aid['global_score_heading']);
+        $this->assertSame('Prediciendo la GMFCS', $aid['global_score_heading']);
         $this->assertSame('Número de asimetrías', $aid['asymmetry_heading']);
         $this->assertSame('Puntuaciones de Corte para el Alto Riesgo en PC', $aid['high_risk_heading']);
+        $this->assertCount(4, $aid['references']);
+        $this->assertStringContainsString('Romeo, D. M. et al., (2013)', $aid['references'][0]);
+        $this->assertStringContainsString('Pietruszewski, L. et al., (2021)', $aid['references'][3]);
         $this->assertArrayNotHasKey(7, $aid['high_risk_cutoffs_by_age_months']);
         $this->assertStringContainsString('no se interpolan', $aid['age_rule']);
     }
