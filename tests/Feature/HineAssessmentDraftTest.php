@@ -54,7 +54,8 @@ class HineAssessmentDraftTest extends TestCase
 
     private function userWithPermissions(array $permissionNames): User
     {
-        $role = Role::query()->create(['name' => 'hine-'.uniqid(), 'label' => 'HINE Test', 'is_system' => false]);
+        $slug = 'hine-'.uniqid();
+        $role = Role::query()->create(['name' => 'HINE Test', 'slug' => $slug, 'is_system' => false]);
         $permissions = collect($permissionNames)->map(fn (string $name) => Permission::query()->firstOrCreate(
             ['name' => $name],
             ['label' => $name, 'group' => 'clinical_assessments']
