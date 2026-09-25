@@ -145,6 +145,16 @@ class HineInstrumentTest extends TestCase
         $this->assertStringContainsString('-puede "hacer cosquillas"', $items['vertical_suspension']['instruction']);
     }
 
+    public function test_posture_anchor_columns_preserve_source_blanks(): void
+    {
+        $anchors = HineInstrument::clinicalAnchors();
+
+        $this->assertSame('En posición neutra, centrados o ligeramente flexionados', $anchors['arms_rest'][3]);
+        $this->assertSame('Ligera rotación interna o rotación externa; intermitente postura distónica', $anchors['arms_rest'][1]);
+        $this->assertSame('Marcada rotación interna o rotación externa o postura distónica; postura hemiparética', $anchors['arms_rest'][0]);
+        $this->assertArrayNotHasKey(2, $anchors['arms_rest']);
+    }
+
     public function test_cranial_nerve_anchor_columns_preserve_source_blanks(): void
     {
         $anchors = HineInstrument::clinicalAnchors();
