@@ -12,7 +12,7 @@ class HineInstrumentTest extends TestCase
         $sections = HineInstrument::neurologicalSections();
 
         $this->assertSame(['cranial_nerves','posture','movements','tone','reflexes_reactions'], array_keys($sections));
-        $this->assertSame([5,6,2,8,5], array_map(fn ($s) => count($s['items']), $sections));
+        $this->assertSame([5,6,2,8,5], array_values(array_map(fn ($s) => count($s['items']), $sections)));
         $this->assertSame(78, array_sum(array_column($sections, 'maximum')));
     }
 
