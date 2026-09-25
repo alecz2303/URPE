@@ -66,6 +66,96 @@ final class HineInstrument
         ];
     }
 
+
+    /**
+     * Textual anchors transcribed from the URPE-provided HINE.
+     * Missing keys are intentional: the source contains a blank cell or a
+     * visual criterion that must not be replaced with invented prose.
+     */
+    public static function clinicalAnchors(): array
+    {
+        return [
+            'facial_appearance' => [
+                3 => 'Sonríe o reacciona a los estímulos cerrando los ojos y haciendo muecas',
+                1 => 'Cierra los ojos pero no con firmeza, pobre expresión facial',
+                0 => 'Apariencia facial inexpresiva, no reacciona a los estímulos',
+            ],
+            'eye_movements' => [
+                3 => 'Movimientos oculares conjugados normales',
+                1 => 'Intermitente desviación de los ojos o movimientos anormales',
+                0 => 'Continuo desviación de los ojos o movimientos anormales',
+            ],
+            'visual_response' => [
+                3 => 'Sigue el objeto en un arco completo',
+                1 => 'Sigue el objeto en un arco incompleto o asimétrico',
+                0 => 'No sigue el objeto',
+            ],
+            'auditory_response' => [
+                3 => 'Responde al estímulo desde ambos lados',
+                1 => 'Reacción dudosa al estímulo o responde asimétricamente',
+                0 => 'No responde',
+            ],
+            'sucking_swallowing' => [
+                3 => 'Buena succión y deglución',
+                1 => 'Pobre succión y/o deglución',
+                0 => 'No reflejo de succión, no deglución',
+            ],
+            'head_sitting' => [
+                3 => 'Recta; en la línea media',
+                1 => 'Ligeramente inclinada hacia un lado o hacia atrás o delante',
+                0 => 'Marcadamente inclinada hacia un lado o atrás o delante',
+            ],
+            'arms_rest' => [
+                3 => 'En posición neutra, centrados o ligeramente flexionados',
+                2 => 'Ligera rotación interna o rotación externa',
+                1 => 'Intermitente postura distónica',
+                0 => 'Marcada rotación interna o rotación externa o postura distónica; postura hemiparética',
+            ],
+            'hands' => [
+                3 => 'Manos abiertas',
+                1 => 'Intermitente pulgar aducto o manos cerradas',
+                0 => 'Persistente pulgar aducto o manos cerradas',
+            ],
+            'quantity' => [
+                3 => 'Normales',
+                1 => 'Excesivos o lentos',
+                0 => 'Mínimos o nulos',
+            ],
+            'quality' => [
+                3 => 'Libres, alternantes, y suaves',
+                1 => 'Bruscos, entrecortados; ligero temblor',
+                0 => 'Espasmódicos y sincrónicos; espasmos extensores; atetoides; atáxicos; muy temblorosos; espasmos mioclónicos; movimientos distónicos',
+            ],
+            'passive_shoulder_elevation' => [
+                3 => 'Resistencia superable',
+                2 => 'Dificultad para vencer la resistencia',
+                1 => 'No existe resistencia',
+                0 => 'Resistencia no superable',
+            ],
+            'pronation_supination' => [
+                3 => 'Pronación y supinación completas, no existe resistencia',
+                1 => 'Resistencia superable para la pronación/supinación completa',
+                0 => 'Pronación completa y supinación no posible. Marcada resistencia',
+            ],
+            'arm_protection' => [
+                3 => 'Brazo y mano extendidos',
+                2 => 'Brazo semiflexionado',
+                1 => 'Brazo completamente flexionado',
+            ],
+            'vertical_suspension' => [
+                3 => 'Pataleo simétrico y alternante',
+                1 => 'Una pierna patalea más o pataleo pobre',
+                0 => 'No patalea incluso si es estimulado, o adopta una posición "en tijera"',
+            ],
+            'tendon_reflexes' => [
+                3 => 'Se obtienen con facilidad',
+                2 => 'Ligeramente exaltados',
+                1 => 'Exaltados',
+                0 => 'Clono o ausencia',
+            ],
+        ];
+    }
+
     public static function motorMilestones(): array
     {
         return [
@@ -83,9 +173,9 @@ final class HineInstrument
     public static function behaviorItems(): array
     {
         return [
-            ['key'=>'consciousness','label'=>'Estado de consciencia','option_count'=>6],
-            ['key'=>'emotional_state','label'=>'Estado emocional','option_count'=>5],
-            ['key'=>'social_interaction','label'=>'Interacción social','option_count'=>4],
+            ['key'=>'consciousness','label'=>'Estado de consciencia','option_count'=>6,'options'=>['No despierta','Soñoliento','Duerme pero se despierta fácilmente','Despierto pero no tiene interés','Pierde el interés','Mantiene el interés']],
+            ['key'=>'emotional_state','label'=>'Estado emocional','option_count'=>5,'options'=>['Irritable, inconsolable','Irritable, consolable por cuidador','Irritable cuando se le acercan','No contento o triste','Contento y sonriente']],
+            ['key'=>'social_interaction','label'=>'Interacción social','option_count'=>4,'options'=>['Evita, se retira','Vacilante','Acepta el acercamiento','Amistoso']],
         ];
     }
 
