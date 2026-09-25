@@ -17,7 +17,11 @@ class HineAssessmentDraftTest extends TestCase
     public function test_authorized_user_can_create_hine_draft_for_patient(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
-        $patient = Patient::factory()->create();
+        $patient = Patient::query()->create([
+            'first_name' => 'Paciente',
+            'last_name' => 'HINE',
+            'date_of_birth' => '2026-03-25',
+        ]);
 
         $response = $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), [
             'examination_date' => '2026-09-25',
@@ -43,7 +47,11 @@ class HineAssessmentDraftTest extends TestCase
     public function test_user_without_manage_permission_cannot_create_hine_draft(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view']);
-        $patient = Patient::factory()->create();
+        $patient = Patient::query()->create([
+            'first_name' => 'Paciente',
+            'last_name' => 'HINE',
+            'date_of_birth' => '2026-03-25',
+        ]);
 
         $this->actingAs($user)
             ->post(route('patients.hine-assessments.store', $patient), ['examination_date' => '2026-09-25'])
