@@ -141,12 +141,12 @@ class HineAssessmentController extends Controller
             ));
 
         $data = $request->validate([
-            'examination_date' => ['required', 'date'],
-            'gestational_age' => ['nullable', 'string', 'max:100'],
-            'chronological_age' => ['nullable', 'string', 'max:100'],
-            'corrected_age' => ['nullable', 'string', 'max:100'],
-            'head_circumference' => ['nullable', 'string', 'max:100'],
-            'general_comments' => ['nullable', 'string', 'max:5000'],
+            'examination_date' => ['sometimes', 'required', 'date'],
+            'gestational_age' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'chronological_age' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'corrected_age' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'head_circumference' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'general_comments' => ['sometimes', 'nullable', 'string', 'max:5000'],
             'responses' => ['nullable', 'array'],
             'responses.*.score' => ['nullable', 'numeric', 'in:0,0.5,1,1.5,2,2.5,3'],
             'responses.*.asymmetry' => ['nullable', 'boolean'],
@@ -174,14 +174,17 @@ class HineAssessmentController extends Controller
         }
 
         DB::transaction(function () use ($request, $assessment, $data, $submitted, $catalog, $motor, $behavior, $calculator, $audit): void {
-            $assessment->update(['examination_date' => $data['examination_date']]);
-            $assessment->hine->update([
-                'gestational_age' => $data['gestational_age'] ?? null,
-                'chronological_age' => $data['chronological_age'] ?? null,
-                'corrected_age' => $data['corrected_age'] ?? null,
-                'head_circumference' => $data['head_circumference'] ?? null,
-                'general_comments' => $data['general_comments'] ?? null,
-            ]);
+            if (array_key_exists('examination_date', $data)) {
+                $assessment->update(['examination_date' => $data['examination_date']]);
+            }
+
+            $header = collect(['gestational_age', 'chronological_age', 'corrected_age', 'head_circumference', 'general_comments'])
+                ->filter(fn (string $field) => array_key_exists($field, $data))
+                ->mapWithKeys(fn (string $field) => [$field => $data[$field]])
+                ->all();
+            if ($header !== []) {
+                $assessment->hine->update($header);
+            }
 
             foreach ($submitted as $itemKey => $response) {
                 $definition = $catalog[$itemKey];
