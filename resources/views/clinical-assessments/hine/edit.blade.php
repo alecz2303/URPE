@@ -146,6 +146,47 @@
                                             </table>
                                             <p class="border-t border-slate-200 bg-cyan-50/50 px-3 py-2 text-[11px] font-semibold text-cyan-800">Referencia visual organizada según la proforma HINE fuente.</p>
                                         </div>
+                                    @elseif($item['key'] === 'legs')
+                                        <div class="mt-4 overflow-x-auto rounded-2xl border border-slate-300 bg-white">
+                                            <table class="min-w-[900px] w-full table-fixed text-xs text-slate-700">
+                                                <caption class="sr-only">Referencia de la proforma HINE para Piernas</caption>
+                                                <thead class="bg-slate-100 font-bold text-slate-900">
+                                                    <tr>
+                                                        <th class="w-32 border-b border-r border-slate-300 px-3 py-2"></th>
+                                                        <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 3</th>
+                                                        <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 2</th>
+                                                        <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 1</th>
+                                                        <th class="border-b border-slate-300 px-3 py-2">Puntuación 0</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="align-top">
+                                                        <th class="border-b border-r border-slate-300 bg-slate-50 px-3 py-3 text-left font-bold text-slate-800">En sedestación</th>
+                                                        <td class="border-b border-r border-slate-300 px-3 py-3 text-center">
+                                                            <img src="{{ asset('images/hine/legs_sitting_score_3.png') }}" alt="Piernas en sedestación, puntuación 3" class="mx-auto h-20 w-auto max-w-full object-contain">
+                                                            <p class="mt-2">Capacidad para mantenerse sentado con la espalda recta o ligeramente inclinada (sedestación con las piernas estiradas).</p>
+                                                        </td>
+                                                        <td class="border-b border-r border-slate-300"></td>
+                                                        <td class="border-b border-r border-slate-300 px-3 py-3 text-center">
+                                                            <img src="{{ asset('images/hine/legs_sitting_score_1.png') }}" alt="Piernas en sedestación, puntuación 1" class="mx-auto h-20 w-auto max-w-full object-contain">
+                                                            <p class="mt-2">Capacidad para mantenerse sentado con la espalda recta pero las rodillas flexionadas 15-20%.</p>
+                                                        </td>
+                                                        <td class="border-b border-slate-300 px-3 py-3 text-center">
+                                                            <img src="{{ asset('images/hine/legs_sitting_score_0.png') }}" alt="Piernas en sedestación, puntuación 0" class="mx-auto h-20 w-auto max-w-full object-contain">
+                                                            <p class="mt-2">Incapacidad para mantenerse sentado a menos que las rodillas queden marcadamente flexionadas (no mantiene la sedestación con las piernas estiradas).</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="align-top">
+                                                        <th class="border-r border-slate-300 bg-slate-50 px-3 py-3 text-left font-bold text-slate-800">En supino y bipedestación</th>
+                                                        <td class="border-r border-slate-300 px-3 py-3">Piernas en posición neutra rectas o ligeramente dobladas.</td>
+                                                        <td class="border-r border-slate-300 px-3 py-3">Ligera rotación interna o rotación externa.</td>
+                                                        <td class="border-r border-slate-300 px-3 py-3">Rotación interna o rotación externa de caderas.</td>
+                                                        <td class="px-3 py-3">Marcada rotación interna o rotación externa o extensión o flexión fija o contracturas en caderas y rodillas.</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <p class="border-t border-slate-200 bg-cyan-50/50 px-3 py-2 text-[11px] font-semibold text-cyan-800">Referencia visual y criterios organizados según la proforma HINE fuente.</p>
+                                        </div>
                                     @else
                                         @if(isset($anchors[$item['key']]))
                                             <div class="mt-3 grid gap-2 md:grid-cols-2">
