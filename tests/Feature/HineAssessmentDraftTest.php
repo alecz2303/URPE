@@ -175,7 +175,18 @@ class HineAssessmentDraftTest extends TestCase
 
     public function test_edit_renders_verified_source_score_columns_for_visual_items(): void
     {
-        [$user, $patient, $assessment] = $this->createDraft();
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create([
+            'first_name' => 'Paciente',
+            'last_name' => 'Visual HINE',
+            'date_of_birth' => '2026-03-25',
+        ]);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), [
+            'examination_date' => '2026-09-25',
+        ]);
+
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
 
         $response = $this->actingAs($user)->get(route('patients.hine-assessments.edit', [$patient, $assessment]));
 
