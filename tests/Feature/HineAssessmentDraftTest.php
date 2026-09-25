@@ -44,6 +44,55 @@ class HineAssessmentDraftTest extends TestCase
         ]);
     }
 
+    public function test_hine_draft_preserves_and_updates_source_header_and_general_comments(): void
+    {
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create([
+            'first_name' => 'Paciente',
+            'last_name' => 'Cabecera HINE',
+            'date_of_birth' => '2026-03-25',
+        ]);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), [
+            'examination_date' => '2026-09-24',
+            'gestational_age' => '38 semanas',
+            'chronological_age' => '6 meses',
+            'corrected_age' => '5 meses',
+            'head_circumference' => '42 cm',
+            'general_comments' => 'Comentario inicial',
+        ]);
+
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+
+        $this->actingAs($user)->put(route('patients.hine-assessments.update', [$patient, $assessment]), [
+            'examination_date' => '2026-09-25',
+            'gestational_age' => '39 semanas',
+            'chronological_age' => '6 meses',
+            'corrected_age' => '5 meses',
+            'head_circumference' => '42.5 cm',
+            'general_comments' => 'Comentario final de la evaluación',
+        ])->assertRedirect();
+
+        $assessment->refresh();
+
+        $this->assertSame('2026-09-25', $assessment->examination_date->toDateString());
+        $this->assertSame('39 semanas', $assessment->hine->gestational_age);
+        $this->assertSame('42.5 cm', $assessment->hine->head_circumference);
+        $this->assertSame('Comentario final de la evaluación', $assessment->hine->general_comments);
+
+        $this->actingAs($user)->get(route('patients.hine-assessments.show', [$patient, $assessment]))
+            ->assertOk()
+            ->assertSee('Nombre y apellidos')
+            ->assertSee('Fecha de nacimiento')
+            ->assertSee('Edad gestacional')
+            ->assertSee('Edad cronológica')
+            ->assertSee('Edad corregida')
+            ->assertSee('Perímetro cefálico')
+            ->assertSee('Puntuación de comportamiento')
+            ->assertSee('no forma parte de la puntuación óptima')
+            ->assertSee('Comentario final de la evaluación');
+    }
+
     public function test_authorized_user_can_capture_half_point_neurological_scores_and_explicit_asymmetry(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
