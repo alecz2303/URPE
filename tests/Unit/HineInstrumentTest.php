@@ -91,7 +91,7 @@ class HineInstrumentTest extends TestCase
     {
         $anchors = HineInstrument::clinicalAnchors();
 
-        $this->assertSame('Ligera rotación interna o rotación externa.', $anchors['legs'][2]);
+        $this->assertSame('En supino y bipedestación: ligera rotación interna o rotación externa.', $anchors['legs'][2]);
         $this->assertArrayNotHasKey(2, $anchors['feet']);
         $this->assertSame('150-160°', $anchors['hip_adductors'][2]);
         $this->assertSame('~90° o >170°', $anchors['popliteal_angle'][1]);
