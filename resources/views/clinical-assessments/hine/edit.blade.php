@@ -146,6 +146,28 @@
                                             </table>
                                             <p class="border-t border-slate-200 bg-cyan-50/50 px-3 py-2 text-[11px] font-semibold text-cyan-800">Referencia visual organizada según la proforma HINE fuente.</p>
                                         </div>
+                                    @elseif($item['key'] === 'scarf_sign')
+                                        <div class="mt-4 overflow-x-auto rounded-2xl border border-slate-300 bg-white">
+                                            <table class="min-w-[760px] w-full table-fixed text-xs text-slate-700">
+                                                <thead class="bg-slate-100 font-bold text-slate-900">
+                                                    <tr>
+                                                        <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 3</th>
+                                                        <th class="w-20 border-b border-r border-slate-300 px-3 py-2">2</th>
+                                                        <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 1</th>
+                                                        <th class="border-b border-slate-300 px-3 py-2">Puntuación 0</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="border-r border-slate-300 px-3 py-3 text-center"><p class="mb-2 font-bold">Rango:</p><div class="hine-source-crop hine-scarf-3" role="img" aria-label="Signo de la bufanda, rango de puntuación 3"></div></td>
+                                                        <td class="border-r border-slate-300"></td>
+                                                        <td class="border-r border-slate-300 px-3 py-3"><div class="hine-source-crop hine-scarf-1" role="img" aria-label="Signo de la bufanda, puntuación 1"></div></td>
+                                                        <td class="px-3 py-3"><div class="hine-source-crop hine-scarf-0" role="img" aria-label="Signo de la bufanda, puntuación 0"></div></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <p class="border-t border-slate-200 bg-cyan-50/50 px-3 py-2 text-[11px] font-semibold text-cyan-800">Referencia visual organizada según la proforma HINE fuente. La columna 2 permanece vacía.</p>
+                                        </div>
                                     @elseif($item['key'] === 'legs')
                                         <div class="mt-4 overflow-x-auto rounded-2xl border border-slate-300 bg-white">
                                             <table class="min-w-[900px] w-full table-fixed text-xs text-slate-700">
