@@ -117,6 +117,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/pacientes/{patient}/evaluaciones/hine', [HineAssessmentController::class, 'index'])->name('patients.hine-assessments.index');
     Route::get('/pacientes/{patient}/evaluaciones/hine/crear', [HineAssessmentController::class, 'create'])->name('patients.hine-assessments.create');
     Route::post('/pacientes/{patient}/evaluaciones/hine', [HineAssessmentController::class, 'store'])->name('patients.hine-assessments.store');
+    Route::get('/pacientes/{patient}/evaluaciones/hine/{assessment}', [HineAssessmentController::class, 'show'])->name('patients.hine-assessments.show');
     Route::get('/pacientes/{patient}/evaluaciones/hine/{assessment}/editar', [HineAssessmentController::class, 'edit'])->name('patients.hine-assessments.edit');
     Route::put('/pacientes/{patient}/evaluaciones/hine/{assessment}', [HineAssessmentController::class, 'update'])->name('patients.hine-assessments.update');
     Route::post('/pacientes/{patient}/evaluaciones/hine/{assessment}/finalizar', [HineAssessmentController::class, 'finalize'])->name('patients.hine-assessments.finalize');
