@@ -210,19 +210,56 @@
                                             <p class="border-t border-slate-200 bg-cyan-50/50 px-3 py-2 text-[11px] font-semibold text-cyan-800">Referencia visual y criterios organizados según la proforma HINE fuente.</p>
                                         </div>
                                     @else
-                                        @if(isset($anchors[$item['key']]))
-                                            <div class="mt-3 grid gap-2 md:grid-cols-2">
-                                                @foreach($anchors[$item['key']] as $anchorScore => $anchorText)
-                                                    <div class="rounded-xl bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-600"><strong class="text-slate-800">{{ $anchorScore }}:</strong> {{ $anchorText }}</div>
-                                                @endforeach
+                                        @php($scoreVisualItems = ['passive_shoulder_elevation', 'hip_adductors', 'popliteal_angle', 'ankle_dorsiflexion', 'arm_protection', 'lateral_suspension', 'parachute'])
+                                        @if(in_array($item['key'], $scoreVisualItems, true))
+                                            @php($visualColumns = \App\Support\HineInstrument::visualScoreColumns()[$item['key']] ?? [])
+                                            <div class="mt-4 overflow-x-auto rounded-2xl border border-slate-300 bg-white">
+                                                <table class="min-w-[760px] w-full table-fixed text-xs text-slate-700">
+                                                    <caption class="sr-only">Referencia de la proforma HINE para {{ $item['label'] }}</caption>
+                                                    <thead class="bg-slate-100 font-bold text-slate-900">
+                                                        <tr>
+                                                            @foreach([3, 2, 1, 0] as $sourceScore)
+                                                                <th class="border-b border-slate-300 px-3 py-2 @if(!$loop->last) border-r @endif">Puntuación {{ $sourceScore }}</th>
+                                                            @endforeach
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="align-top">
+                                                            @foreach([3, 2, 1, 0] as $sourceScore)
+                                                                <td class="px-3 py-3 text-center @if(!$loop->last) border-r border-slate-300 @endif">
+                                                                    @if(isset($anchors[$item['key']][$sourceScore]))
+                                                                        <p>{{ $anchors[$item['key']][$sourceScore] }}</p>
+                                                                    @endif
+                                                                    @if(in_array($sourceScore, $visualColumns, true))
+                                                                        <p class="mt-2 text-[11px] font-semibold text-cyan-800">Ilustración fuente: puntuación {{ $sourceScore }}</p>
+                                                                    @endif
+                                                                </td>
+                                                            @endforeach
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                @if(isset($visuals[$item['key']]))
+                                                    <figure class="border-t border-slate-200 bg-cyan-50/40 p-3">
+                                                        <img src="{{ asset('images/hine/'.$visuals[$item['key']]) }}" alt="Referencia visual HINE: {{ $item['label'] }}" class="max-h-44 w-auto max-w-full object-contain" loading="lazy" decoding="async">
+                                                        <figcaption class="mt-2 text-[11px] font-semibold text-cyan-800">Referencia visual compuesta de la fuente. Las posiciones individuales se conservan según las columnas indicadas arriba.</figcaption>
+                                                    </figure>
+                                                @endif
                                             </div>
-                                        @endif
+                                        @else
+                                            @if(isset($anchors[$item['key']]))
+                                                <div class="mt-3 grid gap-2 md:grid-cols-2">
+                                                    @foreach($anchors[$item['key']] as $anchorScore => $anchorText)
+                                                        <div class="rounded-xl bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-600"><strong class="text-slate-800">{{ $anchorScore }}:</strong> {{ $anchorText }}</div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
 
-                                        @if(isset($visuals[$item['key']]))
-                                            <figure class="mt-4 rounded-2xl border border-cyan-100 bg-cyan-50/40 p-4">
-                                                <img src="{{ asset('images/hine/'.$visuals[$item['key']]) }}" alt="Referencia visual HINE: {{ $item['label'] }}" class="max-h-52 w-auto max-w-full object-contain" loading="lazy" decoding="async">
-                                                <figcaption class="mt-2 text-[11px] font-semibold text-cyan-800">Referencia visual del instrumento HINE.</figcaption>
-                                            </figure>
+                                            @if(isset($visuals[$item['key']]))
+                                                <figure class="mt-4 rounded-2xl border border-cyan-100 bg-cyan-50/40 p-4">
+                                                    <img src="{{ asset('images/hine/'.$visuals[$item['key']]) }}" alt="Referencia visual HINE: {{ $item['label'] }}" class="max-h-52 w-auto max-w-full object-contain" loading="lazy" decoding="async">
+                                                    <figcaption class="mt-2 text-[11px] font-semibold text-cyan-800">Referencia visual del instrumento HINE.</figcaption>
+                                                </figure>
+                                            @endif
                                         @endif
                                     @endif
                                 </div>
