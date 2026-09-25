@@ -145,6 +145,16 @@ class HineInstrumentTest extends TestCase
         $this->assertStringContainsString('-puede "hacer cosquillas"', $items['vertical_suspension']['instruction']);
     }
 
+    public function test_cranial_nerve_anchor_columns_preserve_source_blanks(): void
+    {
+        $anchors = HineInstrument::clinicalAnchors();
+
+        $this->assertSame('Responde al estímulo desde ambos lados', $anchors['auditory_response'][3]);
+        $this->assertSame('No responde al estímulo o responde asimétricamente', $anchors['auditory_response'][1]);
+        $this->assertArrayNotHasKey(2, $anchors['auditory_response']);
+        $this->assertArrayNotHasKey(0, $anchors['auditory_response']);
+    }
+
     public function test_source_anchor_columns_preserve_blank_cells_and_verified_ranges(): void
     {
         $anchors = HineInstrument::clinicalAnchors();
