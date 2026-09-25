@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\HineAssessment;
+use App\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
@@ -33,6 +34,17 @@ class HinePersistenceSchemaTest extends TestCase
         $this->assertFalse(Schema::hasColumn('hine_assessments', 'corrected_age_days'));
         $this->assertFalse(Schema::hasColumn('hine_assessments', 'head_circumference_cm'));
         $this->assertFalse(Schema::hasColumn('hine_assessments', 'behavior_score'));
+    }
+
+    public function test_hine_permissions_are_assigned_to_administrator_and_clinical_coordination(): void
+    {
+        foreach (['administrator', 'clinical_coordination'] as $roleSlug) {
+            $role = Role::query()->where('slug', $roleSlug)->firstOrFail();
+            $permissionSlugs = $role->permissions()->pluck('slug')->all();
+
+            $this->assertContains('clinical_assessments.view', $permissionSlugs);
+            $this->assertContains('clinical_assessments.manage', $permissionSlugs);
+        }
     }
 
     public function test_hine_model_does_not_expose_behavior_score_as_fillable_or_cast(): void
