@@ -85,6 +85,22 @@ class HineAssessmentController extends Controller
             ->route('patients.hine-assessments.index', $patient)
             ->with('success', 'Evaluación HINE creada como borrador.');
     }
+
+    public function show(Request $request, Patient $patient, ClinicalAssessment $assessment): View
+    {
+        abort_unless($request->user()->hasPermission('clinical_assessments.view'), 403);
+        $this->assertHineForPatient($patient, $assessment);
+        $assessment->load('author', 'hine.responses');
+
+        return view('clinical-assessments.hine.show', [
+            'patient' => $patient,
+            'assessment' => $assessment,
+            'hine' => $assessment->hine,
+            'sections' => HineInstrument::neurologicalSections(),
+            'interpretation' => HineInstrument::interpretationAid(),
+        ]);
+    }
+
     public function edit(Request $request, Patient $patient, ClinicalAssessment $assessment): View
     {
         abort_unless($request->user()->hasPermission('clinical_assessments.manage'), 403);
