@@ -18,6 +18,23 @@ return new class extends Migration
                 [...$permission, 'created_at' => now(), 'updated_at' => now()],
             );
         }
+
+        $permissionIds = DB::table('permissions')
+            ->whereIn('slug', array_column($permissions, 'slug'))
+            ->pluck('id');
+
+        $roleIds = DB::table('roles')
+            ->whereIn('slug', ['administrator', 'clinical_coordination'])
+            ->pluck('id');
+
+        foreach ($roleIds as $roleId) {
+            foreach ($permissionIds as $permissionId) {
+                DB::table('permission_role')->updateOrInsert([
+                    'permission_id' => $permissionId,
+                    'role_id' => $roleId,
+                ]);
+            }
+        }
     }
 
     public function down(): void
