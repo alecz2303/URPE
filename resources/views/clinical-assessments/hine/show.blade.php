@@ -46,6 +46,9 @@
                                         <span class="font-semibold text-slate-700">{{ $item['label'] }}</span>
                                         <span class="rounded-full bg-white px-3 py-1 text-sm font-black text-violet-700 ring-1 ring-slate-200">{{ $response?->score ?? '—' }}</span>
                                     </div>
+                                    @isset($item['instruction'])<p class="mt-2 text-sm text-slate-500">{{ $item['instruction'] }}</p>@endisset
+                                    @isset($item['age_note'])<p class="mt-1 text-xs font-semibold text-violet-700">{{ $item['age_note'] }}</p>@endisset
+                                    @isset($item['sites'])<p class="mt-1 text-xs font-semibold text-slate-500">{{ implode(' · ', $item['sites']) }}</p>@endisset
                                     @if($response?->asymmetry)<p class="mt-2 text-xs font-bold text-amber-700">Asimetría registrada</p>@endif
                                     @if($response?->comments)<p class="mt-2 text-sm text-slate-600">{{ $response->comments }}</p>@endif
                                 </div>
@@ -65,6 +68,8 @@
                         @php($response = $responses->get($item['key']))
                         <div class="rounded-2xl bg-emerald-50/60 p-4">
                             <p class="font-semibold text-slate-800">{{ $item['label'] }}</p>
+                            @isset($item['instruction'])<p class="mt-1 text-sm text-slate-500">{{ $item['instruction'] }}</p>@endisset
+                            @isset($item['age_note'])<p class="mt-1 text-xs font-semibold text-emerald-700">{{ $item['age_note'] }}</p>@endisset
                             <p class="mt-1 text-sm text-slate-600">Observado: {{ data_get($response?->response_data, 'observed') ?: '—' }}</p>
                             <p class="text-sm text-slate-600">Edad de adquisición: {{ data_get($response?->response_data, 'acquisition_age') ?: '—' }}</p>
                             @if($response?->comments)<p class="mt-2 text-sm text-slate-600">{{ $response->comments }}</p>@endif
