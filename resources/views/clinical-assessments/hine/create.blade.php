@@ -12,6 +12,8 @@
                 <p class="mt-2 text-sm text-slate-500">Esta acción crea un borrador. La puntuación neurológica se capturará después sin modificar evaluaciones anteriores.</p>
             </div>
             <div class="grid gap-5 p-6 sm:grid-cols-2">
+                <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-600"><span class="font-bold text-slate-800">Nombre y apellidos:</span> {{ $patient->full_name }}</div>
+                <div class="rounded-xl bg-slate-50 p-3 text-sm text-slate-600"><span class="font-bold text-slate-800">Fecha de nacimiento:</span> {{ $patient->date_of_birth?->format('d/m/Y') ?: '—' }}</div>
                 <label class="text-sm font-bold text-slate-700">Fecha de examen
                     <input type="date" name="examination_date" value="{{ old('examination_date', now()->toDateString()) }}" required class="mt-2 w-full rounded-xl border-slate-200">
                 </label>
@@ -24,8 +26,11 @@
                 <label class="text-sm font-bold text-slate-700">Edad corregida
                     <input type="text" name="corrected_age" value="{{ old('corrected_age') }}" maxlength="100" class="mt-2 w-full rounded-xl border-slate-200">
                 </label>
-                <label class="text-sm font-bold text-slate-700 sm:col-span-2">Perímetro cefálico
+                <label class="text-sm font-bold text-slate-700">Perímetro cefálico
                     <input type="text" name="head_circumference" value="{{ old('head_circumference') }}" maxlength="100" class="mt-2 w-full rounded-xl border-slate-200">
+                </label>
+                <label class="text-sm font-bold text-slate-700 sm:col-span-2">Comentarios
+                    <textarea name="general_comments" rows="3" maxlength="5000" class="mt-2 w-full rounded-xl border-slate-200">{{ old('general_comments') }}</textarea>
                 </label>
             </div>
         </section>
