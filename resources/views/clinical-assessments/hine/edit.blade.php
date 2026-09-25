@@ -80,19 +80,61 @@
                                     @isset($item['age_note'])<p class="mt-1 text-xs font-semibold text-violet-700">{{ $item['age_note'] }}</p>@endisset
                                     @isset($item['sites'])<p class="mt-1 text-xs font-semibold text-slate-600">{{ implode(' · ', $item['sites']) }}</p>@endisset
 
-                                    @if(isset($anchors[$item['key']]))
-                                        <div class="mt-3 grid gap-2 md:grid-cols-2">
-                                            @foreach($anchors[$item['key']] as $anchorScore => $anchorText)
-                                                <div class="rounded-xl bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-600"><strong class="text-slate-800">{{ $anchorScore }}:</strong> {{ $anchorText }}</div>
-                                            @endforeach
+                                    @if($item['key'] === 'head_sitting')
+                                        <div class="mt-4 overflow-x-auto rounded-2xl border border-slate-300 bg-white">
+                                            <table class="min-w-[760px] w-full table-fixed text-xs text-slate-700">
+                                                <caption class="sr-only">Referencia de la proforma HINE para Cabeza en sedestación</caption>
+                                                <thead class="bg-slate-100 font-bold text-slate-900">
+                                                    <tr>
+                                                        <th class="border-b border-r border-slate-300 px-3 py-2 text-left">Referencia HINE</th>
+                                                        <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 3</th>
+                                                        <th class="w-14 border-b border-r border-slate-300 px-2 py-2">2</th>
+                                                        <th class="border-b border-r border-slate-300 px-3 py-2">Puntuación 1</th>
+                                                        <th class="border-b border-slate-300 px-3 py-2">Puntuación 0</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="align-top">
+                                                        <th class="border-r border-slate-300 px-3 py-3 text-left font-bold text-slate-900">Cabeza<br><span class="font-normal">en sedestación</span></th>
+                                                        <td class="border-r border-slate-300 px-3 py-3 text-center">
+                                                            <div class="mx-auto h-20 w-20 overflow-hidden">
+                                                                <img src="{{ asset('images/hine/head_sitting.png') }}" alt="" class="h-full max-w-none" style="width: 500%; transform: translateX(0%); transform-origin: left center;">
+                                                            </div>
+                                                            <p class="mt-2">Recta; en la línea media</p>
+                                                        </td>
+                                                        <td class="border-r border-slate-300"></td>
+                                                        <td class="border-r border-slate-300 px-3 py-3 text-center">
+                                                            <div class="mx-auto h-20 w-40 overflow-hidden">
+                                                                <img src="{{ asset('images/hine/head_sitting.png') }}" alt="" class="h-full max-w-none" style="width: 250%; transform: translateX(-40%); transform-origin: left center;">
+                                                            </div>
+                                                            <p class="mt-2">Ligeramente inclinada hacia un lado o hacia atrás o delante</p>
+                                                        </td>
+                                                        <td class="px-3 py-3 text-center">
+                                                            <div class="mx-auto h-20 w-40 overflow-hidden">
+                                                                <img src="{{ asset('images/hine/head_sitting.png') }}" alt="" class="h-full max-w-none" style="width: 250%; transform: translateX(-120%); transform-origin: left center;">
+                                                            </div>
+                                                            <p class="mt-2">Marcadamente inclinada hacia un lado o atrás o delante</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <p class="border-t border-slate-200 bg-cyan-50/50 px-3 py-2 text-[11px] font-semibold text-cyan-800">Referencia visual organizada según la proforma HINE fuente.</p>
                                         </div>
-                                    @endif
+                                    @else
+                                        @if(isset($anchors[$item['key']]))
+                                            <div class="mt-3 grid gap-2 md:grid-cols-2">
+                                                @foreach($anchors[$item['key']] as $anchorScore => $anchorText)
+                                                    <div class="rounded-xl bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-600"><strong class="text-slate-800">{{ $anchorScore }}:</strong> {{ $anchorText }}</div>
+                                                @endforeach
+                                            </div>
+                                        @endif
 
-                                    @if(isset($visuals[$item['key']]))
-                                        <figure class="mt-4 rounded-2xl border border-cyan-100 bg-cyan-50/40 p-4">
-                                            <img src="{{ asset('images/hine/'.$visuals[$item['key']]) }}" alt="Referencia visual HINE: {{ $item['label'] }}" class="max-h-52 w-auto max-w-full object-contain" loading="lazy" decoding="async">
-                                            <figcaption class="mt-2 text-[11px] font-semibold text-cyan-800">Referencia visual del instrumento HINE.</figcaption>
-                                        </figure>
+                                        @if(isset($visuals[$item['key']]))
+                                            <figure class="mt-4 rounded-2xl border border-cyan-100 bg-cyan-50/40 p-4">
+                                                <img src="{{ asset('images/hine/'.$visuals[$item['key']]) }}" alt="Referencia visual HINE: {{ $item['label'] }}" class="max-h-52 w-auto max-w-full object-contain" loading="lazy" decoding="async">
+                                                <figcaption class="mt-2 text-[11px] font-semibold text-cyan-800">Referencia visual del instrumento HINE.</figcaption>
+                                            </figure>
+                                        @endif
                                     @endif
                                 </div>
 
