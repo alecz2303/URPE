@@ -173,6 +173,21 @@ class HineAssessmentDraftTest extends TestCase
         }
     }
 
+    public function test_edit_renders_verified_source_score_columns_for_visual_items(): void
+    {
+        [$user, $patient, $assessment] = $this->createDraft();
+
+        $response = $this->actingAs($user)->get(route('patients.hine-assessments.edit', [$patient, $assessment]));
+
+        $response->assertOk();
+        $response->assertSee('Elevación pasiva del hombro');
+        $response->assertSee('Dificultad para vencer la resistencia');
+        $response->assertSee('Ilustración fuente: puntuación 3');
+        $response->assertSee('Ilustración fuente: puntuación 1');
+        $response->assertSee('Paracaídas');
+        $response->assertSee('Las posiciones individuales se conservan según las columnas indicadas arriba.');
+    }
+
     public function test_motor_milestones_and_behavior_are_persisted_without_changing_global_score(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
