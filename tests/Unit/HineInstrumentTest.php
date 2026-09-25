@@ -106,6 +106,17 @@ class HineInstrumentTest extends TestCase
             $this->assertMatchesRegularExpression('/^[a-z0-9_]+\\.png$/', $image);
         }
     }
+    public function test_motor_milestone_normal_ages_keep_their_source_columns(): void
+    {
+        $milestones = collect(HineInstrument::motorMilestones())->keyBy('key');
+
+        $this->assertSame([1 => 'Normal a los 4m', 2 => 'Normal a los 6m', 3 => 'Normal a los 7-8m', 4 => 'Normal a los 9m'], $milestones['sitting']['normal_ages']);
+        $this->assertSame([2 => 'Normal a los 3m', 3 => 'Normal a los 4-5m', 4 => 'Normal a los 5-6m'], $milestones['supine_kicking']['normal_ages']);
+        $this->assertSame([1 => 'Normal a los 4m', 2 => 'Normal a los 6m', 3 => 'Normal a los 6m'], $milestones['rolling']['normal_ages']);
+        $this->assertSame([1 => 'Normal a los 3m', 2 => 'Normal a los 4m', 3 => 'Normal a los 8m', 4 => 'Normal a los 10m'], $milestones['crawling']['normal_ages']);
+        $this->assertSame([1 => 'Normal a los 4m', 2 => 'Normal a los 7m', 3 => 'Normal a los 12m'], $milestones['standing']['normal_ages']);
+    }
+
     public function test_source_examination_instructions_are_preserved_for_tone_and_reactions(): void
     {
         $sections = HineInstrument::neurologicalSections();
