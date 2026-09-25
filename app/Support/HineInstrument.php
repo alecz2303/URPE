@@ -295,9 +295,16 @@ final class HineInstrument
                 12 => 65,
             ],
             'source_title' => 'Hammersmith Infant Neurological Examination',
-            'global_score_heading' => 'Puntuación global',
+            'global_score_heading' => 'Prediciendo la GMFCS',
+            'global_score_context' => 'Rangos mostrados en el apoyo para la interpretación.',
             'asymmetry_heading' => 'Número de asimetrías',
             'high_risk_heading' => 'Puntuaciones de Corte para el Alto Riesgo en PC',
+            'references' => [
+                'Romeo, D. M. et al., (2013). Neurological assessment in infants discharged from a neonatal intensive care unit. European Journal of Paediatric Neurology, 17(2), 192–198.',
+                'Romeo, D. M. et al., (2008). Neuromotor development in infants with cerebral palsy investigated by the Hammersmith Infant Neurological Examination during the first year of age. European Journal of Paediatric Neurology, 12(1), 24–31.',
+                'Hay, K. et al., (2018). Hammersmith Infant Neurological Examination Asymmetry Score Distinguishes Hemiplegic Cerebral Palsy From Typical Development. Pediatric Neurology, 87, 70–74.',
+                'Pietruszewski, L. et al., (2021). Hammersmith Infant Neurological Examination Clinical Use to Recommend Therapist Assessment of Functional Hand Asymmetries. Pediatric Physical Therapy, 33(4), 200–206.',
+            ],
             'note' => 'Apoyo para la interpretación. Las puntuaciones de corte son una referencia del material proporcionado y no constituyen por sí solas un diagnóstico.',
             'age_rule' => 'Sólo se muestran los puntos de corte explícitos para 3, 6, 9 y 12 meses; no se interpolan edades intermedias.',
         ];
