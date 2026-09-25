@@ -102,6 +102,7 @@
             <div class="mt-5 grid gap-4 lg:grid-cols-3">
                 <div class="rounded-2xl bg-slate-50 p-4">
                     <p class="text-xs font-bold uppercase text-slate-500">{{ $interpretation['global_score_heading'] }}</p>
+                    <p class="mt-1 text-xs text-slate-500">{{ $interpretation['global_score_context'] }}</p>
                     <div class="mt-3 flex flex-wrap gap-2">
                         @foreach($interpretation['global_score_ranges'] as $range)
                             <span class="rounded-full bg-white px-3 py-1.5 text-sm font-bold text-slate-700 ring-1 ring-slate-200">{{ $range['label'] }}</span>
@@ -123,6 +124,14 @@
                 </div>
             </div>
             <p class="mt-4 text-xs font-semibold text-slate-500">{{ $interpretation['age_rule'] }}</p>
+            <div class="mt-5 border-t border-slate-100 pt-4">
+                <p class="text-xs font-bold uppercase tracking-wide text-slate-500">Referencias</p>
+                <ol class="mt-2 list-decimal space-y-1 pl-5 text-xs leading-5 text-slate-500">
+                    @foreach($interpretation['references'] as $reference)
+                        <li>{{ $reference }}</li>
+                    @endforeach
+                </ol>
+            </div>
         </section>
     </div>
 </x-app-shell>
