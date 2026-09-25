@@ -123,7 +123,8 @@ final class HineInstrument
             ],
             'quality' => [
                 3 => 'Libres, alternantes, y suaves',
-                1 => 'Bruscos, entrecortados; ligero temblor',
+                2 => 'Bruscos, entrecortados',
+                1 => 'Ligero temblor',
                 0 => 'Espasmódicos y sincrónicos; espasmos extensores; atetoides; atáxicos; muy temblorosos; espasmos mioclónicos; movimientos distónicos',
             ],
             'passive_shoulder_elevation' => [
