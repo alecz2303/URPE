@@ -115,6 +115,58 @@ class HineAssessmentDraftTest extends TestCase
         $this->assertNull($assessment->hine->responses->firstWhere('item_key', 'consciousness')->score);
     }
 
+    public function test_hine_cannot_be_finalized_until_all_neurological_items_are_scored(): void
+    {
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create(['first_name' => 'Paciente', 'last_name' => 'Incompleto', 'date_of_birth' => '2026-03-25']);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), ['examination_date' => '2026-09-25']);
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+
+        $this->actingAs($user)->put(route('patients.hine-assessments.update', [$patient, $assessment]), [
+            'responses' => ['facial_appearance' => ['score' => 3]],
+        ]);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.finalize', [$patient, $assessment]))
+            ->assertSessionHasErrors('finalize');
+
+        $this->assertSame(ClinicalAssessment::STATUS_DRAFT, $assessment->fresh()->status);
+    }
+
+    public function test_complete_hine_can_be_finalized_and_is_then_immutable(): void
+    {
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create(['first_name' => 'Paciente', 'last_name' => 'Final HINE', 'date_of_birth' => '2026-03-25']);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), ['examination_date' => '2026-09-25']);
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+
+        $responses = [];
+        foreach (\App\Support\HineInstrument::neurologicalSections() as $section) {
+            foreach ($section['items'] as $item) {
+                $responses[$item['key']] = ['score' => 3];
+            }
+        }
+
+        $this->actingAs($user)->put(route('patients.hine-assessments.update', [$patient, $assessment]), ['responses' => $responses]);
+        $this->actingAs($user)->post(route('patients.hine-assessments.finalize', [$patient, $assessment]))->assertRedirect();
+
+        $assessment->refresh();
+        $this->assertSame(ClinicalAssessment::STATUS_FINALIZED, $assessment->status);
+        $this->assertSame('78.0', $assessment->hine->global_score);
+        $this->assertNotNull($assessment->finalized_at);
+
+        $this->actingAs($user)->put(route('patients.hine-assessments.update', [$patient, $assessment]), [
+            'responses' => ['facial_appearance' => ['score' => 0]],
+        ])->assertForbidden();
+
+        $this->assertSame('78.0', $assessment->fresh()->hine->global_score);
+        $this->assertDatabaseHas('audit_events', [
+            'event' => 'clinical_assessment.finalized',
+            'target_id' => (string) $assessment->id,
+        ]);
+    }
+
     public function test_user_without_manage_permission_cannot_create_hine_draft(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view']);
