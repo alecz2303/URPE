@@ -162,7 +162,7 @@
                                                         <td class="border-r border-slate-300 px-3 py-3 text-center"><img src="{{ asset('images/hine/scarf_sign_score_3.png') }}" alt="Signo de la bufanda, puntuación 3" class="mx-auto h-24 w-auto max-w-full object-contain"></td>
                                                         <td class="border-r border-slate-300"></td>
                                                         <td class="border-r border-slate-300 px-3 py-3"><img src="{{ asset('images/hine/scarf_sign_score_1.png') }}" alt="Signo de la bufanda, puntuación 1" class="mx-auto h-24 w-auto max-w-full object-contain"></td>
-                                                        <td class="px-3 py-3"><img src="{{ asset('images/hine/scarf_sign_score_0.png') }}" alt="Signo de la bufanda, puntuación 0" class="mx-auto h-24 w-auto max-w-full object-contain"></td>
+                                                        <td class="px-3 py-3 text-center"><img src="{{ asset('images/hine/scarf_sign_score_0.png') }}?v=2" alt="Signo de la bufanda, puntuación 0" class="mx-auto block h-24 w-auto max-w-full object-contain" loading="eager"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
