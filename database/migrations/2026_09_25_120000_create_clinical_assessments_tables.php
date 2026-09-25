@@ -25,10 +25,10 @@ return new class extends Migration
         Schema::create('hine_assessments', function (Blueprint $table): void {
             $table->id();
             $table->foreignId('clinical_assessment_id')->unique()->constrained()->cascadeOnDelete();
-            $table->decimal('gestational_age_weeks', 4, 1)->nullable();
-            $table->unsignedSmallInteger('chronological_age_days')->nullable();
-            $table->unsignedSmallInteger('corrected_age_days')->nullable();
-            $table->decimal('head_circumference_cm', 5, 2)->nullable();
+            $table->string('gestational_age', 100)->nullable();
+            $table->string('chronological_age', 100)->nullable();
+            $table->string('corrected_age', 100)->nullable();
+            $table->string('head_circumference', 100)->nullable();
             $table->decimal('cranial_nerves_score', 4, 1)->nullable();
             $table->decimal('posture_score', 4, 1)->nullable();
             $table->decimal('movements_score', 4, 1)->nullable();
@@ -36,7 +36,6 @@ return new class extends Migration
             $table->decimal('reflexes_reactions_score', 4, 1)->nullable();
             $table->decimal('global_score', 4, 1)->nullable();
             $table->unsignedSmallInteger('asymmetry_count')->default(0);
-            $table->decimal('behavior_score', 4, 1)->nullable();
             $table->text('general_comments')->nullable();
             $table->timestamps();
         });
