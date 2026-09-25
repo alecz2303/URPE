@@ -213,6 +213,10 @@
                                         @php($scoreVisualItems = ['passive_shoulder_elevation', 'hip_adductors', 'popliteal_angle', 'ankle_dorsiflexion', 'arm_protection', 'lateral_suspension', 'parachute'])
                                         @if(in_array($item['key'], $scoreVisualItems, true))
                                             @php($visualColumns = \App\Support\HineInstrument::visualScoreColumns()[$item['key']] ?? [])
+                                            @php($individualVisuals = [
+                                                'arm_protection' => [3 => 'arm_protection_score_3.png', 1 => 'arm_protection_score_1.png', 0 => 'arm_protection_score_0.png'],
+                                                'parachute' => [3 => 'parachute_score_3.png', 1 => 'parachute_score_1.png'],
+                                            ])
                                             <div class="mt-4 overflow-x-auto rounded-2xl border border-slate-300 bg-white">
                                                 <table class="min-w-[760px] w-full table-fixed text-xs text-slate-700">
                                                     <caption class="sr-only">Referencia de la proforma HINE para {{ $item['label'] }}</caption>
@@ -230,7 +234,9 @@
                                                                     @if(isset($anchors[$item['key']][$sourceScore]))
                                                                         <p>{{ $anchors[$item['key']][$sourceScore] }}</p>
                                                                     @endif
-                                                                    @if(in_array($sourceScore, $visualColumns, true))
+                                                                    @if(isset($individualVisuals[$item['key']][$sourceScore]))
+                                                                        <img src="{{ asset('images/hine/'.$individualVisuals[$item['key']][$sourceScore]) }}" alt="Referencia visual HINE: {{ $item['label'] }}, puntuación {{ $sourceScore }}" class="mx-auto mt-2 max-h-36 w-auto max-w-full object-contain" loading="lazy" decoding="async">
+                                                                    @elseif(in_array($sourceScore, $visualColumns, true))
                                                                         <p class="mt-2 text-[11px] font-semibold text-cyan-800">Ilustración fuente: puntuación {{ $sourceScore }}</p>
                                                                     @endif
                                                                 </td>
@@ -238,7 +244,7 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                @if(isset($visuals[$item['key']]))
+                                                @if(isset($visuals[$item['key']]) && !isset($individualVisuals[$item['key']]))
                                                     <figure class="border-t border-slate-200 bg-cyan-50/40 p-3">
                                                         <img src="{{ asset('images/hine/'.$visuals[$item['key']]) }}" alt="Referencia visual HINE: {{ $item['label'] }}" class="max-h-44 w-auto max-w-full object-contain" loading="lazy" decoding="async">
                                                         <figcaption class="mt-2 text-[11px] font-semibold text-cyan-800">Referencia visual compuesta de la fuente. Las posiciones individuales se conservan según las columnas indicadas arriba.</figcaption>
