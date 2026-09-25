@@ -87,6 +87,13 @@ class HineInstrumentTest extends TestCase
             $this->assertMatchesRegularExpression('/^[a-z0-9_]+\\.png$/', $image);
         }
     }
+    public function test_every_visual_reference_has_a_real_public_asset(): void
+    {
+        foreach (HineInstrument::visualReferenceMap() as $image) {
+            $this->assertFileExists(public_path('images/hine/'.$image));
+        }
+    }
+
     public function test_interpretation_aid_preserves_only_explicit_source_cutoffs(): void
     {
         $aid = HineInstrument::interpretationAid();
