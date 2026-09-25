@@ -200,6 +200,27 @@ final class HineInstrument
      * Asset filenames intentionally preserve extraction order so each image
      * can be verified against the source before publication in the UI.
      */
+    /**
+     * Score columns that actually contain a source illustration.
+     * Missing scores are intentionally blank in the HINE proforma.
+     */
+    public static function visualScoreColumns(): array
+    {
+        return [
+            'head_sitting' => [3, 1, 0],
+            'trunk_sitting' => [3, 1, 0],
+            'scarf_sign' => [3, 1, 0],
+            'legs_sitting' => [3, 1, 0],
+            'passive_shoulder_elevation' => [3, 1, 0],
+            'hip_adductors' => [3, 2, 1, 0],
+            'popliteal_angle' => [3, 2, 1, 0],
+            'ankle_dorsiflexion' => [3, 2, 1, 0],
+            'arm_protection' => [3, 1, 0],
+            'lateral_suspension' => [3, 2, 1, 0],
+            'parachute' => [3, 1],
+        ];
+    }
+
     public static function visualReferenceMap(): array
     {
         return [
