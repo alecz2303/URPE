@@ -83,4 +83,15 @@ class HineInstrumentTest extends TestCase
         $this->assertSame(['img-055.png','img-056.png'], $map['parachute']);
         $this->assertSame(['img-064.png','img-065.png','img-066.png','img-067.png'], $map['crawling']);
     }
+    public function test_interpretation_aid_preserves_only_explicit_source_cutoffs(): void
+    {
+        $aid = HineInstrument::interpretationAid();
+
+        $this->assertSame(['<40', '40–60', '>60'], array_column($aid['global_score_ranges'], 'label'));
+        $this->assertSame(4, $aid['asymmetry_attention_threshold']);
+        $this->assertSame([3 => 56, 6 => 59, 9 => 62, 12 => 65], $aid['high_risk_cutoffs_by_age_months']);
+        $this->assertArrayNotHasKey(7, $aid['high_risk_cutoffs_by_age_months']);
+        $this->assertStringContainsString('no se interpolan', $aid['age_rule']);
+    }
+
 }
