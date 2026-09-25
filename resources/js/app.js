@@ -132,3 +132,37 @@ if (hineWizard) {
 
     renderHineStep();
 }
+
+
+const hineScoreForm = document.querySelector('[data-hine-wizard]');
+
+if (hineScoreForm) {
+    const liveScore = hineScoreForm.querySelector('[data-hine-live-score]');
+    const liveAsymmetries = hineScoreForm.querySelector('[data-hine-live-asymmetries]');
+    const scoreLabel = hineScoreForm.querySelector('[data-hine-score-label]');
+    const provisional = hineScoreForm.querySelector('[data-hine-provisional]');
+    let dirty = false;
+
+    const refreshHineSummary = () => {
+        const checkedScores = [...hineScoreForm.querySelectorAll('input[type="radio"][name^="responses["][name$="[score]"]:checked')];
+        const checkedAsymmetries = [...hineScoreForm.querySelectorAll('input[type="checkbox"][name^="responses["][name$="[asymmetry]"]:checked')];
+
+        const total = checkedScores.reduce((sum, input) => sum + Number.parseFloat(input.value || '0'), 0);
+
+        if (liveScore) liveScore.textContent = total.toFixed(1);
+        if (liveAsymmetries) liveAsymmetries.textContent = String(checkedAsymmetries.length);
+
+        if (dirty) {
+            if (scoreLabel) scoreLabel.textContent = 'Puntuación provisional';
+            provisional?.classList.remove('hidden');
+        }
+    };
+
+    hineScoreForm.addEventListener('change', (event) => {
+        if (!event.target.matches('input[type="radio"][name^="responses["][name$="[score]"], input[type="checkbox"][name^="responses["][name$="[asymmetry]"]')) return;
+        dirty = true;
+        refreshHineSummary();
+    });
+
+    refreshHineSummary();
+}
