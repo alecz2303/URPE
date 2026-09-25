@@ -47,6 +47,25 @@ class HineInstrumentTest extends TestCase
         $this->assertArrayNotHasKey(2, $anchors['facial_appearance']);
     }
 
+    public function test_motor_milestones_preserve_source_observation_criteria(): void
+    {
+        $milestones = collect(HineInstrument::motorMilestones())->keyBy('key');
+
+        $this->assertSame(
+            ['No puede mantenerse sentado', 'Con soporte en caderas', 'Se apoya', 'Sedestación estable', 'Pivota (rota)'],
+            $milestones['sitting']['options']
+        );
+        $this->assertSame('Normal a los 10m', $milestones['crawling']['normal_ages'][3]);
+        $this->assertSame(
+            ['Rebota (intenta botar)', 'Camina con apoyo', 'Camina independiente'],
+            $milestones['walking']['options']
+        );
+        $this->assertSame(
+            'Por favor, anote la edad a la cual se consigue la máxima habilidad.',
+            $milestones['head_control']['age_note']
+        );
+    }
+
     public function test_behavior_options_are_preserved_without_converting_them_to_neurological_scores(): void
     {
         $items = HineInstrument::behaviorItems();
