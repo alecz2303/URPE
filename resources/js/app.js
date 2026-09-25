@@ -94,3 +94,41 @@ if (backToTopButton) {
     window.addEventListener('scroll', updateBackToTop, { passive: true });
     window.addEventListener('resize', updateBackToTop, { passive: true });
 }
+
+
+const hineWizard = document.querySelector('[data-hine-wizard]');
+
+if (hineWizard) {
+    let currentStep = 0;
+    const steps = [...hineWizard.querySelectorAll('[data-hine-step]')];
+    const navigation = [...hineWizard.querySelectorAll('[data-hine-go]')];
+
+    const renderHineStep = () => {
+        steps.forEach((panel) => {
+            panel.hidden = Number(panel.dataset.hineStep) !== currentStep;
+        });
+
+        navigation.forEach((button) => {
+            const active = Number(button.dataset.hineGo) === currentStep;
+            const activeClasses = (button.dataset.hineActiveClass || '').split(' ').filter(Boolean);
+            const inactiveClasses = (button.dataset.hineInactiveClass || '').split(' ').filter(Boolean);
+            button.classList.remove(...activeClasses, ...inactiveClasses);
+            button.classList.add(...(active ? activeClasses : inactiveClasses));
+            button.setAttribute('aria-current', active ? 'step' : 'false');
+        });
+    };
+
+    const goToHineStep = (step) => {
+        const requested = Number(step);
+        if (!Number.isInteger(requested) || !steps.some((panel) => Number(panel.dataset.hineStep) === requested)) return;
+        currentStep = requested;
+        renderHineStep();
+        window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+    };
+
+    navigation.forEach((button) => button.addEventListener('click', () => goToHineStep(button.dataset.hineGo)));
+    hineWizard.querySelectorAll('[data-hine-prev]').forEach((button) => button.addEventListener('click', () => goToHineStep(currentStep - 1)));
+    hineWizard.querySelectorAll('[data-hine-next]').forEach((button) => button.addEventListener('click', () => goToHineStep(currentStep + 1)));
+
+    renderHineStep();
+}
