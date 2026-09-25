@@ -95,22 +95,16 @@
                                                 <tbody>
                                                     <tr class="align-top">
                                                         <td class="border-r border-slate-300 px-3 py-3 text-center">
-                                                            <div class="mx-auto h-20 w-20 overflow-hidden">
-                                                                <img src="{{ asset('images/hine/head_sitting.png') }}" alt="" class="h-full max-w-none" style="width: 500%; transform: translateX(0%); transform-origin: left center;">
-                                                            </div>
+                                                            <img src="{{ asset('images/hine/head_sitting_score_3.png') }}" alt="Cabeza recta en la línea media" class="mx-auto h-20 w-auto max-w-full object-contain">
                                                             <p class="mt-2">Recta; en la línea media</p>
                                                         </td>
                                                         <td class="border-r border-slate-300"></td>
                                                         <td class="border-r border-slate-300 px-3 py-3 text-center">
-                                                            <div class="mx-auto h-20 w-40 overflow-hidden">
-                                                                <img src="{{ asset('images/hine/head_sitting.png') }}" alt="" class="h-full max-w-none" style="width: 250%; transform: translateX(-40%); transform-origin: left center;">
-                                                            </div>
+                                                            <img src="{{ asset('images/hine/head_sitting_score_1.png') }}" alt="Cabeza ligeramente inclinada" class="mx-auto h-20 w-auto max-w-full object-contain">
                                                             <p class="mt-2">Ligeramente inclinada hacia un lado o hacia atrás o delante</p>
                                                         </td>
                                                         <td class="px-3 py-3 text-center">
-                                                            <div class="mx-auto h-20 w-40 overflow-hidden">
-                                                                <img src="{{ asset('images/hine/head_sitting.png') }}" alt="" class="h-full max-w-none" style="width: 250%; transform: translateX(-120%); transform-origin: left center;">
-                                                            </div>
+                                                            <img src="{{ asset('images/hine/head_sitting_score_0.png') }}" alt="Cabeza marcadamente inclinada" class="mx-auto h-20 w-auto max-w-full object-contain">
                                                             <p class="mt-2">Marcadamente inclinada hacia un lado o atrás o delante</p>
                                                         </td>
                                                     </tr>
