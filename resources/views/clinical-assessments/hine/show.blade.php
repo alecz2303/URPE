@@ -29,6 +29,66 @@
             @endforeach
         </section>
 
+        <section class="rounded-3xl border border-slate-100 bg-white shadow-sm">
+            <div class="border-b border-slate-100 px-6 py-5">
+                <p class="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Detalle clínico</p>
+                <h3 class="mt-1 text-lg font-black text-slate-900">Reactivos neurológicos registrados</h3>
+            </div>
+            <div class="divide-y divide-slate-100">
+                @foreach($sections as $sectionKey => $section)
+                    <div class="p-6">
+                        <h4 class="font-black text-slate-800">{{ $section['label'] }}</h4>
+                        <div class="mt-3 grid gap-2">
+                            @foreach($section['items'] as $item)
+                                @php($response = $responses->get($item['key']))
+                                <div class="rounded-2xl bg-slate-50 p-4">
+                                    <div class="flex flex-wrap items-center justify-between gap-2">
+                                        <span class="font-semibold text-slate-700">{{ $item['label'] }}</span>
+                                        <span class="rounded-full bg-white px-3 py-1 text-sm font-black text-violet-700 ring-1 ring-slate-200">{{ $response?->score ?? '—' }}</span>
+                                    </div>
+                                    @if($response?->asymmetry)<p class="mt-2 text-xs font-bold text-amber-700">Asimetría registrada</p>@endif
+                                    @if($response?->comments)<p class="mt-2 text-sm text-slate-600">{{ $response->comments }}</p>@endif
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+
+        <section class="grid gap-6 xl:grid-cols-2">
+            <div class="rounded-3xl border border-emerald-100 bg-white p-6 shadow-sm">
+                <p class="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">No puntúa</p>
+                <h3 class="mt-1 text-lg font-black text-slate-900">Hitos motores</h3>
+                <div class="mt-4 space-y-3">
+                    @foreach($motorMilestones as $item)
+                        @php($response = $responses->get($item['key']))
+                        <div class="rounded-2xl bg-emerald-50/60 p-4">
+                            <p class="font-semibold text-slate-800">{{ $item['label'] }}</p>
+                            <p class="mt-1 text-sm text-slate-600">Observado: {{ data_get($response?->response_data, 'observed') ?: '—' }}</p>
+                            <p class="text-sm text-slate-600">Edad de adquisición: {{ data_get($response?->response_data, 'acquisition_age') ?: '—' }}</p>
+                            @if($response?->comments)<p class="mt-2 text-sm text-slate-600">{{ $response->comments }}</p>@endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="rounded-3xl border border-amber-100 bg-white p-6 shadow-sm">
+                <p class="text-xs font-bold uppercase tracking-[0.16em] text-amber-700">No puntúa</p>
+                <h3 class="mt-1 text-lg font-black text-slate-900">Comportamiento</h3>
+                <div class="mt-4 space-y-3">
+                    @foreach($behaviorItems as $item)
+                        @php($response = $responses->get($item['key']))
+                        @php($option = data_get($response?->response_data, 'option'))
+                        <div class="rounded-2xl bg-amber-50/60 p-4">
+                            <p class="font-semibold text-slate-800">{{ $item['label'] }}</p>
+                            <p class="mt-1 text-sm text-slate-600">{{ $option !== null ? ($item['options'][$option] ?? '—') : '—' }}</p>
+                            @if($response?->comments)<p class="mt-2 text-sm text-slate-600">{{ $response->comments }}</p>@endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
         <section class="rounded-3xl border border-cyan-100 bg-white p-6 shadow-sm">
             <p class="text-xs font-bold uppercase tracking-[0.16em] text-cyan-700">Apoyo para la interpretación</p>
             <h3 class="mt-1 text-lg font-black text-slate-900">Referencia del material HINE proporcionado</h3>
