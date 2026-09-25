@@ -181,6 +181,25 @@ class HineInstrumentTest extends TestCase
         $this->assertSame('Brazo completamente flexionado', $anchors['arm_protection'][0]);
     }
 
+    public function test_movement_quality_preserves_blank_score_two_source_column(): void
+    {
+        $anchors = HineInstrument::clinicalAnchors();
+
+        $this->assertSame('Libres, alternantes, y suaves', $anchors['quality'][3]);
+        $this->assertArrayNotHasKey(2, $anchors['quality']);
+        $this->assertSame('Bruscos, entrecortados; Ligero temblor', $anchors['quality'][1]);
+    }
+
+    public function test_passive_shoulder_elevation_preserves_blank_score_two_source_column(): void
+    {
+        $anchors = HineInstrument::clinicalAnchors();
+
+        $this->assertSame('Resistencia superable', $anchors['passive_shoulder_elevation'][3]);
+        $this->assertArrayNotHasKey(2, $anchors['passive_shoulder_elevation']);
+        $this->assertSame('No existe resistencia', $anchors['passive_shoulder_elevation'][1]);
+        $this->assertSame('Resistencia no superable', $anchors['passive_shoulder_elevation'][0]);
+    }
+
     public function test_tone_numeric_anchor_ranges_match_the_source(): void
     {
         $anchors = HineInstrument::clinicalAnchors();
