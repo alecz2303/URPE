@@ -156,6 +156,35 @@ final class HineInstrument
         ];
     }
 
+
+    /**
+     * Exact visual references identified in the URPE-provided PDF.
+     * Asset filenames intentionally preserve extraction order so each image
+     * can be verified against the source before publication in the UI.
+     */
+    public static function visualReferenceMap(): array
+    {
+        return [
+            'head_sitting' => ['img-002.png','img-003.png','img-004.png'],
+            'trunk_sitting' => ['img-005.png','img-006.png','img-007.png','img-008.png','img-009.png'],
+            'legs' => ['img-010.png','img-011.png','img-012.png'],
+            'scarf_sign' => ['img-017.png','img-018.png','img-019.png','img-020.png'],
+            'passive_shoulder_elevation' => ['img-021.png','img-022.png','img-023.png'],
+            'hip_adductors' => ['img-024.png','img-025.png','img-026.png','img-027.png'],
+            'popliteal_angle' => ['img-028.png','img-029.png','img-030.png','img-031.png','img-032.png'],
+            'ankle_dorsiflexion' => ['img-033.png','img-034.png','img-035.png','img-036.png'],
+            'pull_to_sit' => ['img-037.png','img-038.png','img-039.png'],
+            'ventral_suspension' => ['img-040.png','img-041.png','img-042.png'],
+            'arm_protection' => ['img-045.png','img-046.png','img-047.png'],
+            'vertical_suspension' => ['img-048.png','img-049.png','img-050.png'],
+            'lateral_suspension' => ['img-051.png','img-052.png','img-053.png','img-054.png'],
+            'parachute' => ['img-055.png','img-056.png'],
+            'sitting' => ['img-057.png','img-058.png','img-059.png','img-060.png'],
+            'supine_kicking' => ['img-061.png','img-062.png','img-063.png'],
+            'crawling' => ['img-064.png','img-065.png','img-066.png','img-067.png'],
+        ];
+    }
+
     public static function motorMilestones(): array
     {
         return [
