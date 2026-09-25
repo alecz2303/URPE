@@ -79,9 +79,13 @@ class HineInstrumentTest extends TestCase
         sort($mapped);
 
         $this->assertSame($required, $mapped);
-        $this->assertSame(['img-017.png','img-018.png','img-019.png','img-020.png'], $map['scarf_sign']);
-        $this->assertSame(['img-055.png','img-056.png'], $map['parachute']);
-        $this->assertSame(['img-064.png','img-065.png','img-066.png','img-067.png'], $map['crawling']);
+        $this->assertSame('scarf_sign.png', $map['scarf_sign']);
+        $this->assertSame('parachute.png', $map['parachute']);
+        $this->assertSame('crawling.png', $map['crawling']);
+
+        foreach ($map as $image) {
+            $this->assertMatchesRegularExpression('/^[a-z0-9_]+\\.png$/', $image);
+        }
     }
     public function test_interpretation_aid_preserves_only_explicit_source_cutoffs(): void
     {
