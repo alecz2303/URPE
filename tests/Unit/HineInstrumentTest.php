@@ -202,6 +202,32 @@ class HineInstrumentTest extends TestCase
         $this->assertArrayNotHasKey(1, $anchors['parachute']);
     }
 
+    public function test_posture_hands_legs_and_feet_preserve_source_score_columns(): void
+    {
+        $anchors = HineInstrument::clinicalAnchors();
+
+        $this->assertSame([
+            3 => 'Manos abiertas',
+            1 => 'Intermitente pulgar aducto o manos cerradas',
+            0 => 'Persistente pulgar aducto o manos cerradas',
+        ], $anchors['hands']);
+        $this->assertArrayNotHasKey(2, $anchors['hands']);
+
+        $this->assertSame([
+            3 => 'En sedestación: capacidad para mantenerse sentado con la espalda recta o ligeramente inclinada (sedestación con las piernas estiradas). En supino y bipedestación: piernas en posición neutra rectas o ligeramente dobladas.',
+            2 => 'En supino y bipedestación: ligera rotación interna o rotación externa.',
+            1 => 'En sedestación: capacidad para mantenerse sentado con la espalda recta pero las rodillas flexionadas 15-20%. En supino y bipedestación: rotación interna o rotación externa de caderas.',
+            0 => 'En sedestación: incapacidad para mantenerse sentado a menos que las rodillas queden marcadamente flexionadas (no mantiene la sedestación con las piernas estiradas). En supino y bipedestación: marcada rotación interna o rotación externa o extensión o flexión fija o contracturas en caderas y rodillas.',
+        ], $anchors['legs']);
+
+        $this->assertSame([
+            3 => 'Centrados en posición neutra. Dedos de los pies rectos, entre flexión y extensión.',
+            1 => 'Ligera rotación interna o rotación externa. Intermitente tendencia a mantenerse de puntillas o a extender o flexionar los dedos.',
+            0 => 'Marcada rotación interna o rotación externa de tobillo. Persistente tendencia a mantenerse de puntillas o a extender o flexionar los dedos.',
+        ], $anchors['feet']);
+        $this->assertArrayNotHasKey(2, $anchors['feet']);
+    }
+
     public function test_every_visual_reference_has_a_real_public_asset(): void
     {
         foreach (HineInstrument::visualReferenceMap() as $image) {
