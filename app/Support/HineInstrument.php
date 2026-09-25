@@ -209,5 +209,26 @@ final class HineInstrument
         ];
     }
 
+
+    public static function interpretationAid(): array
+    {
+        return [
+            'global_score_ranges' => [
+                ['operator' => '<', 'value' => 40, 'label' => '<40'],
+                ['operator' => 'between', 'minimum' => 40, 'maximum' => 60, 'label' => '40–60'],
+                ['operator' => '>', 'value' => 60, 'label' => '>60'],
+            ],
+            'asymmetry_attention_threshold' => 4,
+            'high_risk_cutoffs_by_age_months' => [
+                3 => 56,
+                6 => 59,
+                9 => 62,
+                12 => 65,
+            ],
+            'note' => 'Apoyo para la interpretación. Las puntuaciones de corte son una referencia del material proporcionado y no constituyen por sí solas un diagnóstico.',
+            'age_rule' => 'Sólo se muestran los puntos de corte explícitos para 3, 6, 9 y 12 meses; no se interpolan edades intermedias.',
+        ];
+    }
+
     private function __construct() {}
 }
