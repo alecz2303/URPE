@@ -36,4 +36,23 @@ class HineInstrumentTest extends TestCase
         $this->assertTrue($sections['reflexes_reactions']['items'][0]['visual']);
         $this->assertTrue(HineInstrument::motorMilestones()[1]['visual']);
     }
+    public function test_source_anchors_do_not_invent_half_point_descriptions(): void
+    {
+        $anchors = HineInstrument::clinicalAnchors();
+
+        $this->assertSame('Sonríe o reacciona a los estímulos cerrando los ojos y haciendo muecas', $anchors['facial_appearance'][3]);
+        $this->assertArrayNotHasKey('0.5', $anchors['facial_appearance']);
+        $this->assertArrayNotHasKey('1.5', $anchors['facial_appearance']);
+        $this->assertArrayNotHasKey('2.5', $anchors['facial_appearance']);
+        $this->assertArrayNotHasKey(2, $anchors['facial_appearance']);
+    }
+
+    public function test_behavior_options_are_preserved_without_converting_them_to_neurological_scores(): void
+    {
+        $items = HineInstrument::behaviorItems();
+
+        $this->assertSame('Mantiene el interés', $items[0]['options'][5]);
+        $this->assertSame('Contento y sonriente', $items[1]['options'][4]);
+        $this->assertSame('Amistoso', $items[2]['options'][3]);
+    }
 }
