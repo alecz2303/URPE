@@ -6,6 +6,9 @@
         @can('clinical_records.view')
             <a href="{{ route('clinical-records.show', $patient) }}" class="rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-bold text-violet-800 shadow-sm hover:bg-violet-100">Expediente clínico</a>
         @endcan
+        @can('clinical_assessments.view')
+            <a href="{{ route('patients.hine-assessments.index', $patient) }}" class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-bold text-emerald-800 shadow-sm hover:bg-emerald-100">Evaluaciones</a>
+        @endcan
         @can('patients.manage')
             <a href="{{ route('patients.edit', $patient) }}" class="rounded-xl bg-gradient-to-r from-cyan-600 to-sky-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:from-cyan-700 hover:to-sky-700">Editar paciente</a>
         @endcan
