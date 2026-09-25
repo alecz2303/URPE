@@ -87,6 +87,22 @@ class HineInstrumentTest extends TestCase
             $this->assertMatchesRegularExpression('/^[a-z0-9_]+\\.png$/', $image);
         }
     }
+    public function test_source_anchor_columns_preserve_blank_cells_and_verified_ranges(): void
+    {
+        $anchors = HineInstrument::clinicalAnchors();
+
+        $this->assertSame('Ligera rotación interna o rotación externa.', $anchors['legs'][2]);
+        $this->assertArrayNotHasKey(2, $anchors['feet']);
+        $this->assertSame('150-160°', $anchors['hip_adductors'][2]);
+        $this->assertSame('~90° o >170°', $anchors['popliteal_angle'][1]);
+        $this->assertSame('<20° o 90°', $anchors['ankle_dorsiflexion'][1]);
+
+        $this->assertArrayNotHasKey(2, $anchors['pronation_supination']);
+        $this->assertArrayNotHasKey(2, $anchors['arm_protection']);
+        $this->assertSame('Brazo semiflexionado', $anchors['arm_protection'][1]);
+        $this->assertSame('Brazo completamente flexionado', $anchors['arm_protection'][0]);
+    }
+
     public function test_every_visual_reference_has_a_real_public_asset(): void
     {
         foreach (HineInstrument::visualReferenceMap() as $image) {
