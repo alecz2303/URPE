@@ -162,6 +162,7 @@ final class HineInstrument
             ],
             'passive_shoulder_elevation' => [
                 3 => 'Resistencia superable',
+                2 => 'Dificultad para vencer la resistencia',
                 1 => 'No existe resistencia',
                 0 => 'Resistencia no superable',
             ],
@@ -182,7 +183,7 @@ final class HineInstrument
             ],
             'parachute' => [
                 3 => '(después de los 6 meses)',
-                0 => '(después de los 6 meses)',
+                1 => '(después de los 6 meses)',
             ],
             'tendon_reflexes' => [
                 3 => 'Se obtienen con facilidad · bíceps · rodilla · tobillo',
