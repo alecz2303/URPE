@@ -159,10 +159,10 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td class="border-r border-slate-300 px-3 py-3 text-center"><p class="mb-2 font-bold">Rango:</p><div class="hine-source-crop hine-scarf-3" role="img" aria-label="Signo de la bufanda, rango de puntuación 3"></div></td>
+                                                        <td class="border-r border-slate-300 px-3 py-3 text-center"><p class="mb-2 font-bold">Rango:</p><img src="{{ asset('images/hine/scarf_sign.png') }}" alt="Signo de la bufanda, referencia visual fuente" class="mx-auto h-24 w-auto max-w-full object-contain"></td>
                                                         <td class="border-r border-slate-300"></td>
-                                                        <td class="border-r border-slate-300 px-3 py-3"><div class="hine-source-crop hine-scarf-1" role="img" aria-label="Signo de la bufanda, puntuación 1"></div></td>
-                                                        <td class="px-3 py-3"><div class="hine-source-crop hine-scarf-0" role="img" aria-label="Signo de la bufanda, puntuación 0"></div></td>
+                                                        <td class="border-r border-slate-300 px-3 py-3"><img src="{{ asset('images/hine/scarf_sign.png') }}" alt="Signo de la bufanda, referencia visual fuente" class="mx-auto h-24 w-auto max-w-full object-contain"></td>
+                                                        <td class="px-3 py-3"><img src="{{ asset('images/hine/scarf_sign.png') }}" alt="Signo de la bufanda, referencia visual fuente" class="mx-auto h-24 w-auto max-w-full object-contain"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
