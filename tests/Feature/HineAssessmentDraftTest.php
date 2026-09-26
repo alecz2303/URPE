@@ -196,6 +196,9 @@ class HineAssessmentDraftTest extends TestCase
         $response->assertSee('Ilustración fuente: puntuación 3');
         $response->assertSee('Ilustración fuente: puntuación 1');
         $response->assertSee('Paracaídas');
+        $response->assertSee('Pull to sit');
+        $response->assertSee('Suspensión ventral');
+        $response->assertSee('Referencia visual compuesta de la fuente. Las posiciones individuales se conservan según las columnas indicadas arriba.');
         $response->assertSee('arm_protection_score_3.png');
         $response->assertSee('arm_protection_score_1.png');
         $response->assertSee('arm_protection_score_0.png');
