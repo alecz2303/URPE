@@ -214,6 +214,12 @@
                                         @if(in_array($item['key'], $scoreVisualItems, true))
                                             @php($visualColumns = \App\Support\HineInstrument::visualScoreColumns()[$item['key']] ?? [])
                                             @php($individualVisuals = [
+                                                'passive_shoulder_elevation' => [3 => 'passive_shoulder_elevation_score_3.png', 1 => 'passive_shoulder_elevation_score_1.png', 0 => 'passive_shoulder_elevation_score_0.png'],
+                                                'hip_adductors' => [3 => 'hip_adductors_score_3.png', 2 => 'hip_adductors_score_2.png', 1 => 'hip_adductors_score_1.png', 0 => 'hip_adductors_score_0.png'],
+                                                'popliteal_angle' => [3 => 'popliteal_angle_score_3.png', 2 => 'popliteal_angle_score_2.png', 1 => 'popliteal_angle_score_1.png', 0 => 'popliteal_angle_score_0.png'],
+                                                'ankle_dorsiflexion' => [3 => 'ankle_dorsiflexion_score_3.png', 2 => 'ankle_dorsiflexion_score_2.png', 1 => 'ankle_dorsiflexion_score_1.png', 0 => 'ankle_dorsiflexion_score_0.png'],
+                                                'pull_to_sit' => [3 => 'pull_to_sit_score_3.png', 1 => 'pull_to_sit_score_1.png', 0 => 'pull_to_sit_score_0.png'],
+                                                'ventral_suspension' => [3 => 'ventral_suspension_score_3.png', 1 => 'ventral_suspension_score_1.png', 0 => 'ventral_suspension_score_0.png'],
                                                 'arm_protection' => [3 => 'arm_protection_score_3.png', 1 => 'arm_protection_score_1.png', 0 => 'arm_protection_score_0.png'],
                                                 'vertical_suspension' => [3 => 'vertical_suspension_score_3.png', 1 => 'vertical_suspension_score_1.png', 0 => 'vertical_suspension_score_0.png'],
                                                 'lateral_suspension' => [3 => 'lateral_suspension_score_3.png', 2 => 'lateral_suspension_score_2.png', 1 => 'lateral_suspension_score_1.png', 0 => 'lateral_suspension_score_0.png'],
@@ -238,8 +244,6 @@
                                                                     @endif
                                                                     @if(isset($individualVisuals[$item['key']][$sourceScore]))
                                                                         <img src="{{ asset('images/hine/'.$individualVisuals[$item['key']][$sourceScore]) }}" alt="Referencia visual HINE: {{ $item['label'] }}, puntuación {{ $sourceScore }}" class="mx-auto mt-2 max-h-36 w-auto max-w-full object-contain" loading="lazy" decoding="async">
-                                                                    @elseif(in_array($sourceScore, $visualColumns, true))
-                                                                        <p class="mt-2 text-[11px] font-semibold text-cyan-800">Ilustración fuente: puntuación {{ $sourceScore }}</p>
                                                                     @endif
                                                                 </td>
                                                             @endforeach
