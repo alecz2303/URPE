@@ -210,11 +210,12 @@
                                             <p class="border-t border-slate-200 bg-cyan-50/50 px-3 py-2 text-[11px] font-semibold text-cyan-800">Referencia visual y criterios organizados según la proforma HINE fuente.</p>
                                         </div>
                                     @else
-                                        @php($scoreVisualItems = ['passive_shoulder_elevation', 'hip_adductors', 'popliteal_angle', 'ankle_dorsiflexion', 'arm_protection', 'lateral_suspension', 'parachute'])
+                                        @php($scoreVisualItems = ['passive_shoulder_elevation', 'hip_adductors', 'popliteal_angle', 'ankle_dorsiflexion', 'arm_protection', 'vertical_suspension', 'lateral_suspension', 'parachute'])
                                         @if(in_array($item['key'], $scoreVisualItems, true))
                                             @php($visualColumns = \App\Support\HineInstrument::visualScoreColumns()[$item['key']] ?? [])
                                             @php($individualVisuals = [
                                                 'arm_protection' => [3 => 'arm_protection_score_3.png', 1 => 'arm_protection_score_1.png', 0 => 'arm_protection_score_0.png'],
+                                                'vertical_suspension' => [3 => 'vertical_suspension_score_3.png', 1 => 'vertical_suspension_score_1.png', 0 => 'vertical_suspension_score_0.png'],
                                                 'lateral_suspension' => [3 => 'lateral_suspension_score_3.png', 2 => 'lateral_suspension_score_2.png', 1 => 'lateral_suspension_score_1.png', 0 => 'lateral_suspension_score_0.png'],
                                                 'parachute' => [3 => 'parachute_score_3.png', 1 => 'parachute_score_1.png'],
                                             ])
