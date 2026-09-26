@@ -255,7 +255,11 @@ class HineInstrumentTest extends TestCase
         $this->assertSame([3, 2, 1, 0], $columns['hip_adductors']);
         $this->assertSame([3, 2, 1, 0], $columns['popliteal_angle']);
         $this->assertSame([3, 2, 1, 0], $columns['ankle_dorsiflexion']);
+        $this->assertSame([3, 1, 0], $columns['legs']);
+        $this->assertSame([3, 1, 0], $columns['pull_to_sit']);
+        $this->assertSame([3, 1, 0], $columns['ventral_suspension']);
         $this->assertSame([3, 1, 0], $columns['arm_protection']);
+        $this->assertSame([3, 1, 0], $columns['vertical_suspension']);
         $this->assertSame([3, 2, 1, 0], $columns['lateral_suspension']);
         $this->assertSame([3, 1], $columns['parachute']);
 
