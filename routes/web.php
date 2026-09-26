@@ -12,6 +12,7 @@ use App\Http\Controllers\ClinicalSessionIndexController;
 use App\Http\Controllers\ClinicalSessionLogAmendmentController;
 use App\Http\Controllers\ClinicalSessionLogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HineAssessmentController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatientSessionLogController;
 use App\Http\Controllers\ReportController;
@@ -112,6 +113,14 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
         ->name('clinical-record-files.destroy');
     Route::get('/pacientes/{patient}/bitacoras', PatientSessionLogController::class)
         ->name('session-logs.patient-history');
+
+    Route::get('/pacientes/{patient}/evaluaciones/hine', [HineAssessmentController::class, 'index'])->name('patients.hine-assessments.index');
+    Route::get('/pacientes/{patient}/evaluaciones/hine/crear', [HineAssessmentController::class, 'create'])->name('patients.hine-assessments.create');
+    Route::post('/pacientes/{patient}/evaluaciones/hine', [HineAssessmentController::class, 'store'])->name('patients.hine-assessments.store');
+    Route::get('/pacientes/{patient}/evaluaciones/hine/{assessment}', [HineAssessmentController::class, 'show'])->name('patients.hine-assessments.show');
+    Route::get('/pacientes/{patient}/evaluaciones/hine/{assessment}/editar', [HineAssessmentController::class, 'edit'])->name('patients.hine-assessments.edit');
+    Route::put('/pacientes/{patient}/evaluaciones/hine/{assessment}', [HineAssessmentController::class, 'update'])->name('patients.hine-assessments.update');
+    Route::post('/pacientes/{patient}/evaluaciones/hine/{assessment}/finalizar', [HineAssessmentController::class, 'finalize'])->name('patients.hine-assessments.finalize');
 
     Route::get('/archivos-clinicos/{clinicalFile}/descargar', [ClinicalFileController::class, 'download'])
         ->name('clinical-files.download');

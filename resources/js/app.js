@@ -94,3 +94,78 @@ if (backToTopButton) {
     window.addEventListener('scroll', updateBackToTop, { passive: true });
     window.addEventListener('resize', updateBackToTop, { passive: true });
 }
+
+
+const hineWizard = document.querySelector('[data-hine-wizard]');
+
+if (hineWizard) {
+    let currentStep = Number.parseInt(hineWizard.dataset.hineInitialStep || '0', 10);
+    const returnStep = hineWizard.querySelector('[data-hine-return-step]');
+    const steps = [...hineWizard.querySelectorAll('[data-hine-step]')];
+    const navigation = [...hineWizard.querySelectorAll('[data-hine-go]')];
+
+    const renderHineStep = () => {
+        steps.forEach((panel) => {
+            panel.hidden = Number(panel.dataset.hineStep) !== currentStep;
+        });
+
+        navigation.forEach((button) => {
+            const active = Number(button.dataset.hineGo) === currentStep;
+            const activeClasses = (button.dataset.hineActiveClass || '').split(' ').filter(Boolean);
+            const inactiveClasses = (button.dataset.hineInactiveClass || '').split(' ').filter(Boolean);
+            button.classList.remove(...activeClasses, ...inactiveClasses);
+            button.classList.add(...(active ? activeClasses : inactiveClasses));
+            button.setAttribute('aria-current', active ? 'step' : 'false');
+        });
+    };
+
+    const goToHineStep = (step) => {
+        const requested = Number(step);
+        if (!Number.isInteger(requested) || !steps.some((panel) => Number(panel.dataset.hineStep) === requested)) return;
+        currentStep = requested;
+        if (returnStep) returnStep.value = String(currentStep);
+        renderHineStep();
+        window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+    };
+
+    navigation.forEach((button) => button.addEventListener('click', () => goToHineStep(button.dataset.hineGo)));
+    hineWizard.querySelectorAll('[data-hine-prev]').forEach((button) => button.addEventListener('click', () => goToHineStep(currentStep - 1)));
+    hineWizard.querySelectorAll('[data-hine-next]').forEach((button) => button.addEventListener('click', () => goToHineStep(currentStep + 1)));
+
+    if (returnStep) returnStep.value = String(currentStep);
+    renderHineStep();
+}
+
+
+const hineScoreForm = document.querySelector('[data-hine-wizard]');
+
+if (hineScoreForm) {
+    const liveScore = hineScoreForm.querySelector('[data-hine-live-score]');
+    const liveAsymmetries = hineScoreForm.querySelector('[data-hine-live-asymmetries]');
+    const scoreLabel = hineScoreForm.querySelector('[data-hine-score-label]');
+    const provisional = hineScoreForm.querySelector('[data-hine-provisional]');
+    let dirty = false;
+
+    const refreshHineSummary = () => {
+        const checkedScores = [...hineScoreForm.querySelectorAll('input[type="radio"][name^="responses["][name$="[score]"]:checked')];
+        const checkedAsymmetries = [...hineScoreForm.querySelectorAll('input[type="checkbox"][name^="responses["][name$="[asymmetry]"]:checked')];
+
+        const total = checkedScores.reduce((sum, input) => sum + Number.parseFloat(input.value || '0'), 0);
+
+        if (liveScore) liveScore.textContent = total.toFixed(1);
+        if (liveAsymmetries) liveAsymmetries.textContent = String(checkedAsymmetries.length);
+
+        if (dirty) {
+            if (scoreLabel) scoreLabel.textContent = 'Puntuación provisional';
+            provisional?.classList.remove('hidden');
+        }
+    };
+
+    hineScoreForm.addEventListener('change', (event) => {
+        if (!event.target.matches('input[type="radio"][name^="responses["][name$="[score]"], input[type="checkbox"][name^="responses["][name$="[asymmetry]"]')) return;
+        dirty = true;
+        refreshHineSummary();
+    });
+
+    refreshHineSummary();
+}
