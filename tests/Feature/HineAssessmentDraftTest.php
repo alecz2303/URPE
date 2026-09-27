@@ -567,12 +567,31 @@ class HineAssessmentDraftTest extends TestCase
         ]);
         $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
 
+        $this->actingAs($user)->put(route('patients.hine-assessments.update', [$patient, $assessment]), [
+            'responses' => [
+                'facial_appearance' => ['score' => 2.5, 'comments' => 'Respuesta de prueba imprimible'],
+            ],
+            'motor' => [
+                'head_control' => ['observed' => 'Mantiene la posición erguida', 'acquisition_age' => '5 meses'],
+            ],
+            'behavior' => [
+                'consciousness' => ['option' => 5],
+            ],
+        ])->assertRedirect();
+
         $this->actingAs($user)
             ->get(route('patients.hine-assessments.print', [$patient, $assessment]))
             ->assertOk()
             ->assertSee('URPE · Evaluación HINE')
             ->assertSee('Imprimir / Guardar como PDF')
-            ->assertSee('Resumen neurológico')
+            ->assertSee('Resumen visual neurológico')
+            ->assertSee('2.5')
+            ->assertSee('Respuesta de prueba imprimible')
+            ->assertSee('Mantiene la posición erguida')
+            ->assertSee('5 meses')
+            ->assertSee('Mantiene el interés')
+            ->assertSee('print-gauge-cranial', false)
+            ->assertSee('print-radar', false)
             ->assertSee('1. Examen neurológico')
             ->assertSee('2. Hitos motores')
             ->assertSee('3. Comportamiento')
