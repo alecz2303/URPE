@@ -196,16 +196,14 @@
 
                 if (isCompleting) {
                     event.preventDefault();
-                    const confirmed = window.Swal
-                        ? await Swal.fire({
-                            icon: 'question',
-                            title: '¿Completar sesión?',
-                            text: 'La sesión quedará cerrada para edición. Cualquier corrección posterior deberá registrarse mediante una enmienda.',
-                            showCancelButton: true,
-                            confirmButtonText: 'Sí, completar sesión',
-                            cancelButtonText: 'Seguir capturando',
-                        }).then(result => result.isConfirmed)
-                        : window.confirm('¿Completar sesión? Después solo podrá corregirse mediante una enmienda.');
+                    const confirmed = await Swal.fire({
+                        icon: 'question',
+                        title: '¿Completar sesión?',
+                        text: 'La sesión quedará cerrada para edición. Cualquier corrección posterior deberá registrarse mediante una enmienda.',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, completar sesión',
+                        cancelButtonText: 'Seguir capturando',
+                    }).then(result => result.isConfirmed);
 
                     if (! confirmed) return;
 
