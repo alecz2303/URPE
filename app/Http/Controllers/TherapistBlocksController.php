@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Therapist;
+use App\Models\TherapistBlock;
 use App\Services\AuditTrail;
 use App\Services\TherapistAvailability;
 use Carbon\CarbonImmutable;
@@ -58,5 +59,21 @@ class TherapistBlocksController extends Controller
 
         return redirect()->route('therapists.blocks.index', $therapist)
             ->with('status', 'Bloqueo registrado correctamente.');
+    }
+    public function destroy(
+        Request $request,
+        Therapist $therapist,
+        TherapistBlock $block,
+        TherapistAvailability $availability,
+        AuditTrail $audit,
+    ): RedirectResponse {
+        $this->authorize('therapists.manage');
+
+        abort_unless($block->therapist_id === $therapist->id, 404);
+
+        $availability->removeBlock($therapist, $block, $request->user(), $audit);
+
+        return redirect()->route('therapists.blocks.index', $therapist)
+            ->with('status', 'Bloqueo eliminado correctamente.');
     }
 }
