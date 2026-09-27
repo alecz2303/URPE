@@ -18,6 +18,16 @@
         };
         $navFilters = array_filter($filters, fn ($value) => $value !== '' && $value !== 0);
         $routeParams = fn (array $params = []) => array_merge($navFilters, $params);
+        $periodTitle = match ($mode) {
+            'month' => ucfirst($date->translatedFormat('F Y')),
+            'week' => $rangeStart->year !== $rangeEnd->year
+                ? ucfirst($rangeStart->translatedFormat('d \\d\\e F \\d\\e Y').' – '.$rangeEnd->translatedFormat('d \\d\\e F \\d\\e Y'))
+                : ($rangeStart->month !== $rangeEnd->month
+                    ? ucfirst($rangeStart->translatedFormat('d \\d\\e F').' – '.$rangeEnd->translatedFormat('d \\d\\e F \\d\\e Y'))
+                    : ucfirst($rangeStart->format('d').'–'.$rangeEnd->translatedFormat('d \\d\\e F \\d\\e Y'))),
+            default => ucfirst($date->translatedFormat('l d \\d\\e F \\d\\e Y')),
+        };
+
         $statusClasses = fn ($appointment) => match ($appointment->status) {
             \App\Models\Appointment::STATUS_CONFIRMED => 'bg-cyan-100 text-cyan-800',
             \App\Models\Appointment::STATUS_IN_PROGRESS => 'bg-violet-100 text-violet-800',
@@ -213,7 +223,12 @@
             </div>
         </section>
     @elseif($mode === 'week')
-        <section class="overflow-x-auto rounded-3xl border border-cyan-100 bg-white shadow-sm">
+        <section class="overflow-hidden rounded-3xl border border-cyan-100 bg-white shadow-sm">
+            <div class="border-b border-cyan-100 bg-cyan-50/60 px-5 py-4">
+                <p class="text-xs font-extrabold uppercase tracking-[0.16em] text-cyan-700">Vista semanal</p>
+                <h2 data-testid="agenda-period-title" class="mt-1 text-xl font-extrabold text-slate-950">{{ $periodTitle }}</h2>
+            </div>
+            <div class="overflow-x-auto">
             <div class="grid min-w-[980px] grid-cols-7 divide-x divide-cyan-50">
                 @foreach($weekDays as $weekDay)
                     @php($dayAppointments = $appointments->filter(fn ($appointment) => $appointment->starts_at->isSameDay($weekDay)))
@@ -236,6 +251,18 @@
                                     <p class="mt-1 truncate text-xs font-bold" style="color: {{ $appointment->therapy->color ?: '#0891b2' }}">{{ $appointment->therapy->name }}</p>
                                     <p class="mt-2 line-clamp-2 text-[11px] font-medium text-slate-400">{{ $appointment->therapists->pluck('name')->implode(', ') }}</p>
                                     <div class="mt-3 flex flex-wrap gap-2">
+                                        <button type="button"
+                                                    data-appointment-quick-view
+                                                    data-patient="{{ $appointment->patient->full_name }}"
+                                                    data-date="{{ $appointment->starts_at->translatedFormat('l d \\d\\e F \\d\\e Y') }}"
+                                                    data-time="{{ $appointment->starts_at->format('H:i') }}–{{ $appointment->ends_at->format('H:i') }}"
+                                                    data-therapy="{{ $appointment->therapy->name }}"
+                                                    data-therapists="{{ $appointment->therapists->pluck('name')->implode(', ') }}"
+                                                    data-status="{{ $appointment->statusLabel() }}"
+                                                    data-edit-url="@can('appointments.manage'){{ $appointment->allowsScheduleChanges() ? route('appointments.edit', $appointment) : '' }}@endcan"
+                                                    data-session-url="{{ $sessionAction['url'] ?? '' }}"
+                                                    data-session-label="{{ $sessionAction['label'] ?? '' }}"
+                                                    class="inline-flex cursor-pointer text-xs font-bold text-slate-700 hover:text-slate-950">Vista rápida</button>
                                         @if($sessionAction)
                                             <a data-testid="appointment-session-log-action-week" href="{{ $sessionAction['url'] }}" class="inline-flex text-xs font-bold {{ $sessionAction['completed'] ? 'text-emerald-700' : 'text-violet-700' }}">{{ $sessionAction['label'] }}</a>
                                         @endif
@@ -253,9 +280,15 @@
                     </div>
                 @endforeach
             </div>
+            </div>
         </section>
     @else
-        <section class="overflow-x-auto rounded-3xl border border-violet-100 bg-white shadow-sm">
+        <section class="overflow-hidden rounded-3xl border border-violet-100 bg-white shadow-sm">
+            <div class="border-b border-violet-100 bg-violet-50/60 px-5 py-4">
+                <p class="text-xs font-extrabold uppercase tracking-[0.16em] text-violet-600">Vista mensual</p>
+                <h2 data-testid="agenda-period-title" class="mt-1 text-xl font-extrabold text-slate-950">{{ $periodTitle }}</h2>
+            </div>
+            <div class="overflow-x-auto">
             <div class="min-w-[900px]">
                 <div class="grid grid-cols-7 border-b border-violet-100 bg-gradient-to-r from-violet-50 via-pink-50 to-amber-50">
                     @foreach(['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'] as $dayLabel)
@@ -281,6 +314,18 @@
                                         <div class="mt-1 flex items-center justify-between gap-2">
                                             <span class="rounded-full px-1.5 py-0.5 text-[8px] font-bold {{ $statusClasses($appointment) }}">{{ $appointment->statusLabel() }}</span>
                                             <div class="flex flex-wrap gap-2">
+                                                <button type="button"
+                                                    data-appointment-quick-view
+                                                    data-patient="{{ $appointment->patient->full_name }}"
+                                                    data-date="{{ $appointment->starts_at->translatedFormat('l d \\d\\e F \\d\\e Y') }}"
+                                                    data-time="{{ $appointment->starts_at->format('H:i') }}–{{ $appointment->ends_at->format('H:i') }}"
+                                                    data-therapy="{{ $appointment->therapy->name }}"
+                                                    data-therapists="{{ $appointment->therapists->pluck('name')->implode(', ') }}"
+                                                    data-status="{{ $appointment->statusLabel() }}"
+                                                    data-edit-url="@can('appointments.manage'){{ $appointment->allowsScheduleChanges() ? route('appointments.edit', $appointment) : '' }}@endcan"
+                                                    data-session-url="{{ $sessionAction['url'] ?? '' }}"
+                                                    data-session-label="{{ $sessionAction['label'] ?? '' }}"
+                                                    class="inline-flex cursor-pointer text-[10px] font-bold text-slate-700 hover:text-slate-950">Vista rápida</button>
                                                 @if($sessionAction)
                                                     <a data-testid="appointment-session-log-action-month" href="{{ $sessionAction['url'] }}" class="text-[10px] font-bold {{ $sessionAction['completed'] ? 'text-emerald-700' : 'text-violet-700' }}">{{ $sessionAction['label'] }}</a>
                                                 @endif
@@ -301,6 +346,74 @@
                     @endforeach
                 </div>
             </div>
+            </div>
         </section>
     @endif
+
+    <div id="appointment-quick-view-modal" data-testid="appointment-quick-view-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 p-4" role="dialog" aria-modal="true" aria-labelledby="appointment-quick-view-title">
+        <div class="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-xs font-extrabold uppercase tracking-[0.16em] text-cyan-700">Vista rápida</p>
+                    <h2 id="appointment-quick-view-title" class="mt-1 text-xl font-extrabold text-slate-950" data-quick-view-field="patient"></h2>
+                </div>
+                <button type="button" data-quick-view-close class="grid h-9 w-9 place-items-center rounded-xl bg-slate-100 text-lg font-bold text-slate-600 hover:bg-slate-200" aria-label="Cerrar vista rápida">×</button>
+            </div>
+            <dl class="mt-5 grid gap-4 sm:grid-cols-2">
+                <div><dt class="text-xs font-bold uppercase text-slate-400">Fecha</dt><dd class="mt-1 text-sm font-semibold text-slate-800" data-quick-view-field="date"></dd></div>
+                <div><dt class="text-xs font-bold uppercase text-slate-400">Horario</dt><dd class="mt-1 text-sm font-semibold text-slate-800" data-quick-view-field="time"></dd></div>
+                <div><dt class="text-xs font-bold uppercase text-slate-400">Terapia</dt><dd class="mt-1 text-sm font-semibold text-slate-800" data-quick-view-field="therapy"></dd></div>
+                <div><dt class="text-xs font-bold uppercase text-slate-400">Estado</dt><dd class="mt-1 text-sm font-semibold text-slate-800" data-quick-view-field="status"></dd></div>
+                <div class="sm:col-span-2"><dt class="text-xs font-bold uppercase text-slate-400">Terapeuta(s)</dt><dd class="mt-1 text-sm font-semibold text-slate-800" data-quick-view-field="therapists"></dd></div>
+            </dl>
+            <div class="mt-6 flex flex-wrap justify-end gap-2">
+                <a href="#" data-quick-view-action="session" class="hidden rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-bold text-white hover:bg-violet-700"></a>
+                <a href="#" data-quick-view-action="edit" class="hidden rounded-xl bg-cyan-50 px-4 py-2.5 text-sm font-bold text-cyan-700 hover:bg-cyan-100">Editar</a>
+                <button type="button" data-quick-view-close class="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-50">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const modal = document.getElementById('appointment-quick-view-modal');
+            if (!modal) return;
+
+            const fields = Object.fromEntries(
+                [...modal.querySelectorAll('[data-quick-view-field]')].map((element) => [element.dataset.quickViewField, element])
+            );
+            const editAction = modal.querySelector('[data-quick-view-action="edit"]');
+            const sessionAction = modal.querySelector('[data-quick-view-action="session"]');
+            let trigger = null;
+
+            const close = () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                trigger?.focus();
+            };
+
+            document.querySelectorAll('[data-appointment-quick-view]').forEach((button) => {
+                button.addEventListener('click', () => {
+                    trigger = button;
+                    ['patient', 'date', 'time', 'therapy', 'therapists', 'status'].forEach((key) => {
+                        fields[key].textContent = button.dataset[key] || '—';
+                    });
+
+                    editAction.href = button.dataset.editUrl || '#';
+                    editAction.classList.toggle('hidden', !button.dataset.editUrl);
+                    sessionAction.href = button.dataset.sessionUrl || '#';
+                    sessionAction.textContent = button.dataset.sessionLabel || '';
+                    sessionAction.classList.toggle('hidden', !button.dataset.sessionUrl);
+
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    modal.querySelector('[data-quick-view-close]')?.focus();
+                });
+            });
+
+            modal.querySelectorAll('[data-quick-view-close]').forEach((button) => button.addEventListener('click', close));
+            modal.addEventListener('click', (event) => { if (event.target === modal) close(); });
+            document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !modal.classList.contains('hidden')) close(); });
+        })();
+    </script>
 </x-app-shell>

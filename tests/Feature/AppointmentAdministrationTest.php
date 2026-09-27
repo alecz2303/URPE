@@ -46,6 +46,47 @@ class AppointmentAdministrationTest extends TestCase
         }
     }
 
+    public function test_week_and_month_agenda_show_explicit_period_context(): void
+    {
+        $user = $this->administrator();
+
+        $this->actingAs($user)
+            ->get(route('appointments.index', ['view' => 'week', 'date' => '2026-09-30']))
+            ->assertOk()
+            ->assertSee('28 de septiembre – 04 de octubre de 2026')
+            ->assertSee('data-testid="agenda-period-title"', false);
+
+        $this->actingAs($user)
+            ->get(route('appointments.index', ['view' => 'month', 'date' => '2026-09-30']))
+            ->assertOk()
+            ->assertSee('Septiembre 2026')
+            ->assertSee('data-testid="agenda-period-title"', false);
+    }
+
+    public function test_week_and_month_agenda_expose_quick_view_without_leaking_manage_action(): void
+    {
+        [$administrator, $patient, $therapy, $therapist] = $this->baseline();
+        $appointment = $this->createAppointment($administrator, $patient, $therapy, $therapist, '2026-09-07T10:00');
+
+        $viewOnlyUser = $this->viewOnlyUser();
+
+        foreach (['week', 'month'] as $view) {
+            $this->actingAs($administrator)
+                ->get(route('appointments.index', ['view' => $view, 'date' => '2026-09-07']))
+                ->assertOk()
+                ->assertSee('Vista rápida')
+                ->assertSee('data-appointment-quick-view', false)
+                ->assertSee('data-testid="appointment-quick-view-modal"', false)
+                ->assertSee('data-edit-url="'.route('appointments.edit', $appointment).'"', false);
+
+            $this->actingAs($viewOnlyUser)
+                ->get(route('appointments.index', ['view' => $view, 'date' => '2026-09-07']))
+                ->assertOk()
+                ->assertSee('Vista rápida')
+                ->assertSee('data-edit-url=""', false);
+        }
+    }
+
     public function test_dashboard_exposes_agenda_only_with_view_permission(): void
     {
         $authorized = $this->administrator();
