@@ -205,7 +205,6 @@
                     <h3 class="mt-1 text-lg font-black text-slate-900">Resultado neurológico HINE</h3>
                     <p class="mt-1 text-sm text-slate-500">Los porcentajes visuales comparan cada sección únicamente contra su propio máximo; no modifican ni sustituyen la puntuación HINE.</p>
                 </div>
-                <div class="rounded-2xl bg-violet-50 px-5 py-3 text-right ring-1 ring-violet-100"><p class="text-xs font-bold uppercase text-violet-600">Puntuación global</p><p class="text-3xl font-black text-violet-800">{{ $hine->global_score ?? '—' }} <span class="text-sm text-violet-500">/ 78</span></p></div>
             </div>
             <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
                 <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
