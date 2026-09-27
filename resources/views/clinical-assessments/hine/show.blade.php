@@ -3,9 +3,9 @@
         @if($assessment->status !== 'finalized')
             @can('clinical_assessments.manage')
                 <a href="{{ route('patients.hine-assessments.edit', [$patient, $assessment]) }}" class="rounded-xl bg-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm">Continuar captura</a>
-                <form method="POST" action="{{ route('patients.hine-assessments.finalize', [$patient, $assessment]) }}" class="inline" data-swal-confirm data-swal-icon="warning" data-swal-title="¿Finalizar evaluación HINE?" data-swal-text="Después de finalizarla quedará cerrada para edición." data-swal-confirm-text="Sí, finalizar" data-swal-confirm-text="Sí, finalizar">
+                <form id="hine-finalize-form" method="POST" action="{{ route('patients.hine-assessments.finalize', [$patient, $assessment]) }}" class="inline">
                     @csrf
-                    <button type="submit" class="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm">Finalizar evaluación</button>
+                    <button id="hine-finalize-button" type="button" class="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm">Finalizar evaluación</button>
                 </form>
             @endcan
         @endif
@@ -228,4 +228,25 @@
             </div>
         </section>
     </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const button = document.getElementById('hine-finalize-button');
+        const form = document.getElementById('hine-finalize-form');
+        if (! button || ! form) return;
+
+        button.addEventListener('click', async () => {
+            const result = await Swal.fire({
+                icon: 'warning',
+                title: '¿Finalizar evaluación HINE?',
+                text: 'Después de finalizarla quedará cerrada para edición.',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, finalizar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+            });
+
+            if (result.isConfirmed) form.submit();
+        });
+    });
+</script>
 </x-app-shell>
