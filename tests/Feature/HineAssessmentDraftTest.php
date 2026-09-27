@@ -553,7 +553,7 @@ class HineAssessmentDraftTest extends TestCase
         return $user;
     }
 
-    public function test_hine_result_has_printable_a4_view(): void
+    public function test_hine_result_has_printable_letter_view(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
         $patient = Patient::query()->create([
