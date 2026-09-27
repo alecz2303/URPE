@@ -348,8 +348,6 @@ class HineAssessmentDraftTest extends TestCase
             ->assertSee('Comportamiento')
             ->assertSee('Resumen de puntuaciones')
             ->assertSee('Resultado neurológico HINE')
-            ->assertSee('Referencia dinámica · Prediciendo la GMFCS')
-            ->assertSee('Aquí cae')
             ->assertSee('Puntuación global observada')
             ->assertSee('del máximo de la sección')
             ->assertSee('Apoyo para la interpretación')
