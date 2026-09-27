@@ -107,6 +107,25 @@ class HineAssessmentController extends Controller
         ]);
     }
 
+    public function print(Request $request, Patient $patient, ClinicalAssessment $assessment): View
+    {
+        abort_unless($request->user()->hasPermission('clinical_assessments.view'), 403);
+        $this->assertHineForPatient($patient, $assessment);
+        $assessment->load('author', 'hine.responses');
+
+        return view('clinical-assessments.hine.print', [
+            'patient' => $patient,
+            'assessment' => $assessment,
+            'hine' => $assessment->hine,
+            'sections' => HineInstrument::neurologicalSections(),
+            'anchors' => HineInstrument::clinicalAnchors(),
+            'responses' => $assessment->hine->responses->keyBy('item_key'),
+            'motorMilestones' => HineInstrument::motorMilestones(),
+            'behaviorItems' => HineInstrument::behaviorItems(),
+            'interpretation' => HineInstrument::interpretationAid(),
+        ]);
+    }
+
     public function edit(Request $request, Patient $patient, ClinicalAssessment $assessment): View
     {
         abort_unless($request->user()->hasPermission('clinical_assessments.manage'), 403);
