@@ -128,6 +128,47 @@
             </div>
         </section>
 
+        <section class="rounded-3xl border border-violet-100 bg-white p-6 shadow-sm">
+            <div class="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">Resumen de puntuaciones</p>
+                    <h3 class="mt-1 text-lg font-black text-slate-900">Resultado neurológico HINE</h3>
+                    <p class="mt-1 text-sm text-slate-500">Los porcentajes visuales comparan cada sección únicamente contra su propio máximo; no modifican ni sustituyen la puntuación HINE.</p>
+                </div>
+                <div class="rounded-2xl bg-violet-50 px-5 py-3 text-right ring-1 ring-violet-100">
+                    <p class="text-xs font-bold uppercase text-violet-600">Puntuación global</p>
+                    <p class="text-3xl font-black text-violet-800">{{ $hine->global_score ?? '—' }} <span class="text-sm text-violet-500">/ 78</span></p>
+                </div>
+            </div>
+
+            <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                @foreach($sections as $sectionKey => $section)
+                    @php($field = match($sectionKey) {'cranial_nerves'=>'cranial_nerves_score','posture'=>'posture_score','movements'=>'movements_score','tone'=>'tone_score','reflexes_reactions'=>'reflexes_reactions_score'})
+                    @php($sectionScore = $hine->{$field})
+                    @php($sectionPercent = $sectionScore !== null ? min(100, max(0, ((float) $sectionScore / $section['maximum']) * 100)) : 0)
+                    <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                        <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">{{ $section['label'] }}</p>
+                        <p class="mt-2 text-xl font-black text-slate-900">{{ $sectionScore ?? '—' }} <span class="text-xs text-slate-400">/ {{ $section['maximum'] }}</span></p>
+                        <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200" role="img" aria-label="{{ $section['label'] }}: {{ $sectionScore ?? 0 }} de {{ $section['maximum'] }}">
+                            <div class="h-full rounded-full bg-cyan-500" style="width: {{ number_format($sectionPercent, 2, '.', '') }}%"></div>
+                        </div>
+                        <p class="mt-2 text-xs font-semibold text-slate-500">{{ $sectionScore !== null ? number_format($sectionPercent, 1) : '—' }}{{ $sectionScore !== null ? '%' : '' }} del máximo de la sección</p>
+                    </div>
+                @endforeach
+            </div>
+
+            <div class="mt-5 rounded-2xl border border-violet-100 bg-violet-50/50 p-4">
+                @php($globalPercent = $hine->global_score !== null ? min(100, max(0, ((float) $hine->global_score / 78) * 100)) : 0)
+                <div class="flex items-center justify-between gap-4">
+                    <span class="text-sm font-bold text-slate-700">Puntuación global observada</span>
+                    <span class="text-sm font-black text-violet-800">{{ $hine->global_score ?? '—' }} / 78{{ $hine->global_score !== null ? ' · '.number_format($globalPercent, 1).'%' : '' }}</span>
+                </div>
+                <div class="mt-3 h-4 overflow-hidden rounded-full bg-white ring-1 ring-violet-100" role="img" aria-label="Puntuación global HINE: {{ $hine->global_score ?? 0 }} de 78">
+                    <div class="h-full rounded-full bg-violet-600" style="width: {{ number_format($globalPercent, 2, '.', '') }}%"></div>
+                </div>
+            </div>
+        </section>
+
         <section class="rounded-3xl border border-cyan-100 bg-white p-6 shadow-sm">
             <p class="text-xs font-bold uppercase tracking-[0.16em] text-cyan-700">Apoyo para la interpretación</p>
             <h3 class="mt-1 text-lg font-black text-slate-900">{{ $interpretation['source_title'] }}</h3>
