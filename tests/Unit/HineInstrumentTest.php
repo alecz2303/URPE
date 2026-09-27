@@ -161,9 +161,9 @@ class HineInstrumentTest extends TestCase
         $anchors = HineInstrument::clinicalAnchors();
 
         $this->assertSame('Responde al estímulo desde ambos lados', $anchors['auditory_response'][3]);
-        $this->assertSame('No responde al estímulo o responde asimétricamente', $anchors['auditory_response'][1]);
+        $this->assertSame('Respuesta dudosa o asimétrica', $anchors['auditory_response'][1]);
+        $this->assertSame('No responde al estímulo', $anchors['auditory_response'][0]);
         $this->assertArrayNotHasKey(2, $anchors['auditory_response']);
-        $this->assertArrayNotHasKey(0, $anchors['auditory_response']);
     }
 
     public function test_source_anchor_columns_preserve_blank_cells_and_verified_ranges(): void
