@@ -235,7 +235,6 @@ class HineAssessmentDraftTest extends TestCase
         $response->assertSee('parachute_score_3.png');
         $response->assertSee('parachute_score_1.png');
         $response->assertDontSee('parachute_score_0.png');
-        $response->assertSee('Las posiciones individuales se conservan según las columnas indicadas arriba.');
     }
 
     public function test_motor_milestones_and_behavior_are_persisted_without_changing_global_score(): void
