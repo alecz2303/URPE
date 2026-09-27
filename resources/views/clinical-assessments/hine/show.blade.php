@@ -1,6 +1,81 @@
 <x-app-shell title="Resultado HINE" eyebrow="{{ $patient->full_name }}">
     <x-slot:actions>
-        @if($assessment->status !== 'finalized')
+        <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const make = (name, attrs = {}) => {
+            const node = document.createElementNS(svgNS, name);
+            Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+            return node;
+        };
+
+        const radar = document.getElementById('hine-radar');
+        if (radar) {
+            const values = [
+                Number(@json($hine->cranial_nerves_score ?? 0)) / 15,
+                Number(@json($hine->posture_score ?? 0)) / 18,
+                Number(@json($hine->movements_score ?? 0)) / 6,
+                Number(@json($hine->tone_score ?? 0)) / 24,
+                Number(@json($hine->reflexes_reactions_score ?? 0)) / 15
+            ].map(value => Math.max(0, Math.min(1, value)));
+            const labels = ['Pares craneales', 'Postura', 'Movimientos', 'Tono', 'Reflejos'];
+            const cx = 210, cy = 190, radius = 125;
+            const point = (index, scale = 1) => {
+                const angle = (-90 + index * 72) * Math.PI / 180;
+                return [cx + Math.cos(angle) * radius * scale, cy + Math.sin(angle) * radius * scale];
+            };
+            [0.25, 0.5, 0.75, 1].forEach(scale => {
+                radar.appendChild(make('polygon', {points: values.map((_, i) => point(i, scale).join(',')).join(' '), fill: 'none', stroke: '#cbd5e1', 'stroke-width': '1'}));
+            });
+            values.forEach((_, i) => {
+                const [x, y] = point(i);
+                radar.appendChild(make('line', {x1: cx, y1: cy, x2: x, y2: y, stroke: '#cbd5e1', 'stroke-width': '1'}));
+                const [lx, ly] = point(i, 1.22);
+                const label = make('text', {x: lx, y: ly, 'text-anchor': 'middle', 'font-size': '12', 'font-weight': '700', fill: '#475569'});
+                label.textContent = labels[i];
+                radar.appendChild(label);
+            });
+            radar.appendChild(make('polygon', {points: values.map((value, i) => point(i, value).join(',')).join(' '), fill: '#06b6d4', 'fill-opacity': '.22', stroke: '#0891b2', 'stroke-width': '3'}));
+            values.forEach((value, i) => {
+                const [x, y] = point(i, value);
+                radar.appendChild(make('circle', {cx: x, cy: y, r: '5', fill: '#0891b2', stroke: '#fff', 'stroke-width': '2'}));
+            });
+        }
+
+        const gauge = document.getElementById('hine-gauge');
+        if (gauge) {
+            const score = Math.max(0, Math.min(78, Number(@json($hine->global_score ?? 0))));
+            const cx = 210, cy = 205, radius = 145;
+            const polar = value => {
+                const angle = Math.PI - (value / 78) * Math.PI;
+                return [cx + Math.cos(angle) * radius, cy - Math.sin(angle) * radius];
+            };
+            const arc = (from, to, stroke) => {
+                const [x1, y1] = polar(from), [x2, y2] = polar(to);
+                gauge.appendChild(make('path', {d: `M ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2}`, fill: 'none', stroke, 'stroke-width': '28', 'stroke-linecap': 'butt'}));
+            };
+            arc(0, 40, '#e2e8f0');
+            arc(40, 60, '#cbd5e1');
+            arc(60, 78, '#94a3b8');
+            [0, 40, 60, 78].forEach(value => {
+                const [x, y] = polar(value);
+                const t = make('text', {x, y: y + (value === 0 || value === 78 ? 22 : -12), 'text-anchor': 'middle', 'font-size': '12', 'font-weight': '800', fill: '#64748b'});
+                t.textContent = value;
+                gauge.appendChild(t);
+            });
+            const [nx, ny] = polar(score);
+            gauge.appendChild(make('line', {x1: cx, y1: cy, x2: nx, y2: ny, stroke: '#7c3aed', 'stroke-width': '5', 'stroke-linecap': 'round'}));
+            gauge.appendChild(make('circle', {cx, cy, r: '10', fill: '#7c3aed'}));
+            const value = make('text', {x: cx, y: 130, 'text-anchor': 'middle', 'font-size': '38', 'font-weight': '900', fill: '#5b21b6'});
+            value.textContent = score.toFixed(1);
+            gauge.appendChild(value);
+            const max = make('text', {x: cx, y: 153, 'text-anchor': 'middle', 'font-size': '13', 'font-weight': '700', fill: '#64748b'});
+            max.textContent = 'de 78';
+            gauge.appendChild(max);
+        }
+    });
+</script>
+@if($assessment->status !== 'finalized')
             @can('clinical_assessments.manage')
                 <a href="{{ route('patients.hine-assessments.edit', [$patient, $assessment]) }}" class="rounded-xl bg-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm">Continuar captura</a>
                 <form id="hine-finalize-form" method="POST" action="{{ route('patients.hine-assessments.finalize', [$patient, $assessment]) }}" class="inline">
@@ -173,6 +248,34 @@
                 <div class="flex items-center justify-between gap-4"><span class="text-sm font-bold text-slate-700">Puntuación global observada</span><span class="text-sm font-black text-violet-800">{{ $hine->global_score ?? '—' }} / 78</span></div>
                 <div class="mt-3 h-4 overflow-hidden rounded-full bg-white ring-1 ring-violet-100"><div class="h-full rounded-full bg-violet-600" style="width: {{ $hine->global_score !== null ? number_format(min(100, max(0, ((float) $hine->global_score / 78) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
             </div>
+        </section>
+
+        <section class="grid gap-5 lg:grid-cols-2">
+            <article class="rounded-3xl border border-cyan-100 bg-white p-6 shadow-sm">
+                <p class="text-xs font-bold uppercase tracking-[0.16em] text-cyan-700">Perfil por secciones</p>
+                <h3 class="mt-1 text-lg font-black text-slate-900">Radar HINE</h3>
+                <p class="mt-1 text-xs leading-5 text-slate-500">Cada eje se normaliza visualmente contra el máximo de su propia sección. Las puntuaciones HINE originales se muestran debajo.</p>
+                <div class="mt-4 flex justify-center">
+                    <svg id="hine-radar" viewBox="0 0 420 380" class="h-auto w-full max-w-[430px]" role="img" aria-label="Radar de las cinco secciones HINE"></svg>
+                </div>
+                <div class="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-5">
+                    <div class="rounded-xl bg-slate-50 p-2 text-center"><strong>{{ $hine->cranial_nerves_score ?? '—' }}</strong>/15<br><span class="text-slate-500">Pares craneales</span></div>
+                    <div class="rounded-xl bg-slate-50 p-2 text-center"><strong>{{ $hine->posture_score ?? '—' }}</strong>/18<br><span class="text-slate-500">Postura</span></div>
+                    <div class="rounded-xl bg-slate-50 p-2 text-center"><strong>{{ $hine->movements_score ?? '—' }}</strong>/6<br><span class="text-slate-500">Movimientos</span></div>
+                    <div class="rounded-xl bg-slate-50 p-2 text-center"><strong>{{ $hine->tone_score ?? '—' }}</strong>/24<br><span class="text-slate-500">Tono</span></div>
+                    <div class="rounded-xl bg-slate-50 p-2 text-center"><strong>{{ $hine->reflexes_reactions_score ?? '—' }}</strong>/15<br><span class="text-slate-500">Reflejos</span></div>
+                </div>
+            </article>
+
+            <article class="rounded-3xl border border-violet-100 bg-white p-6 shadow-sm">
+                <p class="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">Puntuación global</p>
+                <h3 class="mt-1 text-lg font-black text-slate-900">Gauge HINE</h3>
+                <p class="mt-1 text-xs leading-5 text-slate-500">Posición visual de la puntuación global sobre 78. Los marcadores 40 y 60 corresponden a los rangos de la referencia de interpretación.</p>
+                <div class="mt-4 flex justify-center">
+                    <svg id="hine-gauge" viewBox="0 0 420 250" class="h-auto w-full max-w-[430px]" role="img" aria-label="Gauge de puntuación global HINE"></svg>
+                </div>
+                <p class="text-center text-xs font-semibold text-slate-500">Apoyo visual; no constituye por sí solo un diagnóstico.</p>
+            </article>
         </section>
 
         <section class="rounded-3xl border border-cyan-100 bg-white p-6 shadow-sm">
