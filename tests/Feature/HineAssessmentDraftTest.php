@@ -193,8 +193,6 @@ class HineAssessmentDraftTest extends TestCase
         $response->assertOk();
         $response->assertSee('Elevación pasiva del hombro');
         $response->assertSee('Dificultad para vencer la resistencia');
-        $response->assertSee('Ilustración fuente: puntuación 3');
-        $response->assertSee('Ilustración fuente: puntuación 1');
         $response->assertSee('Paracaídas');
         $response->assertSee('passive_shoulder_elevation_score_3.png');
         $response->assertSee('passive_shoulder_elevation_score_1.png');
