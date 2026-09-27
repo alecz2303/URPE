@@ -143,9 +143,19 @@
 
             <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
                 @foreach($sections as $sectionKey => $section)
-                    @php($field = match($sectionKey) {'cranial_nerves'=>'cranial_nerves_score','posture'=>'posture_score','movements'=>'movements_score','tone'=>'tone_score','reflexes_reactions'=>'reflexes_reactions_score'})
-                    @php($sectionScore = $hine->{$field})
-                    @php($sectionPercent = $sectionScore !== null ? min(100, max(0, ((float) $sectionScore / $section['maximum']) * 100)) : 0)
+                    @php
+                        $field = match ($sectionKey) {
+                            'cranial_nerves' => 'cranial_nerves_score',
+                            'posture' => 'posture_score',
+                            'movements' => 'movements_score',
+                            'tone' => 'tone_score',
+                            'reflexes_reactions' => 'reflexes_reactions_score',
+                        };
+                        $sectionScore = $hine->{$field};
+                        $sectionPercent = $sectionScore !== null
+                            ? min(100, max(0, ((float) $sectionScore / $section['maximum']) * 100))
+                            : 0;
+                    @endphp
                     <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                         <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">{{ $section['label'] }}</p>
                         <p class="mt-2 text-xl font-black text-slate-900">{{ $sectionScore ?? '—' }} <span class="text-xs text-slate-400">/ {{ $section['maximum'] }}</span></p>
