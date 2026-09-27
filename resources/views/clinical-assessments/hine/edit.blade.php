@@ -328,21 +328,17 @@
             <div class="divide-y divide-slate-100">
                 @php($motorVisuals = [
                     'sitting' => [
-                        0 => 'motor_sitting_option_0.png',
                         1 => 'motor_sitting_option_1.png',
                         2 => 'motor_sitting_option_2.png',
                         3 => 'motor_sitting_option_3.png',
                         4 => 'motor_sitting_option_4.png',
                     ],
                     'supine_kicking' => [
-                        0 => 'motor_supine_kicking_option_0.png',
-                        1 => 'motor_supine_kicking_option_1.png',
                         2 => 'motor_supine_kicking_option_2.png',
                         3 => 'motor_supine_kicking_option_3.png',
                         4 => 'motor_supine_kicking_option_4.png',
                     ],
                     'crawling' => [
-                        0 => 'motor_crawling_option_0.png',
                         1 => 'motor_crawling_option_1.png',
                         2 => 'motor_crawling_option_2.png',
                         3 => 'motor_crawling_option_3.png',
