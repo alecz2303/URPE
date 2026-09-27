@@ -79,6 +79,7 @@
                 </form>
             @endcan
         @endif
+        <a href="{{ route('patients.hine-assessments.print', [$patient, $assessment]) }}" target="_blank" rel="noopener" class="rounded-xl border border-violet-200 bg-violet-50 px-4 py-2.5 text-sm font-bold text-violet-700">Imprimir / Guardar PDF</a>
         <a href="{{ route('patients.hine-assessments.index', $patient) }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700">Historial HINE</a>
     </x-slot:actions>
 
