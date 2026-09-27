@@ -384,13 +384,13 @@
 
                         <div class="mt-4 grid gap-3 sm:grid-cols-2">
                             <label class="text-xs font-bold uppercase tracking-wide text-slate-500">Observado
-                                <input type="text" name="motor[{{ $item['key'] }}][observed]" maxlength="500" value="{{ old('motor.'.$item['key'].'.observed', data_get($response?->response_data, 'observed')) }}" class="mt-2 w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">
+                                <input type="text" name="motor[{{ $item['key'] }}][observed]" maxlength="500" value="{{ old('motor.'.$item['key'].'.observed', data_get($response?->response_data, 'observed')) }}" class="mt-2 block min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium normal-case tracking-normal text-slate-800 shadow-sm outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100">
                             </label>
                             <label class="text-xs font-bold uppercase tracking-wide text-slate-500">Edad de adquisición
-                                <input type="text" name="motor[{{ $item['key'] }}][acquisition_age]" maxlength="100" value="{{ old('motor.'.$item['key'].'.acquisition_age', data_get($response?->response_data, 'acquisition_age')) }}" class="mt-2 w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">
+                                <input type="text" name="motor[{{ $item['key'] }}][acquisition_age]" maxlength="100" value="{{ old('motor.'.$item['key'].'.acquisition_age', data_get($response?->response_data, 'acquisition_age')) }}" class="mt-2 block min-h-12 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium normal-case tracking-normal text-slate-800 shadow-sm outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100">
                             </label>
                             <label class="text-xs font-bold uppercase tracking-wide text-slate-500 sm:col-span-2">Comentarios
-                                <textarea name="motor[{{ $item['key'] }}][comments]" rows="2" maxlength="2000" class="mt-2 w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">{{ old('motor.'.$item['key'].'.comments', $response?->comments) }}</textarea>
+                                <textarea name="motor[{{ $item['key'] }}][comments]" rows="3" maxlength="2000" class="mt-2 block min-h-24 w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium normal-case leading-6 tracking-normal text-slate-800 shadow-sm outline-none transition focus:border-cyan-500 focus:ring-4 focus:ring-cyan-100">{{ old('motor.'.$item['key'].'.comments', $response?->comments) }}</textarea>
                             </label>
                         </div>
                     </article>
