@@ -326,30 +326,67 @@
                 <p class="mt-1 text-sm text-slate-500">Registrar lo observado y la edad de adquisición. Observe las asimetrías según las indicaciones del instrumento.</p>
             </div>
             <div class="divide-y divide-slate-100">
+                @php($motorVisuals = [
+                    'sitting' => [
+                        0 => 'motor_sitting_option_0.png',
+                        1 => 'motor_sitting_option_1.png',
+                        2 => 'motor_sitting_option_2.png',
+                        3 => 'motor_sitting_option_3.png',
+                        4 => 'motor_sitting_option_4.png',
+                    ],
+                    'supine_kicking' => [
+                        0 => 'motor_supine_kicking_option_0.png',
+                        1 => 'motor_supine_kicking_option_1.png',
+                        2 => 'motor_supine_kicking_option_2.png',
+                        3 => 'motor_supine_kicking_option_3.png',
+                        4 => 'motor_supine_kicking_option_4.png',
+                    ],
+                    'crawling' => [
+                        0 => 'motor_crawling_option_0.png',
+                        1 => 'motor_crawling_option_1.png',
+                        2 => 'motor_crawling_option_2.png',
+                        3 => 'motor_crawling_option_3.png',
+                        4 => 'motor_crawling_option_4.png',
+                    ],
+                ])
                 @foreach($motorMilestones as $item)
                     @php($response = $responses->get($item['key']))
-                    <article class="grid gap-4 p-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+                    <article class="p-6">
                         <div>
                             <h4 class="font-bold text-slate-800">{{ $item['label'] }}</h4>
                             @isset($item['instruction'])<p class="mt-1 text-sm text-slate-500">{{ $item['instruction'] }}</p>@endisset
-                            @isset($item['options'])
-                                <div class="mt-3 space-y-2">
-                                    @foreach($item['options'] as $optionIndex => $option)
-                                        <div class="rounded-xl bg-emerald-50/60 px-3 py-2 text-xs leading-5 text-slate-700">
-                                            <span class="font-bold text-emerald-800">{{ $option }}</span>
-                                            @if(isset($item['normal_ages'][$optionIndex]))
-                                                <span class="ml-1 text-slate-500">· {{ $item['normal_ages'][$optionIndex] }}</span>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                    @isset($item['age_note'])<p class="text-xs font-semibold text-emerald-800">{{ $item['age_note'] }}</p>@endisset
-                                </div>
-                            @endisset
-                            @if(isset($visuals[$item['key']]))<figure class="mt-3 rounded-2xl border border-cyan-100 bg-cyan-50/40 p-3">
-                                <img src="{{ asset('images/hine/'.$visuals[$item['key']]) }}" alt="Referencia visual HINE: {{ $item['label'] }}" class="max-h-48 w-auto max-w-full object-contain" loading="lazy" decoding="async">
-                            </figure>@endif
+                            @isset($item['age_note'])<p class="mt-1 text-xs font-semibold text-emerald-800">{{ $item['age_note'] }}</p>@endisset
                         </div>
-                        <div class="grid gap-3 sm:grid-cols-2">
+
+                        <div class="mt-4 overflow-x-auto rounded-2xl border border-slate-300 bg-white">
+                            <table class="w-full table-fixed text-xs text-slate-700" style="min-width: {{ max(720, count($item['options']) * 190) }}px">
+                                <caption class="sr-only">Opciones de la proforma HINE para {{ $item['label'] }}</caption>
+                                <thead class="bg-emerald-50 font-bold text-emerald-900">
+                                    <tr>
+                                        @foreach($item['options'] as $optionIndex => $option)
+                                            <th class="border-b border-slate-300 px-3 py-2 @if(!$loop->last) border-r @endif">Opción {{ $optionIndex + 1 }}</th>
+                                        @endforeach
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="align-top">
+                                        @foreach($item['options'] as $optionIndex => $option)
+                                            <td class="px-3 py-3 text-center @if(!$loop->last) border-r border-slate-300 @endif">
+                                                <p class="font-bold text-slate-800">{{ $option }}</p>
+                                                @if(isset($motorVisuals[$item['key']][$optionIndex]))
+                                                    <img src="{{ asset('images/hine/'.$motorVisuals[$item['key']][$optionIndex]) }}" alt="Referencia visual HINE: {{ $item['label'] }}, {{ $option }}" class="mx-auto mt-3 max-h-36 w-auto max-w-full object-contain" loading="lazy" decoding="async">
+                                                @endif
+                                                @if(isset($item['normal_ages'][$optionIndex]))
+                                                    <p class="mt-2 text-slate-500">{{ $item['normal_ages'][$optionIndex] }}</p>
+                                                @endif
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mt-4 grid gap-3 sm:grid-cols-2">
                             <label class="text-xs font-bold uppercase tracking-wide text-slate-500">Observado
                                 <input type="text" name="motor[{{ $item['key'] }}][observed]" maxlength="500" value="{{ old('motor.'.$item['key'].'.observed', data_get($response?->response_data, 'observed')) }}" class="mt-2 w-full rounded-xl border-slate-200 text-sm normal-case tracking-normal">
                             </label>
