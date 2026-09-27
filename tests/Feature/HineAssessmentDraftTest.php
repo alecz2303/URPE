@@ -595,7 +595,8 @@ class HineAssessmentDraftTest extends TestCase
             ->assertSee('1. Examen neurológico')
             ->assertSee('2. Hitos motores')
             ->assertSee('3. Comportamiento')
-            ->assertSee('Apoyo para la interpretación');
+            ->assertSee('Apoyo para la interpretación')
+            ->assertDontSee('<th>Lado</th>', false);
     }
 
 }
