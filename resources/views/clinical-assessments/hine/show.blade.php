@@ -192,10 +192,8 @@
                 <div class="mx-auto mt-4 max-w-3xl">
                     <div class="relative aspect-[680/341] overflow-hidden rounded-2xl bg-[#f3f5fa] ring-1 ring-slate-300">
                         <img src="{{ asset('images/hine/HINE_interpretationaid_SP.png') }}" alt="Referencia Prediciendo la GMFCS" class="pointer-events-none absolute h-auto max-w-none" style="width:188.2353%; left:-5.8824%; top:-74.1935%;">
-                        @if($gmfcsRange !== null)
-                            <div class="pointer-events-none absolute bottom-0 top-[18%] bg-cyan-300/40 mix-blend-multiply ring-4 ring-inset ring-cyan-500" style="left:{{ $gmfcsRange * 33.3333 }}%; width:33.3334%;"></div>
-                            <div class="absolute bottom-3 z-10 -translate-x-1/2 rounded-full bg-cyan-700 px-3 py-1.5 text-xs font-black text-white shadow-lg" style="left:{{ ($gmfcsRange * 33.3333) + 16.6667 }}%;">Aquí cae {{ $hine->global_score }}</div>
-                        @endif
+                        <div class="{{ $gmfcsRange === null ? 'hidden' : '' }} pointer-events-none absolute bottom-0 top-[18%] bg-cyan-300/40 mix-blend-multiply ring-4 ring-inset ring-cyan-500" style="left:{{ ($gmfcsRange ?? 0) * 33.3333 }}%; width:33.3334%;"></div>
+                        <div class="{{ $gmfcsRange === null ? 'hidden' : '' }} absolute bottom-3 z-10 -translate-x-1/2 rounded-full bg-cyan-700 px-3 py-1.5 text-xs font-black text-white shadow-lg" style="left:{{ (($gmfcsRange ?? 0) * 33.3333) + 16.6667 }}%;">Aquí cae {{ $hine->global_score ?? '—' }}</div>
                     </div>
                     <p class="mt-2 text-center text-[11px] font-semibold text-slate-500">Resaltado visual del rango; no constituye por sí solo un diagnóstico ni modifica la referencia original.</p>
                 </div>
