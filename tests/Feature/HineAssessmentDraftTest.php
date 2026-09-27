@@ -216,11 +216,13 @@ class HineAssessmentDraftTest extends TestCase
         $response->assertSee('ventral_suspension_score_1.png');
         $response->assertSee('ventral_suspension_score_0.png');
         $response->assertDontSee('Ilustración fuente: puntuación');
-        $response->assertSee('motor_sitting_option_0.png');
+        $response->assertDontSee('motor_sitting_option_0.png');
         $response->assertSee('motor_sitting_option_4.png');
-        $response->assertSee('motor_supine_kicking_option_0.png');
+        $response->assertDontSee('motor_supine_kicking_option_0.png');
+        $response->assertDontSee('motor_supine_kicking_option_1.png');
+        $response->assertSee('motor_supine_kicking_option_2.png');
         $response->assertSee('motor_supine_kicking_option_4.png');
-        $response->assertSee('motor_crawling_option_0.png');
+        $response->assertDontSee('motor_crawling_option_0.png');
         $response->assertSee('motor_crawling_option_4.png');
         $response->assertSee('Pivota (rota)');
         $response->assertSee('Gatea sobre manos y rodillas');
