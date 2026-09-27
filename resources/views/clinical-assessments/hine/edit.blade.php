@@ -442,7 +442,7 @@
         </div>
     </form>
 
-    <form method="POST" action="{{ route('patients.hine-assessments.finalize', [$patient, $assessment]) }}" class="mt-3 flex justify-end" onsubmit="return confirm('¿Finalizar esta evaluación HINE? Después quedará cerrada para edición.');">
+    <form method="POST" action="{{ route('patients.hine-assessments.finalize', [$patient, $assessment]) }}" class="mt-3 flex justify-end" data-swal-confirm data-swal-icon="warning" data-swal-title="¿Finalizar evaluación HINE?" data-swal-text="Después de finalizarla quedará cerrada para edición." data-swal-confirm-text="Sí, finalizar">
         @csrf
         <button class="rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-6 py-3 text-sm font-bold text-white shadow-lg">Finalizar evaluación HINE</button>
     </form>
