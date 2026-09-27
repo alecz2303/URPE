@@ -113,6 +113,22 @@ class TherapistAvailability
         });
     }
 
+    public function removeBlock(Therapist $therapist, TherapistBlock $block, User $actor, AuditTrail $audit): void
+    {
+        DB::transaction(function () use ($therapist, $block, $actor, $audit): void {
+            $metadata = [
+                'block_id' => $block->id,
+                'starts_at' => $block->starts_at->toIso8601String(),
+                'ends_at' => $block->ends_at->toIso8601String(),
+                'reason' => $block->reason,
+            ];
+
+            $block->delete();
+
+            $audit->record('therapist.block_deleted', $therapist, $metadata, $actor);
+        });
+    }
+
     public function isAvailableDuring(Therapist $therapist, CarbonInterface $startsAt, CarbonInterface $endsAt): bool
     {
         if (! $therapist->is_active || $endsAt->lessThanOrEqualTo($startsAt) || ! $startsAt->isSameDay($endsAt)) {

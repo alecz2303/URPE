@@ -62,7 +62,14 @@
                             </div>
                             <span class="rounded-full bg-rose-100 px-2.5 py-1 text-[11px] font-bold text-rose-700">No disponible</span>
                         </div>
-                        <p class="mt-3 text-sm leading-6 text-slate-600">{{ $block->reason ?: 'Sin motivo registrado.' }}</p>
+                        <div class="mt-3 flex flex-wrap items-end justify-between gap-3">
+                            <p class="text-sm leading-6 text-slate-600">{{ $block->reason ?: 'Sin motivo registrado.' }}</p>
+                            <form method="POST" action="{{ route('therapists.blocks.destroy', [$therapist, $block]) }}" data-swal-confirm data-swal-title="¿Eliminar bloqueo?" data-swal-text="El terapeuta volverá a estar disponible en este intervalo si su horario y sus citas lo permiten." data-swal-confirm-text="Sí, eliminar">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="cursor-pointer rounded-xl border border-rose-200 bg-white px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50">Eliminar bloqueo</button>
+                            </form>
+                        </div>
                     </article>
                 @empty
                     <div class="rounded-2xl border border-dashed border-rose-200 bg-rose-50/50 px-5 py-10 text-center">

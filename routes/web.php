@@ -76,6 +76,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/terapeutas', [TherapistController::class, 'store'])->name('therapists.store');
     Route::get('/terapeutas/{therapist}/bloqueos', [TherapistBlocksController::class, 'index'])->name('therapists.blocks.index');
     Route::post('/terapeutas/{therapist}/bloqueos', [TherapistBlocksController::class, 'store'])->name('therapists.blocks.store');
+    Route::delete('/terapeutas/{therapist}/bloqueos/{block}', [TherapistBlocksController::class, 'destroy'])->name('therapists.blocks.destroy');
     Route::get('/terapeutas/{therapist}', TherapistShowController::class)->name('therapists.show');
     Route::get('/terapeutas/{therapist}/editar', [TherapistController::class, 'edit'])->name('therapists.edit');
     Route::put('/terapeutas/{therapist}', [TherapistController::class, 'update'])->name('therapists.update');

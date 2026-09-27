@@ -276,6 +276,61 @@ class TherapistAdministrationTest extends TestCase
         ]);
     }
 
+    public function test_authorized_user_can_delete_block_from_ui_and_audit_it(): void
+    {
+        $actor = $this->userWithPermission('therapists.manage');
+        $therapist = Therapist::query()->create(['name' => 'Bloqueable']);
+        $block = $therapist->blocks()->create([
+            'starts_at' => '2026-09-28 10:00:00',
+            'ends_at' => '2026-09-28 11:00:00',
+            'reason' => 'Prueba UAT - bloqueo temporal',
+        ]);
+
+        $this->actingAs($actor)
+            ->delete(route('therapists.blocks.destroy', [$therapist, $block]))
+            ->assertRedirect(route('therapists.blocks.index', $therapist))
+            ->assertSessionHas('status', 'Bloqueo eliminado correctamente.');
+
+        $this->assertDatabaseMissing('therapist_blocks', ['id' => $block->id]);
+        $this->assertDatabaseHas('audit_events', [
+            'actor_id' => $actor->id,
+            'event' => 'therapist.block_deleted',
+        ]);
+    }
+
+    public function test_user_without_permission_cannot_delete_therapist_block(): void
+    {
+        $actor = User::factory()->create();
+        $therapist = Therapist::query()->create(['name' => 'Protegido']);
+        $block = $therapist->blocks()->create([
+            'starts_at' => '2026-09-28 10:00:00',
+            'ends_at' => '2026-09-28 11:00:00',
+        ]);
+
+        $this->actingAs($actor)
+            ->delete(route('therapists.blocks.destroy', [$therapist, $block]))
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('therapist_blocks', ['id' => $block->id]);
+    }
+
+    public function test_block_cannot_be_deleted_through_another_therapist(): void
+    {
+        $actor = $this->userWithPermission('therapists.manage');
+        $owner = Therapist::query()->create(['name' => 'Propietario']);
+        $other = Therapist::query()->create(['name' => 'Otro']);
+        $block = $owner->blocks()->create([
+            'starts_at' => '2026-09-28 10:00:00',
+            'ends_at' => '2026-09-28 11:00:00',
+        ]);
+
+        $this->actingAs($actor)
+            ->delete(route('therapists.blocks.destroy', [$other, $block]))
+            ->assertNotFound();
+
+        $this->assertDatabaseHas('therapist_blocks', ['id' => $block->id]);
+    }
+
     public function test_dashboard_only_shows_therapist_management_with_permission(): void
     {
         $authorized = $this->userWithPermission('therapists.manage');
