@@ -552,4 +552,23 @@ class HineAssessmentDraftTest extends TestCase
 
         return $user;
     }
+
+    public function test_hine_result_has_printable_a4_view(): void
+    {
+        $user = $this->makeUserWithPermission('clinical_assessments.view');
+        $patient = Patient::factory()->create();
+        $assessment = $this->makeHineAssessment($patient, $user);
+
+        $this->actingAs($user)
+            ->get(route('patients.hine-assessments.print', [$patient, $assessment]))
+            ->assertOk()
+            ->assertSee('URPE · Evaluación HINE')
+            ->assertSee('Imprimir / Guardar como PDF')
+            ->assertSee('Resumen neurológico')
+            ->assertSee('1. Examen neurológico')
+            ->assertSee('2. Hitos motores')
+            ->assertSee('3. Comportamiento')
+            ->assertSee('Apoyo para la interpretación');
+    }
+
 }
