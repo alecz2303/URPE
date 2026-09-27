@@ -3,7 +3,7 @@
         @if($assessment->status !== 'finalized')
             @can('clinical_assessments.manage')
                 <a href="{{ route('patients.hine-assessments.edit', [$patient, $assessment]) }}" class="rounded-xl bg-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm">Continuar captura</a>
-                <form method="POST" action="{{ route('patients.hine-assessments.finalize', [$patient, $assessment]) }}" class="inline" onsubmit="return confirm('¿Finalizar esta evaluación HINE? Después de finalizarla quedará cerrada para edición.');">
+                <form method="POST" action="{{ route('patients.hine-assessments.finalize', [$patient, $assessment]) }}" class="inline" data-swal-confirm data-swal-icon="warning" data-swal-title="¿Finalizar evaluación HINE?" data-swal-text="Después de finalizarla quedará cerrada para edición." data-swal-confirm-text="Sí, finalizar">
                     @csrf
                     <button type="submit" class="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm">Finalizar evaluación</button>
                 </form>

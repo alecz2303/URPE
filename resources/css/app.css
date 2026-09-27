@@ -9,7 +9,7 @@
     input:not([type='checkbox']):not([type='radio']):not([type='hidden']),
     textarea,
     select {
-        @apply rounded-xl border border-cyan-100 bg-white text-slate-900 shadow-sm transition;
+        @apply min-h-12 rounded-xl border border-cyan-100 bg-white px-4 py-3 text-slate-900 shadow-sm transition;
     }
 
     input:not([type='checkbox']):not([type='radio']):not([type='hidden']):hover,
@@ -22,6 +22,14 @@
     textarea:focus,
     select:focus {
         @apply border-cyan-500 outline-none ring-4 ring-cyan-500/10;
+    }
+
+    textarea {
+        @apply min-h-24 resize-y leading-6;
+    }
+
+    select {
+        @apply pr-10;
     }
 
     ::selection {
