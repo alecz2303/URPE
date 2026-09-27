@@ -55,7 +55,15 @@
 
         <section class="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
             @foreach($sections as $sectionKey => $section)
-                @php($field = match($sectionKey) {'cranial_nerves'=>'cranial_nerves_score','posture'=>'posture_score','movements'=>'movements_score','tone'=>'tone_score','reflexes_reactions'=>'reflexes_reactions_score'})
+                @php
+                    $field = match ($sectionKey) {
+                        'cranial_nerves' => 'cranial_nerves_score',
+                        'posture' => 'posture_score',
+                        'movements' => 'movements_score',
+                        'tone' => 'tone_score',
+                        'reflexes_reactions' => 'reflexes_reactions_score',
+                    };
+                @endphp
                 <div class="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
                     <p class="text-xs font-bold uppercase tracking-wide text-slate-400">{{ $section['label'] }}</p>
                     <p class="mt-2 text-2xl font-black text-slate-800">{{ $hine->{$field} ?? '—' }} <span class="text-sm text-slate-400">/ {{ $section['maximum'] }}</span></p>
@@ -164,7 +172,11 @@
             </div>
 
             <div class="mt-5 rounded-2xl border border-violet-100 bg-violet-50/50 p-4">
-                @php($globalPercent = $hine->global_score !== null ? min(100, max(0, ((float) $hine->global_score / 78) * 100)) : 0)
+                @php
+                    $globalPercent = $hine->global_score !== null
+                        ? min(100, max(0, ((float) $hine->global_score / 78) * 100))
+                        : 0;
+                @endphp
                 <div class="flex items-center justify-between gap-4">
                     <span class="text-sm font-bold text-slate-700">Puntuación global observada</span>
                     <span class="text-sm font-black text-violet-800">{{ $hine->global_score ?? '—' }} / 78{{ $hine->global_score !== null ? ' · '.number_format($globalPercent, 1).'%' : '' }}</span>
