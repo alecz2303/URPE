@@ -62,7 +62,7 @@ final class HineInstrument
                     ['key'=>'vertical_suspension','label'=>'Suspensión vertical','instruction'=>'Sostener al niño por debajo de las axilas asegurándose que las piernas no tocan ninguna superficie -puede "hacer cosquillas" en los pies para estimular el pataleo.','visual'=>true],
                     ['key'=>'lateral_suspension','label'=>'Suspensión lateral','instruction'=>'Describir el lado superior. Sostener al niño cerca de las caderas. Desde la vertical, inclinarlo a los lados hacia la horizontal. Observar la respuesta del tronco, columna, miembros y cabeza.','laterality'=>true,'visual'=>true],
                     ['key'=>'parachute','label'=>'Paracaídas','instruction'=>'Sostener al niño verticalmente e inclinarlo rápidamente hacia delante. Observar la reacción/simetría de la respuesta de los brazos.','age_note'=>'Después de los 6 meses.','visual'=>true],
-                    ['key'=>'tendon_reflexes','label'=>'Reflejos tendinosos','instruction'=>'Con el niño relajado, sentado o tumbado -usar un martillo.','sites'=>['bíceps','rodilla','tobillo']],
+                    ['key'=>'tendon_reflexes','label'=>'Reflejos tendinosos','instruction'=>'Con el niño relajado, sentado o tumbado -usar un martillo pequeño de reflejos.','sites'=>['bíceps','rodilla','tobillo']],
                 ],
             ],
         ];
