@@ -132,6 +132,7 @@ class HineInstrumentTest extends TestCase
         $this->assertStringNotContainsString('después de los 6 meses', strtolower($reactions['parachute']['instruction']));
         $this->assertSame('Después de los 6 meses.', $reactions['parachute']['age_note']);
         $this->assertSame(['bíceps', 'rodilla', 'tobillo'], $reactions['tendon_reflexes']['sites']);
+        $this->assertStringContainsString('martillo pequeño de reflejos', $reactions['tendon_reflexes']['instruction']);
     }
 
     public function test_reaction_source_notes_remain_separate_from_examination_instruction(): void
