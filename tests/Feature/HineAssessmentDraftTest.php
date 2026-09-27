@@ -555,9 +555,17 @@ class HineAssessmentDraftTest extends TestCase
 
     public function test_hine_result_has_printable_a4_view(): void
     {
-        $user = $this->makeUserWithPermission('clinical_assessments.view');
-        $patient = Patient::factory()->create();
-        $assessment = $this->makeHineAssessment($patient, $user);
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create([
+            'first_name' => 'Paciente',
+            'last_name' => 'Imprimible',
+            'date_of_birth' => '2026-03-25',
+        ]);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), [
+            'examination_date' => '2026-09-25',
+        ]);
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
 
         $this->actingAs($user)
             ->get(route('patients.hine-assessments.print', [$patient, $assessment]))
