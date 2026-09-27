@@ -238,7 +238,6 @@
                     <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->reflexes_reactions_score !== null ? number_format(((float) $hine->reflexes_reactions_score / 15) * 100, 1).'%' : '—' }} del máximo de la sección</p>
                 </div>
 
-                    <p class="-mt-1 text-center text-xs font-semibold text-violet-700">{{ $hine->global_score ?? '—' }} / 78</p>
                 </div>
             </div>
             <div class="mt-5 rounded-2xl border border-violet-100 bg-violet-50/50 p-4">
