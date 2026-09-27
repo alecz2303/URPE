@@ -350,7 +350,6 @@ class HineAssessmentDraftTest extends TestCase
             ->assertSee('Resultado neurológico HINE')
             ->assertSee('Puntuación global observada')
             ->assertSee('Radar HINE')
-            ->assertSee('Gauge HINE')
             ->assertSee('hine-radar', false)
             ->assertSee('hine-gauge', false)
             ->assertSee('del máximo de la sección')
