@@ -196,6 +196,38 @@ class UserAdministrationTest extends TestCase
         $this->assertFalse($managed->hasRole('reception'));
     }
 
+    public function test_user_cannot_change_own_role_even_with_role_management_permission(): void
+    {
+        $actor = $this->userWithPermissions(['users.update', 'roles.manage']);
+        $originalRole = $actor->roles()->firstOrFail();
+        $reception = Role::query()->where('slug', 'reception')->firstOrFail();
+
+        $this->actingAs($actor)
+            ->put(route('users.update', $actor), [
+                'name' => $actor->name,
+                'email' => $actor->email,
+                'password' => '',
+                'password_confirmation' => '',
+                'role_id' => $reception->id,
+            ])
+            ->assertSessionHasErrors('role_id');
+
+        $actor->refresh();
+        $this->assertTrue($actor->roles()->whereKey($originalRole->id)->exists());
+        $this->assertFalse($actor->hasRole('reception'));
+    }
+
+    public function test_editing_own_account_does_not_offer_role_selector(): void
+    {
+        $actor = $this->userWithPermissions(['users.update', 'roles.manage']);
+
+        $this->actingAs($actor)
+            ->get(route('users.edit', $actor))
+            ->assertOk()
+            ->assertDontSee('name="role_id"', false)
+            ->assertSee('Por seguridad no puedes modificar tu propio rol.');
+    }
+
     public function test_authorized_user_can_deactivate_and_reactivate_another_account(): void
     {
         $actor = $this->userWithPermission('users.deactivate');

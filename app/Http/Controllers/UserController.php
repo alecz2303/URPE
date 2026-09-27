@@ -81,10 +81,12 @@ class UserController extends Controller
         $this->authorize('users.update');
 
         $canManageRoles = $request->user()->can('roles.manage');
+        $canChangeRole = $canManageRoles && ! $request->user()->is($user);
 
         return view('users.edit', [
             'managedUser' => $user->load('roles'),
             'canManageRoles' => $canManageRoles,
+            'canChangeRole' => $canChangeRole,
             'roles' => $canManageRoles ? Role::query()->orderBy('name')->get() : collect(),
         ]);
     }
@@ -94,19 +96,20 @@ class UserController extends Controller
         $this->authorize('users.update');
 
         $canManageRoles = $request->user()->can('roles.manage');
+        $canChangeRole = $canManageRoles && ! $request->user()->is($user);
 
         $validated = $request->validate(
             [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
                 'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-                'role_id' => [$canManageRoles ? 'required' : 'prohibited', 'integer', Rule::exists('roles', 'id')],
+                'role_id' => [$canChangeRole ? 'required' : 'prohibited', 'integer', Rule::exists('roles', 'id')],
             ],
             $this->validationMessages(),
             $this->validationAttributes(),
         );
 
-        DB::transaction(function () use ($validated, $user, $canManageRoles, $request, $audit): void {
+        DB::transaction(function () use ($validated, $user, $canChangeRole, $request, $audit): void {
             $before = [
                 'name' => $user->name,
                 'email' => $user->email,
@@ -126,7 +129,7 @@ class UserController extends Controller
 
             $user->update($attributes);
 
-            if ($canManageRoles) {
+            if ($canChangeRole) {
                 $user->roles()->sync([$validated['role_id']]);
             }
 

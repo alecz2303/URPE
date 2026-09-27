@@ -25,8 +25,10 @@
                 @method('PUT')
                 <div><label class="text-sm font-semibold">Nombre</label><input name="name" value="{{ old('name', $managedUser->name) }}" required class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3"></div>
                 <div><label class="text-sm font-semibold">Correo electrónico</label><input type="email" name="email" value="{{ old('email', $managedUser->email) }}" required class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3"></div>
-                @if($canManageRoles)
+                @if($canChangeRole)
                     <div class="rounded-2xl border border-violet-100 bg-violet-50/50 p-4"><label class="text-sm font-semibold text-violet-900">Rol</label><select name="role_id" required class="mt-2 w-full rounded-xl border border-violet-200 bg-white px-4 py-3">@foreach($roles as $role)<option value="{{ $role->id }}" @selected(old('role_id', optional($managedUser->roles->first())->id) == $role->id)>{{ $role->name }}</option>@endforeach</select></div>
+                @elseif($canManageRoles)
+                    <div class="rounded-2xl border border-violet-100 bg-violet-50/50 px-4 py-3 text-sm text-violet-900">Rol actual: <strong>{{ $managedUser->roles->pluck('name')->join(', ') ?: 'Sin rol' }}</strong>. Por seguridad no puedes modificar tu propio rol.</div>
                 @else
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">Rol actual: <strong>{{ $managedUser->roles->pluck('name')->join(', ') ?: 'Sin rol' }}</strong>. No tienes permiso para modificar roles.</div>
                 @endif
