@@ -20,7 +20,7 @@ class FinalPermissionCoverageTest extends TestCase
             'clinical_coordination' => [
                 'therapies.manage', 'patients.view', 'patients.manage', 'clinical_records.view', 'clinical_records.manage',
                 'appointments.view', 'appointments.manage', 'session_logs.view', 'session_logs.manage',
-                'session_logs.manage_all', 'reports.view',
+                'session_logs.manage_all', 'reports.view', 'clinical_assessments.view', 'clinical_assessments.manage',
             ],
             'therapist' => ['session_logs.view', 'session_logs.manage'],
             'reception' => ['patients.view', 'patients.manage', 'appointments.view', 'appointments.manage'],
@@ -71,6 +71,8 @@ class FinalPermissionCoverageTest extends TestCase
             'appointments.manage',
             'session_logs.manage_all',
             'reports.view',
+            'clinical_assessments.view',
+            'clinical_assessments.manage',
             'users.view',
             'roles.manage',
         ] as $permission) {

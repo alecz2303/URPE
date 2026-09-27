@@ -31,6 +31,8 @@ class AuthorizationSeeder extends Seeder
             ['name' => 'Capturar bitácoras clínicas asignadas', 'slug' => 'session_logs.manage', 'description' => 'Crear y actualizar bitácoras de sesiones clínicas autorizadas.'],
             ['name' => 'Administrar todas las bitácoras clínicas', 'slug' => 'session_logs.manage_all', 'description' => 'Consultar y administrar bitácoras clínicas sin restricción por asignación de terapeuta.'],
             ['name' => 'Ver reportes operativos y clínicos', 'slug' => 'reports.view', 'description' => 'Consultar reportes agregados y metadatos operativos autorizados.'],
+            ['name' => 'Consultar evaluaciones clínicas', 'slug' => 'clinical_assessments.view', 'description' => 'Consultar evaluaciones clínicas del paciente.'],
+            ['name' => 'Gestionar evaluaciones clínicas', 'slug' => 'clinical_assessments.manage', 'description' => 'Crear, editar borradores y finalizar evaluaciones clínicas.'],
         ])->mapWithKeys(function (array $permission): array {
             $model = Permission::query()->updateOrCreate(
                 ['slug' => $permission['slug']],
@@ -67,7 +69,7 @@ class AuthorizationSeeder extends Seeder
         foreach ([
             'therapies.manage', 'patients.view', 'patients.manage', 'clinical_records.view', 'clinical_records.manage',
             'appointments.view', 'appointments.manage', 'session_logs.view', 'session_logs.manage', 'session_logs.manage_all',
-            'reports.view',
+            'reports.view', 'clinical_assessments.view', 'clinical_assessments.manage',
         ] as $slug) {
             $coordinationPermissionIds[] = $permissions->get($slug)->id;
         }
