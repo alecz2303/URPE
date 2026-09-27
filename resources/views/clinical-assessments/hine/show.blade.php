@@ -180,19 +180,6 @@
             <h3 class="mt-1 text-lg font-black text-slate-900">{{ $interpretation['source_title'] }}</h3>
             <p class="mt-2 text-sm leading-6 text-slate-600">{{ $interpretation['note'] }}</p>
 
-            <div class="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-5">
-                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-                    <div>
-                        <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-600">Referencia original para interpretación</p>
-                        <p class="mt-1 text-xs text-slate-500">Lámina completa proporcionada por URPE. Se conserva íntegra para mantener juntas sus gráficas, notas y referencias bibliográficas.</p>
-                    </div>
-                    <a href="{{ asset('images/hine/HINE_interpretationaid_SP.png') }}" target="_blank" rel="noopener" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-700 shadow-sm hover:border-cyan-300 hover:text-cyan-700">Ver a tamaño completo</a>
-                </div>
-                <a href="{{ asset('images/hine/HINE_interpretationaid_SP.png') }}" target="_blank" rel="noopener" class="block">
-                    <img src="{{ asset('images/hine/HINE_interpretationaid_SP.png') }}" alt="Lámina original completa de apoyo para la interpretación HINE proporcionada por URPE" class="mx-auto h-auto w-full rounded-xl bg-white object-contain shadow-sm ring-1 ring-slate-200">
-                </a>
-            </div>
-
             <div class="mt-5 grid gap-4 lg:grid-cols-3">
                 <div class="rounded-2xl bg-slate-50 p-4">
                     <p class="text-xs font-bold uppercase text-slate-500">{{ $interpretation['global_score_heading'] }}</p>
@@ -225,6 +212,15 @@
                         <li>{{ $reference }}</li>
                     @endforeach
                 </ol>
+            </div>
+        </section>
+        <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <p class="text-xs font-black uppercase tracking-[0.14em] text-slate-600">Referencia original HINE</p>
+                    <p class="mt-1 text-xs text-slate-500">Lámina completa proporcionada por URPE. Se conserva íntegra como respaldo documental.</p>
+                </div>
+                <a href="{{ asset('images/hine/HINE_interpretationaid_SP.png') }}" target="_blank" rel="noopener" class="rounded-xl border border-cyan-200 bg-cyan-50 px-4 py-2.5 text-xs font-bold text-cyan-800 shadow-sm hover:border-cyan-400 hover:bg-cyan-100">Ver en tamaño completo</a>
             </div>
         </section>
     </div>
