@@ -128,6 +128,53 @@
             </div>
         </section>
 
+        <section class="rounded-3xl border border-violet-100 bg-white p-6 shadow-sm">
+            <div class="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">Resumen de puntuaciones</p>
+                    <h3 class="mt-1 text-lg font-black text-slate-900">Resultado neurológico HINE</h3>
+                    <p class="mt-1 text-sm text-slate-500">Los porcentajes visuales comparan cada sección únicamente contra su propio máximo; no modifican ni sustituyen la puntuación HINE.</p>
+                </div>
+                <div class="rounded-2xl bg-violet-50 px-5 py-3 text-right ring-1 ring-violet-100"><p class="text-xs font-bold uppercase text-violet-600">Puntuación global</p><p class="text-3xl font-black text-violet-800">{{ $hine->global_score ?? '—' }} <span class="text-sm text-violet-500">/ 78</span></p></div>
+            </div>
+            <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">Pares craneales</p>
+                    <p class="mt-2 text-xl font-black text-slate-900">{{ $hine->cranial_nerves_score ?? '—' }} <span class="text-xs text-slate-400">/ 15</span></p>
+                    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-cyan-500" style="width: {{ $hine->cranial_nerves_score !== null ? number_format(min(100, max(0, ((float) $hine->cranial_nerves_score / 15) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+                    <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->cranial_nerves_score !== null ? number_format(((float) $hine->cranial_nerves_score / 15) * 100, 1).'%' : '—' }} del máximo de la sección</p>
+                </div>
+                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">Postura</p>
+                    <p class="mt-2 text-xl font-black text-slate-900">{{ $hine->posture_score ?? '—' }} <span class="text-xs text-slate-400">/ 18</span></p>
+                    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-cyan-500" style="width: {{ $hine->posture_score !== null ? number_format(min(100, max(0, ((float) $hine->posture_score / 18) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+                    <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->posture_score !== null ? number_format(((float) $hine->posture_score / 18) * 100, 1).'%' : '—' }} del máximo de la sección</p>
+                </div>
+                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">Movimientos</p>
+                    <p class="mt-2 text-xl font-black text-slate-900">{{ $hine->movements_score ?? '—' }} <span class="text-xs text-slate-400">/ 6</span></p>
+                    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-cyan-500" style="width: {{ $hine->movements_score !== null ? number_format(min(100, max(0, ((float) $hine->movements_score / 6) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+                    <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->movements_score !== null ? number_format(((float) $hine->movements_score / 6) * 100, 1).'%' : '—' }} del máximo de la sección</p>
+                </div>
+                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">Tono</p>
+                    <p class="mt-2 text-xl font-black text-slate-900">{{ $hine->tone_score ?? '—' }} <span class="text-xs text-slate-400">/ 24</span></p>
+                    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-cyan-500" style="width: {{ $hine->tone_score !== null ? number_format(min(100, max(0, ((float) $hine->tone_score / 24) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+                    <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->tone_score !== null ? number_format(((float) $hine->tone_score / 24) * 100, 1).'%' : '—' }} del máximo de la sección</p>
+                </div>
+                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                    <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">Reflejos y reacciones</p>
+                    <p class="mt-2 text-xl font-black text-slate-900">{{ $hine->reflexes_reactions_score ?? '—' }} <span class="text-xs text-slate-400">/ 15</span></p>
+                    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-cyan-500" style="width: {{ $hine->reflexes_reactions_score !== null ? number_format(min(100, max(0, ((float) $hine->reflexes_reactions_score / 15) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+                    <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->reflexes_reactions_score !== null ? number_format(((float) $hine->reflexes_reactions_score / 15) * 100, 1).'%' : '—' }} del máximo de la sección</p>
+                </div>
+            </div>
+            <div class="mt-5 rounded-2xl border border-violet-100 bg-violet-50/50 p-4">
+                <div class="flex items-center justify-between gap-4"><span class="text-sm font-bold text-slate-700">Puntuación global observada</span><span class="text-sm font-black text-violet-800">{{ $hine->global_score ?? '—' }} / 78</span></div>
+                <div class="mt-3 h-4 overflow-hidden rounded-full bg-white ring-1 ring-violet-100"><div class="h-full rounded-full bg-violet-600" style="width: {{ $hine->global_score !== null ? number_format(min(100, max(0, ((float) $hine->global_score / 78) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+            </div>
+        </section>
+
         <section class="rounded-3xl border border-cyan-100 bg-white p-6 shadow-sm">
             <p class="text-xs font-bold uppercase tracking-[0.16em] text-cyan-700">Apoyo para la interpretación</p>
             <h3 class="mt-1 text-lg font-black text-slate-900">{{ $interpretation['source_title'] }}</h3>
