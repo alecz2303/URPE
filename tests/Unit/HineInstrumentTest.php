@@ -328,4 +328,15 @@ class HineInstrumentTest extends TestCase
         $this->assertStringContainsString('no se interpolan', $aid['age_rule']);
     }
 
+
+    public function test_auditory_response_preserves_distinct_source_anchors(): void
+    {
+        $anchors = HineInstrument::clinicalAnchors()['auditory_response'];
+
+        $this->assertSame('Responde al estímulo desde ambos lados', $anchors[3]);
+        $this->assertSame('Respuesta dudosa o asimétrica', $anchors[1]);
+        $this->assertSame('No responde al estímulo', $anchors[0]);
+        $this->assertArrayNotHasKey(2, $anchors);
+    }
+
 }
