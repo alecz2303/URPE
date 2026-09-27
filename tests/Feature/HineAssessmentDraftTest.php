@@ -359,6 +359,37 @@ class HineAssessmentDraftTest extends TestCase
             ->assertSee('no se interpolan');
     }
 
+    public function test_hine_draft_result_exposes_continue_and_finalize_actions_but_finalized_result_does_not(): void
+    {
+        $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);
+        $patient = Patient::query()->create(['first_name' => 'Paciente', 'last_name' => 'Ciclo HINE', 'date_of_birth' => '2026-03-25']);
+
+        $this->actingAs($user)->post(route('patients.hine-assessments.store', $patient), ['examination_date' => '2026-09-25']);
+        $assessment = ClinicalAssessment::query()->where('patient_id', $patient->id)->firstOrFail();
+
+        $this->actingAs($user)->get(route('patients.hine-assessments.show', [$patient, $assessment]))
+            ->assertOk()
+            ->assertSee('Resultado provisional')
+            ->assertSee('Continuar captura')
+            ->assertSee('Finalizar evaluación');
+
+        $responses = [];
+        foreach (\App\Support\HineInstrument::neurologicalSections() as $section) {
+            foreach ($section['items'] as $item) {
+                $responses[$item['key']] = ['score' => 3];
+            }
+        }
+
+        $this->actingAs($user)->put(route('patients.hine-assessments.update', [$patient, $assessment]), ['responses' => $responses]);
+        $this->actingAs($user)->post(route('patients.hine-assessments.finalize', [$patient, $assessment]));
+
+        $this->actingAs($user)->get(route('patients.hine-assessments.show', [$patient, $assessment]))
+            ->assertOk()
+            ->assertDontSee('Resultado provisional')
+            ->assertDontSee('Continuar captura')
+            ->assertDontSee('Finalizar evaluación');
+    }
+
     public function test_hine_result_keeps_source_instructions_and_separate_notes_visible(): void
     {
         $user = $this->userWithPermissions(['clinical_assessments.view', 'clinical_assessments.manage']);

@@ -1,9 +1,28 @@
 <x-app-shell title="Resultado HINE" eyebrow="{{ $patient->full_name }}">
     <x-slot:actions>
+        @if($assessment->status !== 'finalized')
+            @can('clinical_assessments.manage')
+                <a href="{{ route('patients.hine-assessments.edit', [$patient, $assessment]) }}" class="rounded-xl bg-cyan-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm">Continuar captura</a>
+                <form method="POST" action="{{ route('patients.hine-assessments.finalize', [$patient, $assessment]) }}" class="inline" onsubmit="return confirm('¿Finalizar esta evaluación HINE? Después de finalizarla quedará cerrada para edición.');">
+                    @csrf
+                    <button type="submit" class="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm">Finalizar evaluación</button>
+                </form>
+            @endcan
+        @endif
         <a href="{{ route('patients.hine-assessments.index', $patient) }}" class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700">Historial HINE</a>
     </x-slot:actions>
 
     <div class="space-y-6">
+        @if($assessment->status !== 'finalized')
+            <section class="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900 shadow-sm">
+                <p class="font-black">Resultado provisional · evaluación en borrador</p>
+                <p class="mt-1">Los cálculos reflejan únicamente la información guardada hasta este momento. La evaluación no forma parte del historial final hasta que se complete y finalice.</p>
+                @error('finalize')
+                    <p class="mt-2 font-bold text-red-700">{{ $message }}</p>
+                @enderror
+            </section>
+        @endif
+
         <section class="rounded-3xl border border-violet-100 bg-gradient-to-r from-violet-50 via-white to-cyan-50 p-6 shadow-sm">
             <div class="flex flex-wrap items-start justify-between gap-5">
                 <div>
