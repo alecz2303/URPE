@@ -141,28 +141,24 @@
                 </div>
             </div>
 
+            @php
+                $scoreSummary = [
+                    ['label' => $sections['cranial_nerves']['label'], 'score' => $hine->cranial_nerves_score, 'maximum' => $sections['cranial_nerves']['maximum']],
+                    ['label' => $sections['posture']['label'], 'score' => $hine->posture_score, 'maximum' => $sections['posture']['maximum']],
+                    ['label' => $sections['movements']['label'], 'score' => $hine->movements_score, 'maximum' => $sections['movements']['maximum']],
+                    ['label' => $sections['tone']['label'], 'score' => $hine->tone_score, 'maximum' => $sections['tone']['maximum']],
+                    ['label' => $sections['reflexes_reactions']['label'], 'score' => $hine->reflexes_reactions_score, 'maximum' => $sections['reflexes_reactions']['maximum']],
+                ];
+            @endphp
             <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-                @foreach($sections as $sectionKey => $section)
-                    @php
-                        $field = match ($sectionKey) {
-                            'cranial_nerves' => 'cranial_nerves_score',
-                            'posture' => 'posture_score',
-                            'movements' => 'movements_score',
-                            'tone' => 'tone_score',
-                            'reflexes_reactions' => 'reflexes_reactions_score',
-                        };
-                        $sectionScore = $hine->{$field};
-                        $sectionPercent = $sectionScore !== null
-                            ? min(100, max(0, ((float) $sectionScore / $section['maximum']) * 100))
-                            : 0;
-                    @endphp
+                @foreach($scoreSummary as $summary)
                     <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
-                        <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">{{ $section['label'] }}</p>
-                        <p class="mt-2 text-xl font-black text-slate-900">{{ $sectionScore ?? '—' }} <span class="text-xs text-slate-400">/ {{ $section['maximum'] }}</span></p>
-                        <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200" role="img" aria-label="{{ $section['label'] }}: {{ $sectionScore ?? 0 }} de {{ $section['maximum'] }}">
-                            <div class="h-full rounded-full bg-cyan-500" style="width: {{ number_format($sectionPercent, 2, '.', '') }}%"></div>
+                        <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">{{ $summary['label'] }}</p>
+                        <p class="mt-2 text-xl font-black text-slate-900">{{ $summary['score'] ?? '—' }} <span class="text-xs text-slate-400">/ {{ $summary['maximum'] }}</span></p>
+                        <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200" role="img" aria-label="{{ $summary['label'] }}: {{ $summary['score'] ?? 0 }} de {{ $summary['maximum'] }}">
+                            <div class="h-full rounded-full bg-cyan-500" style="width: {{ $summary['score'] !== null ? number_format(min(100, max(0, ((float) $summary['score'] / $summary['maximum']) * 100)), 2, '.', '') : '0.00' }}%"></div>
                         </div>
-                        <p class="mt-2 text-xs font-semibold text-slate-500">{{ $sectionScore !== null ? number_format($sectionPercent, 1) : '—' }}{{ $sectionScore !== null ? '%' : '' }} del máximo de la sección</p>
+                        <p class="mt-2 text-xs font-semibold text-slate-500">{{ $summary['score'] !== null ? number_format(min(100, max(0, ((float) $summary['score'] / $summary['maximum']) * 100)), 1).'%' : '—' }} del máximo de la sección</p>
                     </div>
                 @endforeach
             </div>
