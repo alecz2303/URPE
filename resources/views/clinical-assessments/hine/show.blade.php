@@ -42,37 +42,32 @@
             });
         }
 
-        const gauge = document.getElementById('hine-gauge');
-        if (gauge) {
-            const score = Math.max(0, Math.min(78, Number(@json($hine->global_score ?? 0))));
-            const cx = 120, cy = 122, radius = 82;
+        const gauges = [
+            ['hine-gauge-cranial', Number(@json($hine->cranial_nerves_score ?? 0)), 15],
+            ['hine-gauge-posture', Number(@json($hine->posture_score ?? 0)), 18],
+            ['hine-gauge-movements', Number(@json($hine->movements_score ?? 0)), 6],
+            ['hine-gauge-tone', Number(@json($hine->tone_score ?? 0)), 24],
+            ['hine-gauge-reflexes', Number(@json($hine->reflexes_reactions_score ?? 0)), 15]
+        ];
+        gauges.forEach(([id, rawScore, maximum]) => {
+            const gauge = document.getElementById(id);
+            if (! gauge) return;
+            const score = Math.max(0, Math.min(maximum, rawScore));
+            const cx = 110, cy = 103, radius = 72;
             const polar = value => {
-                const angle = Math.PI - (value / 78) * Math.PI;
+                const angle = Math.PI - (value / maximum) * Math.PI;
                 return [cx + Math.cos(angle) * radius, cy - Math.sin(angle) * radius];
             };
-            const arc = (from, to, stroke) => {
-                const [x1, y1] = polar(from), [x2, y2] = polar(to);
-                gauge.appendChild(make('path', {d: `M ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2}`, fill: 'none', stroke, 'stroke-width': '28', 'stroke-linecap': 'butt'}));
-            };
-            arc(0, 40, '#e2e8f0');
-            arc(40, 60, '#cbd5e1');
-            arc(60, 78, '#94a3b8');
-            [0, 40, 60, 78].forEach(value => {
-                const [x, y] = polar(value);
-                const t = make('text', {x, y: y + (value === 0 || value === 78 ? 22 : -12), 'text-anchor': 'middle', 'font-size': '12', 'font-weight': '800', fill: '#64748b'});
-                t.textContent = value;
-                gauge.appendChild(t);
-            });
+            const [x1, y1] = polar(0), [x2, y2] = polar(maximum);
+            gauge.appendChild(make('path', {d: `M ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2}`, fill: 'none', stroke: '#dbe4ee', 'stroke-width': '20', 'stroke-linecap': 'round'}));
             const [nx, ny] = polar(score);
-            gauge.appendChild(make('line', {x1: cx, y1: cy, x2: nx, y2: ny, stroke: '#7c3aed', 'stroke-width': '5', 'stroke-linecap': 'round'}));
-            gauge.appendChild(make('circle', {cx, cy, r: '10', fill: '#7c3aed'}));
-            const value = make('text', {x: cx, y: 78, 'text-anchor': 'middle', 'font-size': '38', 'font-weight': '900', fill: '#5b21b6'});
-            value.textContent = score.toFixed(1);
-            gauge.appendChild(value);
-            const max = make('text', {x: cx, y: 96, 'text-anchor': 'middle', 'font-size': '13', 'font-weight': '700', fill: '#64748b'});
-            max.textContent = 'de 78';
-            gauge.appendChild(max);
-        }
+            gauge.appendChild(make('line', {x1: cx, y1: cy, x2: nx, y2: ny, stroke: '#0891b2', 'stroke-width': '4', 'stroke-linecap': 'round'}));
+            gauge.appendChild(make('circle', {cx, cy, r: '7', fill: '#0891b2'}));
+            const left = make('text', {x: 27, y: 119, 'text-anchor': 'middle', 'font-size': '10', 'font-weight': '700', fill: '#64748b'});
+            left.textContent = '0'; gauge.appendChild(left);
+            const right = make('text', {x: 193, y: 119, 'text-anchor': 'middle', 'font-size': '10', 'font-weight': '700', fill: '#64748b'});
+            right.textContent = maximum; gauge.appendChild(right);
+        });
     });
 </script>
 @if($assessment->status !== 'finalized')
@@ -212,42 +207,38 @@
                 </div>
                 <div class="rounded-2xl bg-violet-50 px-5 py-3 text-right ring-1 ring-violet-100"><p class="text-xs font-bold uppercase text-violet-600">Puntuación global</p><p class="text-3xl font-black text-violet-800">{{ $hine->global_score ?? '—' }} <span class="text-sm text-violet-500">/ 78</span></p></div>
             </div>
-            <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+            <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
                 <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                     <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">Pares craneales</p>
                     <p class="mt-2 text-xl font-black text-slate-900">{{ $hine->cranial_nerves_score ?? '—' }} <span class="text-xs text-slate-400">/ 15</span></p>
-                    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-cyan-500" style="width: {{ $hine->cranial_nerves_score !== null ? number_format(min(100, max(0, ((float) $hine->cranial_nerves_score / 15) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+                    <div class="mt-1 flex justify-center"><svg id="hine-gauge-cranial" viewBox="0 0 220 125" class="h-auto w-full max-w-[190px]" role="img" aria-label="Gauge de Pares craneales"></svg></div>
                     <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->cranial_nerves_score !== null ? number_format(((float) $hine->cranial_nerves_score / 15) * 100, 1).'%' : '—' }} del máximo de la sección</p>
                 </div>
                 <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                     <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">Postura</p>
                     <p class="mt-2 text-xl font-black text-slate-900">{{ $hine->posture_score ?? '—' }} <span class="text-xs text-slate-400">/ 18</span></p>
-                    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-cyan-500" style="width: {{ $hine->posture_score !== null ? number_format(min(100, max(0, ((float) $hine->posture_score / 18) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+                    <div class="mt-1 flex justify-center"><svg id="hine-gauge-posture" viewBox="0 0 220 125" class="h-auto w-full max-w-[190px]" role="img" aria-label="Gauge de Postura"></svg></div>
                     <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->posture_score !== null ? number_format(((float) $hine->posture_score / 18) * 100, 1).'%' : '—' }} del máximo de la sección</p>
                 </div>
                 <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                     <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">Movimientos</p>
                     <p class="mt-2 text-xl font-black text-slate-900">{{ $hine->movements_score ?? '—' }} <span class="text-xs text-slate-400">/ 6</span></p>
-                    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-cyan-500" style="width: {{ $hine->movements_score !== null ? number_format(min(100, max(0, ((float) $hine->movements_score / 6) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+                    <div class="mt-1 flex justify-center"><svg id="hine-gauge-movements" viewBox="0 0 220 125" class="h-auto w-full max-w-[190px]" role="img" aria-label="Gauge de Movimientos"></svg></div>
                     <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->movements_score !== null ? number_format(((float) $hine->movements_score / 6) * 100, 1).'%' : '—' }} del máximo de la sección</p>
                 </div>
                 <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                     <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">Tono</p>
                     <p class="mt-2 text-xl font-black text-slate-900">{{ $hine->tone_score ?? '—' }} <span class="text-xs text-slate-400">/ 24</span></p>
-                    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-cyan-500" style="width: {{ $hine->tone_score !== null ? number_format(min(100, max(0, ((float) $hine->tone_score / 24) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+                    <div class="mt-1 flex justify-center"><svg id="hine-gauge-tone" viewBox="0 0 220 125" class="h-auto w-full max-w-[190px]" role="img" aria-label="Gauge de Tono"></svg></div>
                     <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->tone_score !== null ? number_format(((float) $hine->tone_score / 24) * 100, 1).'%' : '—' }} del máximo de la sección</p>
                 </div>
                 <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                     <p class="min-h-10 text-xs font-bold uppercase leading-5 tracking-wide text-slate-500">Reflejos y reacciones</p>
                     <p class="mt-2 text-xl font-black text-slate-900">{{ $hine->reflexes_reactions_score ?? '—' }} <span class="text-xs text-slate-400">/ 15</span></p>
-                    <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-cyan-500" style="width: {{ $hine->reflexes_reactions_score !== null ? number_format(min(100, max(0, ((float) $hine->reflexes_reactions_score / 15) * 100)), 2, '.', '') : '0.00' }}%"></div></div>
+                    <div class="mt-1 flex justify-center"><svg id="hine-gauge-reflexes" viewBox="0 0 220 125" class="h-auto w-full max-w-[190px]" role="img" aria-label="Gauge de Reflejos y reacciones"></svg></div>
                     <p class="mt-2 text-xs font-semibold text-slate-500">{{ $hine->reflexes_reactions_score !== null ? number_format(((float) $hine->reflexes_reactions_score / 15) * 100, 1).'%' : '—' }} del máximo de la sección</p>
                 </div>
-                <div class="rounded-2xl border border-violet-100 bg-violet-50/40 p-3">
-                    <p class="text-xs font-bold uppercase leading-5 tracking-wide text-violet-700">Puntuación global</p>
-                    <div class="mt-1 flex justify-center">
-                        <svg id="hine-gauge" viewBox="0 0 240 145" class="h-auto w-full max-w-[220px]" role="img" aria-label="Gauge de puntuación global HINE"></svg>
-                    </div>
+
                     <p class="-mt-1 text-center text-xs font-semibold text-violet-700">{{ $hine->global_score ?? '—' }} / 78</p>
                 </div>
             </div>
