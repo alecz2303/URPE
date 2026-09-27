@@ -94,7 +94,8 @@ final class HineInstrument
             ],
             'auditory_response' => [
                 3 => 'Responde al estímulo desde ambos lados',
-                1 => 'No responde al estímulo o responde asimétricamente',
+                1 => 'Respuesta dudosa o asimétrica',
+                0 => 'No responde al estímulo',
             ],
             'sucking_swallowing' => [
                 3 => 'Buena succión y deglución',
