@@ -192,31 +192,6 @@
             <h3 class="mt-1 text-lg font-black text-slate-900">{{ $interpretation['source_title'] }}</h3>
             <p class="mt-2 text-sm leading-6 text-slate-600">{{ $interpretation['note'] }}</p>
 
-            @php
-                $gmfcsRange = null;
-                if ($hine->global_score !== null) {
-                    $gmfcsRange = (float) $hine->global_score < 40 ? 0 : ((float) $hine->global_score <= 60 ? 1 : 2);
-                }
-            @endphp
-            <div class="mt-5 rounded-2xl border border-cyan-100 bg-cyan-50/40 p-4 sm:p-5">
-                <div class="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                        <p class="text-xs font-black uppercase tracking-[0.14em] text-cyan-700">Referencia dinámica · Prediciendo la GMFCS</p>
-                        <p class="mt-1 text-xs text-slate-600">Se resalta únicamente el rango de la lámina de referencia en el que cae la puntuación global observada.</p>
-                    </div>
-                    <span class="rounded-xl bg-white px-4 py-2 text-sm font-black text-cyan-800 shadow-sm ring-1 ring-cyan-100">Resultado: {{ $hine->global_score ?? '—' }} / 78</span>
-                </div>
-
-                <div class="mx-auto mt-4 max-w-3xl">
-                    <div class="relative aspect-[680/341] overflow-hidden rounded-2xl bg-[#f3f5fa] ring-1 ring-slate-300">
-                        <img src="{{ asset('images/hine/HINE_interpretationaid_SP.png') }}" alt="Referencia Prediciendo la GMFCS" class="pointer-events-none absolute h-auto max-w-none" style="width:188.2353%; left:-5.8824%; top:-74.1935%;">
-                        <div class="{{ $gmfcsRange === null ? 'hidden' : '' }} pointer-events-none absolute bottom-0 top-[18%] bg-cyan-300/40 mix-blend-multiply ring-4 ring-inset ring-cyan-500" style="left:{{ ($gmfcsRange ?? 0) * 33.3333 }}%; width:33.3334%;"></div>
-                        <div class="{{ $gmfcsRange === null ? 'hidden' : '' }} absolute bottom-3 z-10 -translate-x-1/2 rounded-full bg-cyan-700 px-3 py-1.5 text-xs font-black text-white shadow-lg" style="left:{{ (($gmfcsRange ?? 0) * 33.3333) + 16.6667 }}%;">Aquí cae {{ $hine->global_score ?? '—' }}</div>
-                    </div>
-                    <p class="mt-2 text-center text-[11px] font-semibold text-slate-500">Resaltado visual del rango; no constituye por sí solo un diagnóstico ni modifica la referencia original.</p>
-                </div>
-            </div>
-
             <div class="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-5">
                 <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
                     <div>
