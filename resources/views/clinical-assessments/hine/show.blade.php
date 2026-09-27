@@ -228,6 +228,7 @@
             </div>
         </section>
     </div>
+@if($assessment->status !== 'finalized')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const button = document.getElementById('hine-finalize-button');
@@ -249,4 +250,5 @@
         });
     });
 </script>
+@endif
 </x-app-shell>
