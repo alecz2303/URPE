@@ -6,7 +6,9 @@
                 <h2 class="mt-1 text-xl font-extrabold text-slate-950">Historial y sesiones en curso</h2>
                 <p class="mt-2 max-w-2xl text-sm text-slate-500">Localiza borradores, continúa capturas pendientes y consulta sesiones completadas sin depender de la Agenda.</p>
             </div>
-            <a href="{{ route('appointments.index', ['view' => 'day', 'date' => now()->toDateString()]) }}" class="rounded-xl border border-cyan-200 bg-white px-4 py-2.5 text-sm font-bold text-cyan-800 shadow-sm hover:bg-cyan-50">Ir a Agenda de hoy</a>
+            @can('appointments.view')
+                <a href="{{ route('appointments.index', ['view' => 'day', 'date' => now()->toDateString()]) }}" class="rounded-xl border border-cyan-200 bg-white px-4 py-2.5 text-sm font-bold text-cyan-800 shadow-sm hover:bg-cyan-50">Ir a Agenda de hoy</a>
+            @endcan
         </div>
     </section>
 
@@ -118,7 +120,9 @@
                                     @else
                                         <a href="{{ route('session-logs.edit', $appointment) }}" class="rounded-lg bg-violet-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-violet-700">Continuar captura</a>
                                     @endif
-                                    <a href="{{ route('appointments.index', ['view' => 'day', 'date' => $appointment->starts_at->toDateString()]) }}" class="rounded-lg border border-cyan-200 bg-white px-3 py-1.5 text-xs font-bold text-cyan-700 hover:bg-cyan-50">Ver en agenda</a>
+                                    @can('appointments.view')
+                                        <a href="{{ route('appointments.index', ['view' => 'day', 'date' => $appointment->starts_at->toDateString()]) }}" class="rounded-lg border border-cyan-200 bg-white px-3 py-1.5 text-xs font-bold text-cyan-700 hover:bg-cyan-50">Ver en agenda</a>
+                                    @endcan
                                     <a href="{{ route('patients.show', $session->patient) }}" class="rounded-lg px-2 py-1.5 text-xs font-bold text-slate-500 hover:bg-slate-100 hover:text-slate-900">Paciente</a>
                                 </div>
                             </td>
