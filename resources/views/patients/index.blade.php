@@ -10,6 +10,27 @@
         <p class="w-fit rounded-full bg-cyan-100 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-cyan-700">{{ $patients->total() }} {{ $patients->total() === 1 ? 'paciente' : 'pacientes' }}</p>
     </div>
 
+    <form method="GET" action="{{ route('patients.index') }}" class="mb-6 grid gap-3 rounded-3xl border border-cyan-100 bg-white p-4 shadow-sm sm:grid-cols-[minmax(0,1fr)_12rem_auto] sm:items-end">
+        <div>
+            <label for="patient-search" class="text-xs font-extrabold uppercase tracking-wide text-slate-500">Buscar paciente</label>
+            <input id="patient-search" name="q" value="{{ $search }}" placeholder="Nombre, folio, responsable o teléfono" class="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm">
+        </div>
+        <div>
+            <label for="patient-status" class="text-xs font-extrabold uppercase tracking-wide text-slate-500">Estado</label>
+            <select id="patient-status" name="status" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm">
+                <option value="">Todos</option>
+                <option value="active" @selected($status === 'active')>Activos</option>
+                <option value="inactive" @selected($status === 'inactive')>Inactivos</option>
+            </select>
+        </div>
+        <div class="flex gap-2">
+            <button class="rounded-xl bg-cyan-600 px-4 py-3 text-sm font-bold text-white hover:bg-cyan-700">Buscar</button>
+            @if($search !== '' || $status !== '')
+                <a href="{{ route('patients.index') }}" class="rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-600 hover:bg-slate-50">Limpiar</a>
+            @endif
+        </div>
+    </form>
+
     <section class="overflow-hidden rounded-3xl border border-cyan-100 bg-white shadow-sm">
         <div class="divide-y divide-cyan-50">
             @forelse($patients as $patient)
@@ -38,8 +59,8 @@
             @empty
                 <div class="bg-gradient-to-br from-white via-cyan-50/40 to-pink-50/40 px-6 py-16 text-center">
                     <div class="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-cyan-100 text-xl text-cyan-600">♡</div>
-                    <h2 class="mt-4 font-bold">Aún no hay pacientes registrados</h2>
-                    <p class="mt-1 text-sm text-slate-500">Crea el primer paciente para comenzar su seguimiento administrativo y clínico.</p>
+                    <h2 class="mt-4 font-bold">{{ $search !== '' || $status !== '' ? 'No encontramos coincidencias' : 'Aún no hay pacientes registrados' }}</h2>
+                    <p class="mt-1 text-sm text-slate-500">{{ $search !== '' || $status !== '' ? 'Prueba con otros criterios o limpia los filtros.' : 'Crea el primer paciente para comenzar su seguimiento administrativo y clínico.' }}</p>
                     @can('patients.manage')
                         <a href="{{ route('patients.create') }}" class="mt-4 inline-flex rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-white">+ Nuevo paciente</a>
                     @endcan

@@ -166,6 +166,53 @@ class PatientAdministrationTest extends TestCase
             ->assertDontSee(route('patients.index'), false);
     }
 
+
+    public function test_authorized_user_can_search_patients_by_name_and_folio(): void
+    {
+        $actor = $this->userWithPermissions(['patients.view']);
+        $matching = Patient::query()->create(array_merge($this->patientData(), [
+            'first_name' => 'Lucia',
+            'last_name' => 'Mendez',
+        ]));
+        Patient::query()->create(array_merge($this->patientData(), [
+            'first_name' => 'Otro',
+            'last_name' => 'Paciente',
+            'email' => 'otro@example.test',
+        ]));
+
+        $this->actingAs($actor)->get(route('patients.index', ['q' => 'Lucia']))
+            ->assertOk()->assertSee($matching->folio)->assertDontSee('Otro Paciente');
+
+        $this->actingAs($actor)->get(route('patients.index', ['q' => $matching->folio]))
+            ->assertOk()->assertSee('Lucia Mendez');
+    }
+
+    public function test_authorized_user_can_filter_patients_by_status(): void
+    {
+        $actor = $this->userWithPermissions(['patients.view']);
+        $active = Patient::query()->create(array_merge($this->patientData(), ['first_name' => 'Activo', 'is_active' => true]));
+        $inactive = Patient::query()->create(array_merge($this->patientData(), ['first_name' => 'Inactivo', 'email' => 'inactivo@example.test', 'is_active' => false]));
+
+        $this->actingAs($actor)->get(route('patients.index', ['status' => 'inactive']))
+            ->assertOk()->assertSee($inactive->folio)->assertDontSee($active->folio);
+    }
+
+    public function test_patient_filters_are_preserved_in_pagination_links(): void
+    {
+        $actor = $this->userWithPermissions(['patients.view']);
+
+        for ($i = 1; $i <= 26; $i++) {
+            Patient::query()->create(array_merge($this->patientData(), [
+                'first_name' => 'Filtro',
+                'last_name' => 'Paciente '.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
+                'email' => 'filtro'.$i.'@example.test',
+            ]));
+        }
+
+        $this->actingAs($actor)->get(route('patients.index', ['q' => 'Filtro', 'status' => 'active']))
+            ->assertOk()->assertSee('q=Filtro', false)->assertSee('status=active', false);
+    }
+
     private function patientData(): array
     {
         return [

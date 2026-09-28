@@ -13,17 +13,41 @@ use Illuminate\View\View;
 
 class PatientController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         $this->authorize('patients.view');
 
-        return view('patients.index', [
-            'patients' => Patient::query()
-                ->with(['guardians' => fn ($query) => $query->orderByPivot('is_primary', 'desc')])
-                ->orderBy('last_name')
-                ->orderBy('first_name')
-                ->paginate(25),
-        ]);
+        $search = trim((string) $request->query('q', ''));
+        $status = (string) $request->query('status', '');
+
+        $patients = Patient::query()
+            ->with(['guardians' => fn ($query) => $query->orderByPivot('is_primary', 'desc')])
+            ->when($search !== '', function ($query) use ($search): void {
+                $like = '%'.str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $search).'%';
+
+                $query->where(function ($query) use ($like): void {
+                    $query->where('folio', 'like', $like)
+                        ->orWhere('first_name', 'like', $like)
+                        ->orWhere('middle_name', 'like', $like)
+                        ->orWhere('last_name', 'like', $like)
+                        ->orWhere('second_last_name', 'like', $like)
+                        ->orWhere('phone', 'like', $like)
+                        ->orWhereHas('guardians', function ($guardianQuery) use ($like): void {
+                            $guardianQuery->where('first_name', 'like', $like)
+                                ->orWhere('middle_name', 'like', $like)
+                                ->orWhere('last_name', 'like', $like)
+                                ->orWhere('second_last_name', 'like', $like)
+                                ->orWhere('phone', 'like', $like);
+                        });
+                });
+            })
+            ->when(in_array($status, ['active', 'inactive'], true), fn ($query) => $query->where('is_active', $status === 'active'))
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->paginate(25)
+            ->withQueryString();
+
+        return view('patients.index', compact('patients', 'search', 'status'));
     }
 
     public function create(): View
