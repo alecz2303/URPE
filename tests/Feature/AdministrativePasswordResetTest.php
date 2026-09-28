@@ -69,6 +69,11 @@ class AdministrativePasswordResetTest extends TestCase
             ->assertRedirect(route('password.change'));
 
         $this->actingAs($user)
+            ->get(route('password.change'))
+            ->assertOk()
+            ->assertSee('Define una nueva contraseña');
+
+        $this->actingAs($user)
             ->put(route('password.update'), [
                 'password' => 'NuevaClave123!',
                 'password_confirmation' => 'NuevaClave123!',
