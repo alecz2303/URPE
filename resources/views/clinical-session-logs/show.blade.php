@@ -1,6 +1,6 @@
 <x-app-shell title="Bitácora clínica" eyebrow="Sesión terapéutica">
     <x-slot:actions>
-        @if($canManage && ! $sessionLog?->isCompleted() && ! $appointment->isCancelled())
+        @if($canManage && ! $sessionLog?->isCompleted() && $appointment->allowsSessionCapture())
             <a href="{{ route('session-logs.edit', $appointment) }}" class="rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:from-violet-700 hover:to-fuchsia-700">{{ $sessionLog ? 'Continuar captura' : 'Capturar bitácora' }}</a>
         @endif
         <a href="{{ route('appointments.index', ['view' => 'day', 'date' => $appointment->starts_at->toDateString()]) }}" class="rounded-xl border border-cyan-200 bg-white px-4 py-2.5 text-sm font-bold text-cyan-800 shadow-sm hover:bg-cyan-50">Volver a agenda</a>

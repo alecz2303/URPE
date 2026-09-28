@@ -50,7 +50,11 @@
                             <p class="mt-1 text-sm font-bold text-violet-700">{{ $appointment->therapy->name }}</p>
                             <p class="mt-1 text-xs font-medium text-slate-400">{{ $appointment->therapists->pluck('name')->implode(' · ') }}</p>
                         </div>
-                        <a href="{{ route('session-logs.show', $appointment) }}" class="rounded-xl px-3 py-2 text-sm font-bold {{ $appointment->clinicalSessionLog?->isCompleted() ? 'bg-emerald-50 text-emerald-700' : 'bg-violet-600 text-white' }}">{{ $appointment->clinicalSessionLog?->isCompleted() ? 'Ver bitácora' : ($appointment->clinicalSessionLog ? 'Continuar bitácora' : 'Capturar bitácora') }}</a>
+                        @if($appointment->clinicalSessionLog?->isCompleted() || $appointment->allowsSessionCapture())
+                            <a href="{{ route('session-logs.show', $appointment) }}" class="rounded-xl px-3 py-2 text-sm font-bold {{ $appointment->clinicalSessionLog?->isCompleted() ? 'bg-emerald-50 text-emerald-700' : 'bg-violet-600 text-white' }}">{{ $appointment->clinicalSessionLog?->isCompleted() ? 'Ver bitácora' : ($appointment->clinicalSessionLog ? 'Continuar bitácora' : 'Capturar bitácora') }}</a>
+                        @elseif($appointment->clinicalSessionLog)
+                            <a href="{{ route('session-logs.show', $appointment) }}" class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-bold text-slate-600">Ver bitácora</a>
+                        @endif
                     </article>
                 @empty
                     <div class="px-6 py-12 text-center">
