@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('size_bytes');
             $table->char('sha256', 64)->index();
             $table->foreignId('uploaded_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->string('subject_type')->nullable();
+            $table->string('subject_type', 120)->nullable();
             $table->string('subject_id', 100)->nullable();
             $table->json('metadata')->nullable();
             $table->timestamps();
