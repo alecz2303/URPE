@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('actor_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('event', 120)->index();
-            $table->string('target_type')->nullable()->index();
+            $table->string('target_type', 120)->nullable()->index();
             $table->string('target_id', 100)->nullable()->index();
             $table->json('metadata')->nullable();
             $table->string('route_name')->nullable();
