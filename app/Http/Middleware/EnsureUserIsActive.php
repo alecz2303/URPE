@@ -22,6 +22,10 @@ class EnsureUserIsActive
             return redirect()->route('login');
         }
 
+        if ($user && $user->must_change_password && ! $request->routeIs('password.change', 'password.update', 'logout')) {
+            return redirect()->route('password.change');
+        }
+
         return $next($request);
     }
 }

@@ -7,6 +7,14 @@
 
     <p class="mb-6 text-sm font-medium text-slate-500">Cuentas internas, roles y acceso a URPE Gestión Clínica.</p>
 
+    @if(session('temporary_password'))
+        <div class="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-5" role="alert">
+            <p class="font-extrabold text-amber-900">Contraseña temporal — se muestra una sola vez</p>
+            <p class="mt-2 text-sm text-amber-800">Entrégala al usuario por un canal seguro. No queda almacenada en texto legible.</p>
+            <code class="mt-3 block select-all rounded-xl bg-white px-4 py-3 text-lg font-extrabold text-slate-900">{{ session('temporary_password') }}</code>
+        </div>
+    @endif
+
     <section class="overflow-hidden rounded-3xl border border-sky-100 bg-white shadow-sm">
         <div class="divide-y divide-sky-50">
             @forelse($users as $managedUser)
@@ -28,6 +36,15 @@
                     <div class="flex gap-3 md:justify-end">
                         @can('users.update')
                             <a href="{{ route('users.edit', $managedUser) }}" class="rounded-xl bg-sky-100 px-3 py-2 text-sm font-bold text-sky-700 hover:bg-sky-600 hover:text-white">Editar</a>
+                        @endcan
+
+                        @can('users.update')
+                            @if(! auth()->user()->is($managedUser))
+                                <form method="POST" action="{{ route('users.password.reset', $managedUser) }}" data-swal-confirm data-swal-title="¿Restablecer contraseña?" data-swal-text="Se invalidará la contraseña actual y se generará una temporal de un solo uso administrativo." data-swal-confirm-text="Sí, restablecer">
+                                    @csrf
+                                    <button class="rounded-xl bg-amber-50 px-3 py-2 text-sm font-bold text-amber-700 hover:bg-amber-100">Restablecer contraseña</button>
+                                </form>
+                            @endif
                         @endcan
 
                         @can('users.deactivate')

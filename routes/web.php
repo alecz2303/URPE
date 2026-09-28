@@ -4,6 +4,7 @@ use App\Http\Controllers\AppointmentAvailabilityController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AppointmentTherapistSubstitutionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\ForcedPasswordChangeController;
 use App\Http\Controllers\CenterConfigurationController;
 use App\Http\Controllers\ClinicalFileController;
 use App\Http\Controllers\ClinicalRecordController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\TherapistShowController;
 use App\Http\Controllers\TherapyController;
 use App\Http\Controllers\TherapyShowController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserPasswordResetController;
 use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +36,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
+    Route::get('/cambiar-contrasena', [ForcedPasswordChangeController::class, 'edit'])->name('password.change');
+    Route::put('/cambiar-contrasena', [ForcedPasswordChangeController::class, 'update'])->name('password.update');
+
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('/agenda', [AppointmentController::class, 'index'])->name('appointments.index');
@@ -63,6 +68,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/usuarios/{user}/editar', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/usuarios/{user}', [UserController::class, 'update'])->name('users.update');
     Route::patch('/usuarios/{user}/estado', [UserController::class, 'toggleActive'])->name('users.toggle-active');
+    Route::post('/usuarios/{user}/restablecer-contrasena', UserPasswordResetController::class)->name('users.password.reset');
 
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/roles/{role}/editar', [RoleController::class, 'edit'])->name('roles.edit');

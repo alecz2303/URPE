@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 Artisan::command('urpe:status', function (): void {
     $this->info('URPE Gestión Clínica — foundation ready.');
@@ -23,6 +24,39 @@ Artisan::command('urpe:grant-admin {email}', function (string $email): int {
 
     return 0;
 })->purpose('Assign the administrator role to an existing URPE user');
+
+Artisan::command('urpe:dev-password {email=admin@urpe.test} {--password=}', function (string $email): int {
+    if (app()->environment('production')) {
+        $this->error('Este comando está deshabilitado en producción.');
+
+        return 1;
+    }
+
+    $user = User::query()->where('email', $email)->first();
+
+    if (! $user) {
+        $this->error("No existe un usuario con el correo {$email}.");
+
+        return 1;
+    }
+
+    $password = (string) ($this->option('password') ?: $this->secret('Nueva contraseña de desarrollo'));
+
+    if (strlen($password) < 8) {
+        $this->error('La contraseña debe tener al menos 8 caracteres.');
+
+        return 1;
+    }
+
+    $user->forceFill([
+        'password' => Hash::make($password),
+        'must_change_password' => false,
+    ])->save();
+
+    $this->info("Contraseña de desarrollo actualizada para {$email}. No se registró la contraseña.");
+
+    return 0;
+})->purpose('Set a local/development password for an existing URPE user');
 
 Artisan::command('urpe:preflight {--skip-db : Omitir la prueba de conexión a la base de datos}', function (): int {
     $checks = [];
