@@ -64,6 +64,28 @@ class ClinicalSessionIndexTest extends TestCase
             ->assertDontSee($hidden->patient->full_name);
     }
 
+    public function test_therapist_session_index_hides_agenda_links(): void
+    {
+        $this->seed(AuthorizationSeeder::class);
+
+        $user = User::factory()->create();
+        $user->assignRole('therapist');
+        $therapist = Therapist::query()->create([
+            'user_id' => $user->id,
+            'name' => 'Terapeuta UAT',
+            'email' => $user->email,
+            'is_active' => true,
+        ]);
+
+        $this->seedSessions($user, $therapist);
+
+        $response = $this->actingAs($user)->get(route('session-logs.index'));
+
+        $response->assertOk()
+            ->assertDontSee('Ir a Agenda de hoy')
+            ->assertDontSee('Ver en agenda');
+    }
+
     public function test_user_without_session_log_permission_cannot_open_index(): void
     {
         $this->seed(AuthorizationSeeder::class);
