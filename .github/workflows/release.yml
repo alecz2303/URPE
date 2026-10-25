@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 30
     steps:
       - name: Validate tag
@@ -42,22 +42,21 @@ jobs:
           fi
           echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
-      - name: Setup PHP 8.4
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          extensions: mbstring, bcmath, pdo_mysql, zip
-          tools: composer:v2
-          coverage: none
+      - name: Verify preinstalled PHP 8.4
+        run: |
+          php8.4 -v
+          php -r 'exit(PHP_VERSION_ID >= 80400 && PHP_VERSION_ID < 80500 ? 0 : 1);'
+          for extension in mbstring bcmath pdo_mysql zip; do php8.4 -m | grep -Eiq "^${extension}$" || exit 1; done
+          composer --version
 
       - name: Install production PHP dependencies
         run: composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader --no-scripts
 
-      - name: Setup Node 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+      - name: Verify preinstalled Node.js 22
+        run: |
+          node -v
+          npm -v
+          node -e 'process.exit(process.versions.node.startsWith("22.") ? 0 : 1)'
 
       - name: Compile Vite assets
         run: |
@@ -82,7 +81,7 @@ jobs:
           if find package -type l -print -quit | grep -q .; then echo "Symlinks not permitted in package"; exit 1; fi
           test -f package/vendor/autoload.php
           test -f package/public/build/manifest.json
-          printf '{"schema":1,"project":"urpe","version":"%s","type":"laravel","sourceSha":"%s"}\\n' "$RELEASE_TAG" "$SOURCE_SHA" > package/kerberos-release.json
+          printf '{"schema":1,"project":"urpe","version":"%s","type":"laravel","sourceSha":"%s"}\n' "$RELEASE_TAG" "$SOURCE_SHA" > package/kerberos-release.json
           (cd package && zip -q -r ../release.zip .)
           sha256sum release.zip | tee release.zip.sha256
           unzip -tq release.zip
