@@ -11,18 +11,18 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          extensions: mbstring, pdo_sqlite
-          coverage: none
+      - name: Verify preinstalled PHP 8.4
+        run: |
+          php8.4 -v
+          php8.4 -m | grep -Eiq '^mbstring$'
+          php8.4 -m | grep -Eiq '^pdo_sqlite$'
+          php -r 'exit(PHP_VERSION_ID >= 80400 && PHP_VERSION_ID < 80500 ? 0 : 1);'
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
@@ -32,11 +32,11 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
+      - name: Verify preinstalled Node.js 22
+        run: |
+          node -v
+          npm -v
+          node -e 'process.exit(process.versions.node.startsWith("22.") ? 0 : 1)'
 
       - name: Install frontend dependencies
         run: npm ci --no-audit --no-fund
