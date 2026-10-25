@@ -1,0 +1,105 @@
+name: Build and Publish URPE Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "New release tag (example v2026.10.24.1)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: urpe-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Validate tag
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          [[ "$RELEASE_TAG" =~ ^v[0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]+$ ]] || exit 1
+
+      - name: Checkout approved master
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: false
+
+      - name: Ensure tag does not exist
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          git fetch --tags --force
+          if git rev-parse -q --verify "refs/tags/$RELEASE_TAG" >/dev/null; then
+            echo "Release tag already exists"; exit 1
+          fi
+          echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, bcmath, pdo_mysql, zip
+          tools: composer:v2
+          coverage: none
+
+      - name: Install production PHP dependencies
+        run: composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader --no-scripts
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Compile Vite assets
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+
+      - name: Assemble explicit deployment package
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p package
+          for path in app bootstrap config database public resources routes vendor; do
+            test -d "$path"
+            cp -a "$path" package/
+          done
+          for path in artisan composer.json composer.lock; do
+            test -f "$path"
+            cp "$path" package/
+          done
+          mkdir -p package/storage/framework/cache package/storage/framework/sessions package/storage/framework/views package/storage/logs
+          if find package -type l -print -quit | grep -q .; then echo "Symlinks not permitted in package"; exit 1; fi
+          test -f package/vendor/autoload.php
+          test -f package/public/build/manifest.json
+          printf '{"schema":1,"project":"urpe","version":"%s","type":"laravel","sourceSha":"%s"}\\n' "$RELEASE_TAG" "$SOURCE_SHA" > package/kerberos-release.json
+          (cd package && zip -q -r ../release.zip .)
+          sha256sum release.zip | tee release.zip.sha256
+          unzip -tq release.zip
+          if unzip -Z1 release.zip | grep -E '(^|/)(\.env|\.git)(/|$)'; then
+            echo "Sensitive entry detected"; exit 1
+          fi
+
+      - name: Publish immutable version assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          target_commitish: ${{ env.SOURCE_SHA }}
+          name: ${{ inputs.tag }}
+          body: "URPE Laravel 13 release built from ${{ env.SOURCE_SHA }}. Deployment is NOT automatic."
+          files: |
+            release.zip
+            release.zip.sha256
+          draft: false
+          prerelease: false
+          fail_on_unmatched_files: true
