@@ -563,7 +563,7 @@
                                 ['¿Cómo inicio el proceso?','Puedes enviar un mensaje por WhatsApp para solicitar información y agendar una valoración inicial.'],
                                 ['¿Qué debo llevar a la primera valoración?','Todos los estudios que hayan realizado, como resonancias magnéticas, electroencefalograma, radiografías u otros estudios relacionados.'],
                                 ['¿Cómo se eligen las terapias?','Después de la valoración se establecen los objetivos terapéuticos. La selección de terapias se basa en los objetivos individuales de cada paciente.'],
-                                ['¿Dónde se encuentra URPE?','En 15 norte poniente esquina Río Chancalá #105, Fraccionamiento Miramar.'],
+                                ['¿Dónde se encuentra URPE?','En Av. Palma Areca #417, esquina con Helechos, Col. Las Palmas, Tuxtla Gutiérrez, Chiapas..'],
                                 ['¿Cuál es el horario de atención?','Lunes a viernes de 9:00 a 18:00 y sábados de 8:00 a 14:00.'],
                             ];
                         @endphp
