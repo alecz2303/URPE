@@ -563,7 +563,7 @@
                                 ['¿Cómo inicio el proceso?','Puedes enviar un mensaje por WhatsApp para solicitar información y agendar una valoración inicial.'],
                                 ['¿Qué debo llevar a la primera valoración?','Todos los estudios que hayan realizado, como resonancias magnéticas, electroencefalograma, radiografías u otros estudios relacionados.'],
                                 ['¿Cómo se eligen las terapias?','Después de la valoración se establecen los objetivos terapéuticos. La selección de terapias se basa en los objetivos individuales de cada paciente.'],
-                                ['¿Dónde se encuentra URPE?','En Av. Palma Areca #417, esquina con Helechos, Col. Las Palmas, Tuxtla Gutiérrez, Chiapas..'],
+                                ['¿Dónde se encuentra URPE?','En Av. Palma Areca #417, esquina con Helechos, Col. Las Palmas, Tuxtla Gutiérrez, Chiapas.'],
                                 ['¿Cuál es el horario de atención?','Lunes a viernes de 9:00 a 18:00 y sábados de 8:00 a 14:00.'],
                             ];
                         @endphp
@@ -618,7 +618,7 @@
                         <div class="mt-10 space-y-5">
                             <div class="flex gap-4">
                                 <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-cyan-400/15 text-cyan-300" aria-hidden="true">⌖</span>
-                                <div><p class="text-xs font-extrabold uppercase tracking-[.14em] text-slate-400">Dirección</p><p class="mt-1 leading-6 text-white">15 norte poniente esquina Río Chancalá #105, Fraccionamiento Miramar</p></div>
+                                <div><p class="text-xs font-extrabold uppercase tracking-[.14em] text-slate-400">Dirección</p><p class="mt-1 leading-6 text-white">Av. Palma Areca #417, esquina con Helechos, Col. Las Palmas, Tuxtla Gutiérrez, Chiapas.</p></div>
                             </div>
                             <div class="flex gap-4">
                                 <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-pink-400/15 text-pink-300" aria-hidden="true">☎</span>
