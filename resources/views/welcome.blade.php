@@ -468,7 +468,7 @@
 
                 <div class="mt-12 grid gap-6 md:grid-cols-3">
                     @foreach ($team as [$name,$role,$initial,$color])
-                        <article data-reveal="up" class="group overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-[0_14px_45px_rgba(15,23,42,.07)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_22px_55px_rgba(15,23,42,.12)]">
+                        <article data-reveal="up" class="group relative overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-[0_14px_45px_rgba(15,23,42,.07)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_22px_55px_rgba(15,23,42,.12)]">
                             <div class="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br {{ $teamStyles[$color]['soft'] }}">
                                 <div aria-hidden="true" class="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/50"></div>
                                 <div aria-hidden="true" class="absolute bottom-8 left-8 h-4 w-4 rounded-full {{ $teamStyles[$color]['dot'] }}"></div>
@@ -478,7 +478,11 @@
                             <div class="p-7">
                                 <h3 class="text-xl font-extrabold leading-7 text-slate-800">{{ $name }}</h3>
                                 <p class="mt-2 text-sm font-semibold leading-6 {{ $teamStyles[$color]['ink'] }}">{{ $role }}</p>
-                                <span aria-hidden="true" class="mt-6 block h-1 w-10 rounded-full {{ $teamStyles[$color]['dot'] }}"></span>
+                                @if ($initial === 'F')
+                                    <button type="button" data-open-fredi aria-haspopup="dialog" aria-controls="fredi-profile-dialog" class="mt-5 inline-flex items-center gap-2 rounded-full bg-pink-50 px-4 py-2 text-sm font-bold text-pink-700 transition hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600">Ver perfil profesional <span aria-hidden="true">→</span></button>
+                                @else
+                                    <span aria-hidden="true" class="mt-6 block h-1 w-10 rounded-full {{ $teamStyles[$color]['dot'] }}"></span>
+                                @endif
                             </div>
                         </article>
                     @endforeach
@@ -495,6 +499,46 @@
             </div>
         </section>
 
+
+
+        <dialog id="fredi-profile-dialog" aria-labelledby="fredi-profile-title" aria-describedby="fredi-profile-intro" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
+            <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-slate-100 bg-white/95 px-6 py-4 backdrop-blur sm:px-9">
+                <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-pink-600">Nuestro equipo · Perfil profesional</span>
+                <button type="button" data-close-fredi aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 transition hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-pink-600">×</button>
+            </div>
+            <div class="space-y-7 px-6 py-8 sm:px-9 sm:py-10">
+                <div>
+                    <p class="mb-2 text-sm font-bold text-pink-600">Encargado del área de PediaSuit</p>
+                    <h2 id="fredi-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Fredi Eduardo Carpio Jiménez</h2>
+                    <p class="mt-2 font-semibold text-slate-500">Licenciado en Terapia Física</p>
+                    <p id="fredi-profile-intro" class="mt-5 leading-7 text-slate-600">Profesional de la fisioterapia comprometido con la recuperación y el bienestar de sus pacientes, mediante una atención basada en el respeto, la calidad y la calidez humana.</p>
+                </div>
+                <section aria-labelledby="fredi-education"><h3 id="fredi-education" class="text-lg font-extrabold text-slate-800">Formación académica</h3><p class="mt-2 leading-7 text-slate-600">Licenciatura en Terapia Física (2021–2025), con formación técnica previa en Enfermería por CONALEP.</p></section>
+                <section aria-labelledby="fredi-experience"><h3 id="fredi-experience" class="text-lg font-extrabold text-slate-800">Experiencia profesional</h3><p class="mt-2 leading-7 text-slate-600">Forma parte de URPE desde agosto de 2025. Realizó su servicio social en el Centro de Rehabilitación DIF de Tuxtla Gutiérrez y prácticas clínicas en el Hospital Básico Comunitario de Berriozábal.</p></section>
+                <section aria-labelledby="fredi-training"><h3 id="fredi-training" class="text-lg font-extrabold text-slate-800">Formación complementaria destacada</h3>
+                    <ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-slate-600">
+                        <li>Entrenamiento básico en Spider Cage y PediaSuit Protocol — Bogotá, Colombia (2026).</li>
+                        <li>Terapia orosensoriomotriz (2026).</li>
+                        <li>Certificación en punción seca (2025).</li>
+                        <li>Fisioterapia manual e intervencionista de columna dorsal y parrilla costal (2025).</li>
+                        <li>Estimulación temprana para niños de 0 a 11 meses (2024).</li>
+                        <li>Electroterapia aplicada, concepto ELECAP (2024).</li>
+                    </ul>
+                </section>
+                <p class="border-t border-slate-100 pt-5 text-sm font-medium text-slate-500">Atención profesional con respeto, compromiso y calidez humana.</p>
+            </div>
+        </dialog>
+        <script>
+            (() => {
+                const dialog = document.getElementById('fredi-profile-dialog');
+                const opener = document.querySelector('[data-open-fredi]');
+                const closer = dialog?.querySelector('[data-close-fredi]');
+                if (!dialog || !opener || !closer || typeof dialog.showModal !== 'function') return;
+                opener.addEventListener('click', () => dialog.showModal());
+                closer.addEventListener('click', () => dialog.close());
+                dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+            })();
+        </script>
 
         <section class="relative overflow-hidden bg-white py-20 sm:py-24 lg:py-28" aria-labelledby="faq-title">
             <div aria-hidden="true" class="pointer-events-none absolute -right-24 top-20 h-72 w-72 rounded-full bg-lime-100/55 blur-3xl"></div>
