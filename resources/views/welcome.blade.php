@@ -460,6 +460,7 @@
                 ['528745014_3744175259219506_1051254750902545105_n.jpg','Proceso terapéutico'],
                 ['fdcf6966-4d7e-4c77-9d60-8fbbbc929e93.JPG','Atención personalizada'],
                 ['URPE-21.jpg','Instalaciones y terapias de URPE'],
+                ['IMG_9144.jpg','Atención terapéutica en URPE'],
             ];
             $availableTherapyPhotos = array_values(array_filter($therapyPhotos, fn ($item) => is_file(public_path('images/website/therapies/'.$item[0]))));
         @endphp
@@ -474,12 +475,79 @@
                     <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                         @foreach ($availableTherapyPhotos as [$filename,$alt])
                             <figure data-reveal="up" class="group overflow-hidden rounded-[1.75rem] bg-white shadow-[0_14px_45px_rgba(15,23,42,.08)]">
-                                <img src="{{ asset('images/website/therapies/'.$filename) }}" alt="{{ $alt }}" loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105">
+                                <button type="button" data-gallery-open="{{ $loop->index }}" aria-label="Ampliar imagen: {{ $alt }}" class="relative block w-full cursor-zoom-in overflow-hidden focus-visible:outline focus-visible:outline-4 focus-visible:outline-cyan-500">
+                                    <img src="{{ asset('images/website/therapies/'.$filename) }}" alt="{{ $alt }}" loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105">
+                                    <span aria-hidden="true" class="pointer-events-none absolute bottom-4 right-4 rounded-full bg-slate-950/65 px-3 py-2 text-xs font-bold text-white opacity-0 backdrop-blur transition group-hover:opacity-100 group-focus-within:opacity-100">Ampliar ↗</span>
+                                </button>
                             </figure>
                         @endforeach
                     </div>
                 </div>
             </section>
+        @endif
+
+        @if (count($availableTherapyPhotos))
+            <dialog id="urpe-gallery-dialog" aria-label="Galería de fotografías de URPE" class="m-auto h-dvh max-h-dvh w-screen max-w-none border-0 bg-slate-950/95 p-0 text-white backdrop:bg-slate-950/90">
+                <div class="relative flex h-full w-full flex-col items-center justify-center px-4 py-16 sm:px-20">
+                    <button type="button" data-gallery-close aria-label="Cerrar galería" class="absolute right-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">×</button>
+                    <button type="button" data-gallery-prev aria-label="Fotografía anterior" class="absolute left-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white sm:left-6">‹</button>
+                    <div class="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden" data-gallery-stage>
+                        <img data-gallery-image src="" alt="" class="max-h-full max-w-full object-contain opacity-0 transition-opacity duration-300 ease-in-out" decoding="async">
+                    </div>
+                    <button type="button" data-gallery-next aria-label="Fotografía siguiente" class="absolute right-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white sm:right-6">›</button>
+                    <p data-gallery-counter aria-live="polite" class="mt-5 text-sm font-semibold tracking-widest text-white/75"></p>
+                </div>
+            </dialog>
+            <script>
+                (() => {
+                    const dialog = document.getElementById('urpe-gallery-dialog');
+                    const image = dialog?.querySelector('[data-gallery-image]');
+                    if (!dialog || !image || typeof dialog.showModal !== 'function') return;
+                    const photos = @json(array_map(fn ($item) => ['src' => asset('images/website/therapies/'.$item[0]), 'alt' => $item[1]], $availableTherapyPhotos));
+                    const counter = dialog.querySelector('[data-gallery-counter]');
+                    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+                    let current = 0, transitionToken = 0, pending = null, touchStart = null;
+                    const display = (index, immediate = false) => {
+                        if (!photos.length) return;
+                        current = (index + photos.length) % photos.length;
+                        const token = ++transitionToken;
+                        if (pending) clearTimeout(pending);
+                        image.classList.add('opacity-0');
+                        const swap = () => {
+                            if (token !== transitionToken) return;
+                            image.src = photos[current].src;
+                            image.alt = photos[current].alt;
+                            counter.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(photos.length).padStart(2, '0');
+                            const reveal = () => { if (token === transitionToken) image.classList.remove('opacity-0'); };
+                            if (image.complete) requestAnimationFrame(reveal);
+                            else { image.onload = reveal; image.onerror = reveal; }
+                        };
+                        if (immediate || reducedMotion.matches) swap();
+                        else pending = setTimeout(swap, 300);
+                    };
+                    document.querySelectorAll('[data-gallery-open]').forEach(button => {
+                        button.addEventListener('click', () => { dialog.showModal(); display(Number(button.dataset.galleryOpen), true); });
+                    });
+                    dialog.querySelector('[data-gallery-close]').addEventListener('click', () => dialog.close());
+                    dialog.querySelector('[data-gallery-prev]').addEventListener('click', () => display(current - 1));
+                    dialog.querySelector('[data-gallery-next]').addEventListener('click', () => display(current + 1));
+                    dialog.addEventListener('keydown', event => {
+                        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                            event.preventDefault(); display(current + (event.key === 'ArrowRight' ? 1 : -1));
+                        }
+                    });
+                    dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+                    const stage = dialog.querySelector('[data-gallery-stage]');
+                    stage.addEventListener('touchstart', event => { touchStart = event.changedTouches[0]?.clientX ?? null; }, {passive:true});
+                    stage.addEventListener('touchend', event => {
+                        if (touchStart === null) return;
+                        const delta = (event.changedTouches[0]?.clientX ?? touchStart) - touchStart;
+                        touchStart = null;
+                        if (Math.abs(delta) > 45) display(current + (delta < 0 ? 1 : -1));
+                    }, {passive:true});
+                    dialog.addEventListener('close', () => { ++transitionToken; if (pending) clearTimeout(pending); image.src = ''; image.classList.add('opacity-0'); });
+                })();
+            </script>
         @endif
 
         <section id="equipo" class="scroll-mt-28 relative overflow-hidden bg-white py-20 sm:py-24 lg:py-28">
