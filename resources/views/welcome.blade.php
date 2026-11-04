@@ -619,10 +619,16 @@
                 <button type="button" data-close-profile aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 hover:bg-cyan-100">×</button>
             </div>
             <div class="space-y-7 px-6 py-8 sm:px-9 sm:py-10">
-                <div><p class="mb-2 text-sm font-bold text-cyan-600">Director de URPE</p><h2 id="jonathan-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Jonathan Escobar Zambrano</h2><p class="mt-2 font-semibold text-slate-500">Licenciado en Terapia Física</p><p class="mt-5 leading-7 text-slate-600">Fisioterapeuta infantil con experiencia en rehabilitación pediátrica y evaluación del desarrollo motor.</p></div>
+                @if (is_file(public_path('images/team/jonathan-escobar.jpg')))
+                    <div class="flex items-center gap-5 rounded-[1.5rem] bg-gradient-to-r from-cyan-50 via-white to-pink-50 p-4 sm:p-5">
+                        <img src="{{ asset('images/team/jonathan-escobar.jpg') }}" alt="Fotografía de Jonathan Escobar Zambrano" class="h-24 w-24 shrink-0 rounded-2xl object-cover object-top shadow-md ring-4 ring-white sm:h-32 sm:w-32" loading="lazy" decoding="async">
+                        <div><p class="text-xs font-extrabold uppercase tracking-[0.15em] text-cyan-700">Nuestro equipo</p><p class="mt-2 text-sm font-semibold leading-6 text-slate-600">Fundador y director de URPE</p></div>
+                    </div>
+                @endif
+                <div><p class="mb-2 text-sm font-bold text-cyan-600">Fundador y director de URPE</p><h2 id="jonathan-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Jonathan Escobar Zambrano</h2><p class="mt-2 font-semibold text-slate-500">Licenciado en Terapia Física</p><p class="mt-5 leading-7 text-slate-600">Fundador y director de la Unidad de Rehabilitación Pediátrica Evolutiva (URPE), con trayectoria en fisioterapia infantil, evaluación neuromotora y formación especializada nacional e internacional.</p></div>
                 <section><h3 class="text-lg font-extrabold text-slate-800">Formación académica</h3><p class="mt-2 leading-7 text-slate-600">Licenciatura en Terapia Física, Escuela de Terapia Física del Sistema DIF (2009–2013).</p></section>
-                <section><h3 class="text-lg font-extrabold text-slate-800">Experiencia profesional</h3><p class="mt-2 leading-7 text-slate-600">Director de URPE desde 2016. Fisioterapeuta infantil en ÚNETE-AC (2012–2016) y pasantía en terapia física en CREE (2012–2013).</p></section>
-                <section><h3 class="text-lg font-extrabold text-slate-800">Formación complementaria destacada</h3><ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-slate-600"><li>Certificación en terapia Vojta aplicada a lactantes, niños y adolescentes — Universidad de Salamanca (2017–2018).</li><li>Evaluación de Movimientos Generales de Prechtl — GM Trust (2019; recertificación 2024).</li><li>Terapia Manual Tridimensional del Pie (2019).</li><li>Infant Motor Profile y Newborn Behavioral Observations (2023).</li><li>Hammersmith Infant Neurological Examination (2024).</li><li>Protocolo PediaSuit, curso básico (2026).</li></ul></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Experiencia profesional</h3><p class="mt-2 leading-7 text-slate-600">Director de la Unidad de Rehabilitación Pediátrica Evolutiva, Tuxtla Gutiérrez, Chiapas (2016–actualidad). Fisioterapeuta infantil en ÚNETE-AC, Oaxaca de Juárez (2012–2016). Pasantía en terapia física en CREE, Oaxaca de Juárez (2012–2013).</p></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Formación complementaria destacada</h3><ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-slate-600"><li>2012 — Primer Encuentro de Terapeutas Vojta en México, APAC, Culiacán, Sinaloa.</li><li>2013 — III Jornada Internacional de Terapia Vojta en España, Hospital de Móstoles, Madrid.</li><li>2013 — Evaluación Neurológica del Recién Nacido, Universidad Nacional Autónoma de México.</li><li>2017–2018 — Certificación de Terapia Vojta aplicada a lactantes, niños y adolescentes con alteraciones motoras cerebrales infantiles, Universidad de Salamanca, España.</li><li>2019 — Certificación GM Trust para la Evaluación Cualitativa de los Movimientos Generales de Prechtl, curso avanzado, Ciudad de México.</li><li>2019 — Certificación GM Trust para la Evaluación Cuantitativa de los Movimientos Generales de Prechtl, curso básico, Ciudad de México.</li><li>2019 — Certificación en Terapia Manual Tridimensional del Pie de Barbara Zukunft-Huber, Dresde, Alemania.</li><li>2023 — Certificación para aplicar el instrumento de evaluación del desarrollo motor Infant Motor Profile.</li><li>2023 — Entrenamiento en Newborn Behavioral Observations System (NBO), Boston Children’s Hospital, Boston, Estados Unidos.</li><li>2024 — Recertificación GM Trust para la Evaluación Cualitativa de los Movimientos Generales de Prechtl, curso avanzado, Ciudad de México.</li><li>2024 — Certificación Hammersmith Infant Neurological Examination (HINE).</li><li>2026 — Entrenamiento básico en el protocolo PediaSuit, Bogotá, Colombia.</li></ul></section>
             </div>
         </dialog>
         <dialog id="profile-fredi" aria-labelledby="fredi-profile-title" aria-describedby="fredi-profile-intro" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
@@ -631,6 +637,12 @@
                 <button type="button" data-close-profile aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 transition hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-pink-600">×</button>
             </div>
             <div class="space-y-7 px-6 py-8 sm:px-9 sm:py-10">
+                @if (is_file(public_path('images/team/fredi-carpio.jpg')))
+                    <div class="flex items-center gap-5 rounded-[1.5rem] bg-gradient-to-r from-cyan-50 via-white to-pink-50 p-4 sm:p-5">
+                        <img src="{{ asset('images/team/fredi-carpio.jpg') }}" alt="Fotografía de Fredi Eduardo Carpio Jiménez" class="h-24 w-24 shrink-0 rounded-2xl object-cover object-top shadow-md ring-4 ring-white sm:h-32 sm:w-32" loading="lazy" decoding="async">
+                        <div><p class="text-xs font-extrabold uppercase tracking-[0.15em] text-cyan-700">Nuestro equipo</p><p class="mt-2 text-sm font-semibold leading-6 text-slate-600">Área de PediaSuit</p></div>
+                    </div>
+                @endif
                 <div>
                     <p class="mb-2 text-sm font-bold text-pink-600">Encargado del área de PediaSuit</p>
                     <h2 id="fredi-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Fredi Eduardo Carpio Jiménez</h2>
@@ -658,6 +670,12 @@
                 <button type="button" data-close-profile aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 hover:bg-cyan-100">×</button>
             </div>
             <div class="space-y-7 px-6 py-8 sm:px-9 sm:py-10">
+                @if (is_file(public_path('images/team/mauricio-ballinas.jpg')))
+                    <div class="flex items-center gap-5 rounded-[1.5rem] bg-gradient-to-r from-cyan-50 via-white to-pink-50 p-4 sm:p-5">
+                        <img src="{{ asset('images/team/mauricio-ballinas.jpg') }}" alt="Fotografía de Mauricio Ballinas Ramírez" class="h-24 w-24 shrink-0 rounded-2xl object-cover object-top shadow-md ring-4 ring-white sm:h-32 sm:w-32" loading="lazy" decoding="async">
+                        <div><p class="text-xs font-extrabold uppercase tracking-[0.15em] text-cyan-700">Nuestro equipo</p><p class="mt-2 text-sm font-semibold leading-6 text-slate-600">Marcha y bipedestación</p></div>
+                    </div>
+                @endif
                 <div><p class="mb-2 text-sm font-bold text-cyan-600">Encargado del área de marcha y programa de bipedestación</p><h2 id="mauricio-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Mauricio Ballinas Ramírez</h2><p class="mt-2 font-semibold text-slate-500">Licenciado en Terapia Física</p><p class="mt-5 leading-7 text-slate-600">Fisioterapeuta con experiencia clínica y deportiva en rehabilitación, readaptación funcional y prevención de lesiones.</p></div>
                 <section><h3 class="text-lg font-extrabold text-slate-800">Formación académica</h3><p class="mt-2 leading-7 text-slate-600">Licenciatura en Fisioterapia, Instituto de Estudios Superiores de Chiapas (2020–2023).</p></section>
                 <section><h3 class="text-lg font-extrabold text-slate-800">Experiencia profesional</h3><p class="mt-2 leading-7 text-slate-600">Pasantía de fisioterapia en Club León FC (marzo 2024–enero 2025). Fisioterapeuta en Evolut, León, Guanajuato (enero–diciembre 2025).</p></section>
