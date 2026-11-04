@@ -18,6 +18,30 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         html { scroll-behavior: smooth; }
+        /* URPE-45: propuesta visual experimental; aislada de la rama aprobable. */
+        .urpe-editorial-gallery { grid-auto-flow: dense; }
+        .urpe-editorial-gallery figure { position: relative; isolation: isolate; }
+        .urpe-editorial-gallery figure::after { content: ""; pointer-events: none; position: absolute; inset: 0; border: 1px solid rgba(255,255,255,.55); border-radius: inherit; }
+        .urpe-editorial-gallery button { height: 100%; }
+        .urpe-editorial-gallery img { height: 100%; min-height: 235px; }
+        @media (min-width: 1024px) {
+            .urpe-editorial-gallery figure:nth-child(8n + 1) { grid-column: span 2; grid-row: span 2; }
+            .urpe-editorial-gallery figure:nth-child(8n + 1) img { min-height: 490px; }
+            .urpe-editorial-gallery figure:nth-child(8n + 4) { grid-row: span 2; }
+            .urpe-editorial-gallery figure:nth-child(8n + 4) img { min-height: 490px; }
+        }
+        .urpe-team-premium article { box-shadow: 0 20px 65px rgba(15,23,42,.075); }
+        .urpe-team-premium article:hover { box-shadow: 0 28px 75px rgba(8,145,178,.15); }
+        .urpe-team-premium article:first-child { border-color: rgba(8,145,178,.25); }
+        .urpe-team-premium article:first-child::before { content: "FUNDADOR Y DIRECTOR"; position: absolute; top: 16px; left: 16px; z-index: 2; padding: 9px 13px; border-radius: 999px; background: rgba(8,145,178,.94); color: white; font-size: 10px; letter-spacing: .12em; font-weight: 900; box-shadow: 0 6px 18px rgba(8,145,178,.2); }
+        .urpe-team-premium article img { transition: transform .65s cubic-bezier(.2,.8,.2,1), filter .65s; }
+        .urpe-team-premium article:hover img { transform: scale(1.045); }
+        .urpe-director-timeline { list-style: none; padding-left: 0; margin-left: 6px; border-left: 2px solid #cffafe; }
+        .urpe-director-timeline li { position: relative; padding: 12px 14px 12px 25px; margin-left: 0; border-bottom: 1px solid #f1f5f9; }
+        .urpe-director-timeline li::before { content: ""; position: absolute; left: -7px; top: 22px; width: 12px; height: 12px; border: 3px solid white; border-radius: 50%; background: #0891b2; box-shadow: 0 0 0 2px #a5f3fc; }
+        .urpe-director-timeline li:nth-child(even)::before { background: #db2777; box-shadow: 0 0 0 2px #fbcfe8; }
+        @media (prefers-reduced-motion: reduce) { .urpe-team-premium article img { transition: none; } }
+
         [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity .75s cubic-bezier(.2,.75,.25,1), transform .75s cubic-bezier(.2,.75,.25,1); }
         [data-reveal="left"] { transform: translate(-34px, 18px); }
         [data-reveal="right"] { transform: translate(34px, 18px); }
@@ -442,6 +466,114 @@
             </div>
         </section>
 
+        @php
+            // Colocar fotografías autorizadas en public/images/website/therapies/ sin renombrarlas.
+            $therapyPhotos = [
+                ['URPE-12.JPG','Atención terapéutica pediátrica'],
+                ['1214aaec-4b21-4537-9bbf-f526367db002.JPG','Sesión de terapia pediátrica'],
+                ['URPE-52.jpg','Intervención terapéutica'],
+                ['7e172846-47bc-4e0a-8e2c-680fcfec0780.JPG','Acompañamiento terapéutico'],
+                ['PHOTO-2026-06-04-23-17-44.jpg','Atención en URPE'],
+                ['26948424-f8f1-4492-a94b-84e73596ff33.JPG','Terapia en URPE'],
+                ['b5119434-c4cf-4e0d-bf73-2708d6a7480f.JPG','Rehabilitación pediátrica'],
+                ['IMG_5120 2.JPG','Trabajo terapéutico'],
+                ['7cb152b4-600c-4cfa-baa4-dd073e9e9919.JPG','Atención especializada'],
+                ['437043cb-879f-4068-baca-f17c6ead47fa.JPG','Rehabilitación en URPE'],
+                ['482271544_3604708199832880_258636939205075707_n.jpg','Actividades terapéuticas'],
+                ['483099994_3608853806084986_7602086811002161420_n.jpg','Terapia pediátrica'],
+                ['528745014_3744175259219506_1051254750902545105_n.jpg','Proceso terapéutico'],
+                ['fdcf6966-4d7e-4c77-9d60-8fbbbc929e93.JPG','Atención personalizada'],
+                ['URPE-21.jpg','Instalaciones y terapias de URPE'],
+                ['IMG_9144.jpg','Atención terapéutica en URPE'],
+            ];
+            $availableTherapyPhotos = array_values(array_filter($therapyPhotos, fn ($item) => is_file(public_path('images/website/therapies/'.$item[0]))));
+        @endphp
+        @if (count($availableTherapyPhotos))
+            <section class="bg-slate-50 py-20 sm:py-24" aria-labelledby="therapy-gallery-title">
+                <div class="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+                    <div data-reveal="up" class="mx-auto max-w-3xl text-center">
+                        <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-cyan-700">URPE en imágenes</p>
+                        <h2 id="therapy-gallery-title" class="mt-4 text-4xl font-black tracking-tight text-slate-800 sm:text-5xl">Acompañamiento <span class="text-pink-600">en acción.</span></h2>
+                        <p class="mt-5 text-lg leading-8 text-slate-600">Conoce algunos momentos de nuestro trabajo terapéutico.</p>
+                    </div>
+                    <div class="urpe-editorial-gallery mt-12 grid auto-rows-[235px] gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        @foreach ($availableTherapyPhotos as [$filename,$alt])
+                            <figure data-reveal="up" class="group overflow-hidden rounded-[1.75rem] bg-white shadow-[0_14px_45px_rgba(15,23,42,.08)]">
+                                <button type="button" data-gallery-open="{{ $loop->index }}" aria-label="Ampliar imagen: {{ $alt }}" class="relative block w-full cursor-zoom-in overflow-hidden focus-visible:outline focus-visible:outline-4 focus-visible:outline-cyan-500">
+                                    <img src="{{ asset('images/website/therapies/'.$filename) }}" alt="{{ $alt }}" loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105">
+                                    <span aria-hidden="true" class="pointer-events-none absolute bottom-4 right-4 rounded-full bg-slate-950/65 px-3 py-2 text-xs font-bold text-white opacity-0 backdrop-blur transition group-hover:opacity-100 group-focus-within:opacity-100">Ampliar ↗</span>
+                                </button>
+                            </figure>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+        @endif
+
+        @if (count($availableTherapyPhotos))
+            <dialog id="urpe-gallery-dialog" aria-label="Galería de fotografías de URPE" class="m-auto h-dvh max-h-dvh w-screen max-w-none border-0 bg-slate-950/95 p-0 text-white backdrop:bg-slate-950/90">
+                <div class="relative flex h-full w-full flex-col items-center justify-center px-4 py-16 sm:px-20">
+                    <button type="button" data-gallery-close aria-label="Cerrar galería" class="absolute right-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white">×</button>
+                    <button type="button" data-gallery-prev aria-label="Fotografía anterior" class="absolute left-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white sm:left-6">‹</button>
+                    <div class="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden" data-gallery-stage>
+                        <img data-gallery-image src="" alt="" class="max-h-full max-w-full object-contain opacity-0 transition-opacity duration-300 ease-in-out" decoding="async">
+                    </div>
+                    <button type="button" data-gallery-next aria-label="Fotografía siguiente" class="absolute right-2 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl transition hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white sm:right-6">›</button>
+                    <p data-gallery-counter aria-live="polite" class="mt-5 text-sm font-semibold tracking-widest text-white/75"></p>
+                </div>
+            </dialog>
+            <script>
+                (() => {
+                    const dialog = document.getElementById('urpe-gallery-dialog');
+                    const image = dialog?.querySelector('[data-gallery-image]');
+                    if (!dialog || !image || typeof dialog.showModal !== 'function') return;
+                    const photos = @json(array_map(fn ($item) => ['src' => asset('images/website/therapies/'.$item[0]), 'alt' => $item[1]], $availableTherapyPhotos));
+                    const counter = dialog.querySelector('[data-gallery-counter]');
+                    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+                    let current = 0, transitionToken = 0, pending = null, touchStart = null;
+                    const display = (index, immediate = false) => {
+                        if (!photos.length) return;
+                        current = (index + photos.length) % photos.length;
+                        const token = ++transitionToken;
+                        if (pending) clearTimeout(pending);
+                        image.classList.add('opacity-0');
+                        const swap = () => {
+                            if (token !== transitionToken) return;
+                            image.src = photos[current].src;
+                            image.alt = photos[current].alt;
+                            counter.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(photos.length).padStart(2, '0');
+                            const reveal = () => { if (token === transitionToken) image.classList.remove('opacity-0'); };
+                            if (image.complete) requestAnimationFrame(reveal);
+                            else { image.onload = reveal; image.onerror = reveal; }
+                        };
+                        if (immediate || reducedMotion.matches) swap();
+                        else pending = setTimeout(swap, 300);
+                    };
+                    document.querySelectorAll('[data-gallery-open]').forEach(button => {
+                        button.addEventListener('click', () => { dialog.showModal(); display(Number(button.dataset.galleryOpen), true); });
+                    });
+                    dialog.querySelector('[data-gallery-close]').addEventListener('click', () => dialog.close());
+                    dialog.querySelector('[data-gallery-prev]').addEventListener('click', () => display(current - 1));
+                    dialog.querySelector('[data-gallery-next]').addEventListener('click', () => display(current + 1));
+                    dialog.addEventListener('keydown', event => {
+                        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                            event.preventDefault(); display(current + (event.key === 'ArrowRight' ? 1 : -1));
+                        }
+                    });
+                    dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+                    const stage = dialog.querySelector('[data-gallery-stage]');
+                    stage.addEventListener('touchstart', event => { touchStart = event.changedTouches[0]?.clientX ?? null; }, {passive:true});
+                    stage.addEventListener('touchend', event => {
+                        if (touchStart === null) return;
+                        const delta = (event.changedTouches[0]?.clientX ?? touchStart) - touchStart;
+                        touchStart = null;
+                        if (Math.abs(delta) > 45) display(current + (delta < 0 ? 1 : -1));
+                    }, {passive:true});
+                    dialog.addEventListener('close', () => { ++transitionToken; if (pending) clearTimeout(pending); image.src = ''; image.classList.add('opacity-0'); });
+                })();
+            </script>
+        @endif
+
         <section id="equipo" class="scroll-mt-28 relative overflow-hidden bg-white py-20 sm:py-24 lg:py-28">
             <div aria-hidden="true" class="pointer-events-none absolute -left-20 top-24 h-64 w-64 rounded-full bg-pink-100/50 blur-3xl"></div>
             <div aria-hidden="true" class="pointer-events-none absolute -right-20 bottom-10 h-72 w-72 rounded-full bg-cyan-100/60 blur-3xl"></div>
@@ -455,9 +587,9 @@
 
                 @php
                     $team = [
-                        ['Jonathan Escobar Zambrano','Director de URPE','J','cyan'],
-                        ['Fredi Carpio Jiménez','Encargado del área de PediaSuit','F','pink'],
-                        ['Mauricio Ballinas Ramírez','Encargado del área de marcha y programa de bipedestación','M','lime'],
+                        ['id'=>'jonathan','name'=>'Jonathan Escobar Zambrano','role'=>'Fundador y director de URPE','initial'=>'J','color'=>'cyan','photo'=>'jonathan-escobar.jpg'],
+                        ['id'=>'fredi','name'=>'Fredi Eduardo Carpio Jiménez','role'=>'Encargado del área de PediaSuit','initial'=>'F','color'=>'pink','photo'=>'fredi-carpio.jpg'],
+                        ['id'=>'mauricio','name'=>'Mauricio Ballinas Ramírez','role'=>'Encargado del área de marcha y programa de bipedestación','initial'=>'M','color'=>'lime','photo'=>'mauricio-ballinas.jpg'],
                     ];
                     $teamStyles = [
                         'cyan'=>['soft'=>'from-cyan-100 to-cyan-50','ink'=>'text-cyan-600','dot'=>'bg-cyan-400'],
@@ -466,27 +598,27 @@
                     ];
                 @endphp
 
-                <div class="mt-12 grid gap-6 md:grid-cols-3">
-                    @foreach ($team as [$name,$role,$initial,$color])
+                <div class="urpe-team-premium mt-12 grid gap-6 md:grid-cols-3">
+                    @foreach ($team as $person)
+                        @php
+                            $color = $person['color'];
+                            $photo = 'images/team/'.$person['photo'];
+                        @endphp
                         <article data-reveal="up" class="group relative overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-[0_14px_45px_rgba(15,23,42,.07)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_22px_55px_rgba(15,23,42,.12)]">
                             <div class="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br {{ $teamStyles[$color]['soft'] }}">
                                 <div aria-hidden="true" class="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/50"></div>
                                 <div aria-hidden="true" class="absolute bottom-8 left-8 h-4 w-4 rounded-full {{ $teamStyles[$color]['dot'] }}"></div>
-                                @if ($initial === 'F')
-                                    <img src="{{ asset('images/team/fredi-carpio.png') }}" alt="Fredi Eduardo Carpio Jiménez, terapeuta físico de URPE" class="absolute inset-0 h-full w-full object-cover object-[center_32%]" loading="lazy" decoding="async">
+                                @if (is_file(public_path($photo)))
+                                    <img src="{{ asset($photo) }}" alt="Fotografía oficial de {{ $person['name'] }}" class="absolute inset-0 h-full w-full object-cover object-[center_30%]" loading="lazy" decoding="async">
                                 @else
-                                    <div class="relative flex h-28 w-28 items-center justify-center rounded-full bg-white/90 text-5xl font-black shadow-sm {{ $teamStyles[$color]['ink'] }}">{{ $initial }}</div>
-                                    <span class="absolute bottom-4 right-5 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-slate-500 shadow-sm">Foto próximamente</span>
+                                    <div class="relative flex h-28 w-28 items-center justify-center rounded-full bg-white/90 text-5xl font-black shadow-sm {{ $teamStyles[$color]['ink'] }}">{{ $person['initial'] }}</div>
+                                    <span class="absolute bottom-4 right-5 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-slate-500 shadow-sm">Fotografía pendiente</span>
                                 @endif
                             </div>
                             <div class="p-7">
-                                <h3 class="text-xl font-extrabold leading-7 text-slate-800">{{ $name }}</h3>
-                                <p class="mt-2 text-sm font-semibold leading-6 {{ $teamStyles[$color]['ink'] }}">{{ $role }}</p>
-                                @if ($initial === 'F')
-                                    <button type="button" data-open-fredi aria-haspopup="dialog" aria-controls="fredi-profile-dialog" class="mt-5 inline-flex items-center gap-2 rounded-full bg-pink-50 px-4 py-2 text-sm font-bold text-pink-700 transition hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600">Ver perfil profesional <span aria-hidden="true">→</span></button>
-                                @else
-                                    <span aria-hidden="true" class="mt-6 block h-1 w-10 rounded-full {{ $teamStyles[$color]['dot'] }}"></span>
-                                @endif
+                                <h3 class="text-xl font-extrabold leading-7 text-slate-800">{{ $person['name'] }}</h3>
+                                <p class="mt-2 text-sm font-semibold leading-6 {{ $teamStyles[$color]['ink'] }}">{{ $person['role'] }}</p>
+                                <button type="button" data-open-profile="{{ $person['id'] }}" aria-haspopup="dialog" aria-controls="profile-{{ $person['id'] }}" class="mt-5 inline-flex items-center gap-2 rounded-full bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-cyan-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600">Ver perfil profesional <span aria-hidden="true">→</span></button>
                             </div>
                         </article>
                     @endforeach
@@ -505,12 +637,36 @@
 
 
 
-        <dialog id="fredi-profile-dialog" aria-labelledby="fredi-profile-title" aria-describedby="fredi-profile-intro" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
+        <dialog id="profile-jonathan" aria-labelledby="jonathan-profile-title" class="m-auto w-[calc(100%-2rem)] max-w-4xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
             <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-slate-100 bg-white/95 px-6 py-4 backdrop-blur sm:px-9">
-                <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-pink-600">Nuestro equipo · Perfil profesional</span>
-                <button type="button" data-close-fredi aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 transition hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-pink-600">×</button>
+                <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-cyan-600">Nuestro equipo · Perfil profesional</span>
+                <button type="button" data-close-profile aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 hover:bg-cyan-100">×</button>
             </div>
             <div class="space-y-7 px-6 py-8 sm:px-9 sm:py-10">
+                @if (is_file(public_path('images/team/jonathan-escobar.jpg')))
+                    <div class="flex items-center gap-5 rounded-[1.5rem] bg-gradient-to-r from-cyan-50 via-white to-pink-50 p-4 sm:p-5">
+                        <img src="{{ asset('images/team/jonathan-escobar.jpg') }}" alt="Fotografía de Jonathan Escobar Zambrano" class="h-24 w-24 shrink-0 rounded-2xl object-cover object-top shadow-md ring-4 ring-white sm:h-32 sm:w-32" loading="lazy" decoding="async">
+                        <div><p class="text-xs font-extrabold uppercase tracking-[0.15em] text-cyan-700">Nuestro equipo</p><p class="mt-2 text-sm font-semibold leading-6 text-slate-600">Fundador y director de URPE</p></div>
+                    </div>
+                @endif
+                <div><p class="mb-2 text-sm font-bold text-cyan-600">Fundador y director de URPE</p><h2 id="jonathan-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Jonathan Escobar Zambrano</h2><p class="mt-2 font-semibold text-slate-500">Licenciado en Terapia Física</p><p class="mt-5 leading-7 text-slate-600">Fundador y director de la Unidad de Rehabilitación Pediátrica Evolutiva (URPE), con trayectoria en fisioterapia infantil, evaluación neuromotora y formación especializada nacional e internacional.</p></div>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Formación académica</h3><p class="mt-2 leading-7 text-slate-600">Licenciatura en Terapia Física, Escuela de Terapia Física del Sistema DIF (2009–2013).</p></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Experiencia profesional</h3><p class="mt-2 leading-7 text-slate-600">Director de la Unidad de Rehabilitación Pediátrica Evolutiva, Tuxtla Gutiérrez, Chiapas (2016–actualidad). Fisioterapeuta infantil en ÚNETE-AC, Oaxaca de Juárez (2012–2016). Pasantía en terapia física en CREE, Oaxaca de Juárez (2012–2013).</p></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Trayectoria de formación y certificaciones</h3><p class="mt-2 text-sm leading-6 text-slate-500">Preparación continua en evaluación neurológica, rehabilitación pediátrica y terapia especializada.</p><ul class="urpe-director-timeline mt-5 space-y-1 leading-7 text-slate-600"><li>2012 — Primer Encuentro de Terapeutas Vojta en México, APAC, Culiacán, Sinaloa.</li><li>2013 — III Jornada Internacional de Terapia Vojta en España, Hospital de Móstoles, Madrid.</li><li>2013 — Evaluación Neurológica del Recién Nacido, Universidad Nacional Autónoma de México.</li><li>2017–2018 — Certificación de Terapia Vojta aplicada a lactantes, niños y adolescentes con alteraciones motoras cerebrales infantiles, Universidad de Salamanca, España.</li><li>2019 — Certificación GM Trust para la Evaluación Cualitativa de los Movimientos Generales de Prechtl, curso avanzado, Ciudad de México.</li><li>2019 — Certificación GM Trust para la Evaluación Cuantitativa de los Movimientos Generales de Prechtl, curso básico, Ciudad de México.</li><li>2019 — Certificación en Terapia Manual Tridimensional del Pie de Barbara Zukunft-Huber, Dresde, Alemania.</li><li>2023 — Certificación para aplicar el instrumento de evaluación del desarrollo motor Infant Motor Profile.</li><li>2023 — Entrenamiento en Newborn Behavioral Observations System (NBO), Boston Children’s Hospital, Boston, Estados Unidos.</li><li>2024 — Recertificación GM Trust para la Evaluación Cualitativa de los Movimientos Generales de Prechtl, curso avanzado, Ciudad de México.</li><li>2024 — Certificación Hammersmith Infant Neurological Examination (HINE).</li><li>2026 — Entrenamiento básico en el protocolo PediaSuit, Bogotá, Colombia.</li></ul></section>
+            </div>
+        </dialog>
+        <dialog id="profile-fredi" aria-labelledby="fredi-profile-title" aria-describedby="fredi-profile-intro" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
+            <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-slate-100 bg-white/95 px-6 py-4 backdrop-blur sm:px-9">
+                <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-pink-600">Nuestro equipo · Perfil profesional</span>
+                <button type="button" data-close-profile aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 transition hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-pink-600">×</button>
+            </div>
+            <div class="space-y-7 px-6 py-8 sm:px-9 sm:py-10">
+                @if (is_file(public_path('images/team/fredi-carpio.jpg')))
+                    <div class="flex items-center gap-5 rounded-[1.5rem] bg-gradient-to-r from-cyan-50 via-white to-pink-50 p-4 sm:p-5">
+                        <img src="{{ asset('images/team/fredi-carpio.jpg') }}" alt="Fotografía de Fredi Eduardo Carpio Jiménez" class="h-24 w-24 shrink-0 rounded-2xl object-cover object-top shadow-md ring-4 ring-white sm:h-32 sm:w-32" loading="lazy" decoding="async">
+                        <div><p class="text-xs font-extrabold uppercase tracking-[0.15em] text-cyan-700">Nuestro equipo</p><p class="mt-2 text-sm font-semibold leading-6 text-slate-600">Área de PediaSuit</p></div>
+                    </div>
+                @endif
                 <div>
                     <p class="mb-2 text-sm font-bold text-pink-600">Encargado del área de PediaSuit</p>
                     <h2 id="fredi-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Fredi Eduardo Carpio Jiménez</h2>
@@ -532,15 +688,33 @@
                 <p class="border-t border-slate-100 pt-5 text-sm font-medium text-slate-500">Atención profesional con respeto, compromiso y calidez humana.</p>
             </div>
         </dialog>
+        <dialog id="profile-mauricio" aria-labelledby="mauricio-profile-title" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
+            <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-slate-100 bg-white/95 px-6 py-4 backdrop-blur sm:px-9">
+                <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-cyan-600">Nuestro equipo · Perfil profesional</span>
+                <button type="button" data-close-profile aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 hover:bg-cyan-100">×</button>
+            </div>
+            <div class="space-y-7 px-6 py-8 sm:px-9 sm:py-10">
+                @if (is_file(public_path('images/team/mauricio-ballinas.jpg')))
+                    <div class="flex items-center gap-5 rounded-[1.5rem] bg-gradient-to-r from-cyan-50 via-white to-pink-50 p-4 sm:p-5">
+                        <img src="{{ asset('images/team/mauricio-ballinas.jpg') }}" alt="Fotografía de Mauricio Ballinas Ramírez" class="h-24 w-24 shrink-0 rounded-2xl object-cover object-top shadow-md ring-4 ring-white sm:h-32 sm:w-32" loading="lazy" decoding="async">
+                        <div><p class="text-xs font-extrabold uppercase tracking-[0.15em] text-cyan-700">Nuestro equipo</p><p class="mt-2 text-sm font-semibold leading-6 text-slate-600">Marcha y bipedestación</p></div>
+                    </div>
+                @endif
+                <div><p class="mb-2 text-sm font-bold text-cyan-600">Encargado del área de marcha y programa de bipedestación</p><h2 id="mauricio-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Mauricio Ballinas Ramírez</h2><p class="mt-2 font-semibold text-slate-500">Licenciado en Terapia Física</p><p class="mt-5 leading-7 text-slate-600">Fisioterapeuta con experiencia clínica y deportiva en rehabilitación, readaptación funcional y prevención de lesiones.</p></div>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Formación académica</h3><p class="mt-2 leading-7 text-slate-600">Licenciatura en Fisioterapia, Instituto de Estudios Superiores de Chiapas (2020–2023).</p></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Experiencia profesional</h3><p class="mt-2 leading-7 text-slate-600">Pasantía de fisioterapia en Club León FC (marzo 2024–enero 2025). Fisioterapeuta en Evolut, León, Guanajuato (enero–diciembre 2025).</p></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Formación complementaria destacada</h3><ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-slate-600"><li>Curso en punción seca y electropunción.</li><li>Curso de electroestimulación.</li><li>Curso de masoterapia.</li></ul></section>
+            </div>
+        </dialog>
         <script>
             (() => {
-                const dialog = document.getElementById('fredi-profile-dialog');
-                const opener = document.querySelector('[data-open-fredi]');
-                const closer = dialog?.querySelector('[data-close-fredi]');
-                if (!dialog || !opener || !closer || typeof dialog.showModal !== 'function') return;
-                opener.addEventListener('click', () => dialog.showModal());
-                closer.addEventListener('click', () => dialog.close());
-                dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+                document.querySelectorAll('[data-open-profile]').forEach((button) => {
+                    const dialog = document.getElementById('profile-' + button.dataset.openProfile);
+                    if (!dialog || typeof dialog.showModal !== 'function') return;
+                    button.addEventListener('click', () => dialog.showModal());
+                    dialog.querySelector('[data-close-profile]')?.addEventListener('click', () => dialog.close());
+                    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+                });
             })();
         </script>
 
