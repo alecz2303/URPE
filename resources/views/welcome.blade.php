@@ -442,6 +442,46 @@
             </div>
         </section>
 
+        @php
+            // Colocar fotografías autorizadas en public/images/website/therapies/ sin renombrarlas.
+            $therapyPhotos = [
+                ['URPE-12.JPG','Atención terapéutica pediátrica'],
+                ['1214aaec-4b21-4537-9bbf-f526367db002.JPG','Sesión de terapia pediátrica'],
+                ['URPE-52.jpg','Intervención terapéutica'],
+                ['7e172846-47bc-4e0a-8e2c-680fcfec0780.JPG','Acompañamiento terapéutico'],
+                ['PHOTO-2026-06-04-23-17-44.jpg','Atención en URPE'],
+                ['26948424-f8f1-4492-a94b-84e73596ff33.JPG','Terapia en URPE'],
+                ['b5119434-c4cf-4e0d-bf73-2708d6a7480f.JPG','Rehabilitación pediátrica'],
+                ['IMG_5120 2.JPG','Trabajo terapéutico'],
+                ['7cb152b4-600c-4cfa-baa4-dd073e9e9919.JPG','Atención especializada'],
+                ['437043cb-879f-4068-baca-f17c6ead47fa.JPG','Rehabilitación en URPE'],
+                ['482271544_3604708199832880_258636939205075707_n.jpg','Actividades terapéuticas'],
+                ['483099994_3608853806084986_7602086811002161420_n.jpg','Terapia pediátrica'],
+                ['528745014_3744175259219506_1051254750902545105_n.jpg','Proceso terapéutico'],
+                ['fdcf6966-4d7e-4c77-9d60-8fbbbc929e93.JPG','Atención personalizada'],
+                ['URPE-21.jpg','Instalaciones y terapias de URPE'],
+            ];
+            $availableTherapyPhotos = array_values(array_filter($therapyPhotos, fn ($item) => is_file(public_path('images/website/therapies/'.$item[0]))));
+        @endphp
+        @if (count($availableTherapyPhotos))
+            <section class="bg-slate-50 py-20 sm:py-24" aria-labelledby="therapy-gallery-title">
+                <div class="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+                    <div data-reveal="up" class="mx-auto max-w-3xl text-center">
+                        <p class="text-xs font-extrabold uppercase tracking-[0.18em] text-cyan-700">URPE en imágenes</p>
+                        <h2 id="therapy-gallery-title" class="mt-4 text-4xl font-black tracking-tight text-slate-800 sm:text-5xl">Acompañamiento <span class="text-pink-600">en acción.</span></h2>
+                        <p class="mt-5 text-lg leading-8 text-slate-600">Conoce algunos momentos de nuestro trabajo terapéutico.</p>
+                    </div>
+                    <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                        @foreach ($availableTherapyPhotos as [$filename,$alt])
+                            <figure data-reveal="up" class="group overflow-hidden rounded-[1.75rem] bg-white shadow-[0_14px_45px_rgba(15,23,42,.08)]">
+                                <img src="{{ asset('images/website/therapies/'.$filename) }}" alt="{{ $alt }}" loading="lazy" decoding="async" class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105">
+                            </figure>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+        @endif
+
         <section id="equipo" class="scroll-mt-28 relative overflow-hidden bg-white py-20 sm:py-24 lg:py-28">
             <div aria-hidden="true" class="pointer-events-none absolute -left-20 top-24 h-64 w-64 rounded-full bg-pink-100/50 blur-3xl"></div>
             <div aria-hidden="true" class="pointer-events-none absolute -right-20 bottom-10 h-72 w-72 rounded-full bg-cyan-100/60 blur-3xl"></div>
@@ -455,9 +495,9 @@
 
                 @php
                     $team = [
-                        ['Jonathan Escobar Zambrano','Director de URPE','J','cyan'],
-                        ['Fredi Carpio Jiménez','Encargado del área de PediaSuit','F','pink'],
-                        ['Mauricio Ballinas Ramírez','Encargado del área de marcha y programa de bipedestación','M','lime'],
+                        ['id'=>'jonathan','name'=>'Jonathan Escobar Zambrano','role'=>'Director de URPE','initial'=>'J','color'=>'cyan','photo'=>'jonathan-escobar.jpg'],
+                        ['id'=>'fredi','name'=>'Fredi Eduardo Carpio Jiménez','role'=>'Encargado del área de PediaSuit','initial'=>'F','color'=>'pink','photo'=>'fredi-carpio.jpg'],
+                        ['id'=>'mauricio','name'=>'Mauricio Ballinas Ramírez','role'=>'Encargado del área de marcha y programa de bipedestación','initial'=>'M','color'=>'lime','photo'=>'mauricio-ballinas.jpg'],
                     ];
                     $teamStyles = [
                         'cyan'=>['soft'=>'from-cyan-100 to-cyan-50','ink'=>'text-cyan-600','dot'=>'bg-cyan-400'],
@@ -467,26 +507,26 @@
                 @endphp
 
                 <div class="mt-12 grid gap-6 md:grid-cols-3">
-                    @foreach ($team as [$name,$role,$initial,$color])
+                    @foreach ($team as $person)
+                        @php
+                            $color = $person['color'];
+                            $photo = 'images/team/'.$person['photo'];
+                        @endphp
                         <article data-reveal="up" class="group relative overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-[0_14px_45px_rgba(15,23,42,.07)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_22px_55px_rgba(15,23,42,.12)]">
                             <div class="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br {{ $teamStyles[$color]['soft'] }}">
                                 <div aria-hidden="true" class="absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/50"></div>
                                 <div aria-hidden="true" class="absolute bottom-8 left-8 h-4 w-4 rounded-full {{ $teamStyles[$color]['dot'] }}"></div>
-                                @if ($initial === 'F')
-                                    <img src="{{ asset('images/team/fredi-carpio.png') }}" alt="Fredi Eduardo Carpio Jiménez, terapeuta físico de URPE" class="absolute inset-0 h-full w-full object-cover object-[center_32%]" loading="lazy" decoding="async">
+                                @if (is_file(public_path($photo)))
+                                    <img src="{{ asset($photo) }}" alt="Fotografía oficial de {{ $person['name'] }}" class="absolute inset-0 h-full w-full object-cover object-[center_30%]" loading="lazy" decoding="async">
                                 @else
-                                    <div class="relative flex h-28 w-28 items-center justify-center rounded-full bg-white/90 text-5xl font-black shadow-sm {{ $teamStyles[$color]['ink'] }}">{{ $initial }}</div>
-                                    <span class="absolute bottom-4 right-5 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-slate-500 shadow-sm">Foto próximamente</span>
+                                    <div class="relative flex h-28 w-28 items-center justify-center rounded-full bg-white/90 text-5xl font-black shadow-sm {{ $teamStyles[$color]['ink'] }}">{{ $person['initial'] }}</div>
+                                    <span class="absolute bottom-4 right-5 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-slate-500 shadow-sm">Fotografía pendiente</span>
                                 @endif
                             </div>
                             <div class="p-7">
-                                <h3 class="text-xl font-extrabold leading-7 text-slate-800">{{ $name }}</h3>
-                                <p class="mt-2 text-sm font-semibold leading-6 {{ $teamStyles[$color]['ink'] }}">{{ $role }}</p>
-                                @if ($initial === 'F')
-                                    <button type="button" data-open-fredi aria-haspopup="dialog" aria-controls="fredi-profile-dialog" class="mt-5 inline-flex items-center gap-2 rounded-full bg-pink-50 px-4 py-2 text-sm font-bold text-pink-700 transition hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600">Ver perfil profesional <span aria-hidden="true">→</span></button>
-                                @else
-                                    <span aria-hidden="true" class="mt-6 block h-1 w-10 rounded-full {{ $teamStyles[$color]['dot'] }}"></span>
-                                @endif
+                                <h3 class="text-xl font-extrabold leading-7 text-slate-800">{{ $person['name'] }}</h3>
+                                <p class="mt-2 text-sm font-semibold leading-6 {{ $teamStyles[$color]['ink'] }}">{{ $person['role'] }}</p>
+                                <button type="button" data-open-profile="{{ $person['id'] }}" aria-haspopup="dialog" aria-controls="profile-{{ $person['id'] }}" class="mt-5 inline-flex items-center gap-2 rounded-full bg-slate-50 px-4 py-2 text-sm font-bold text-slate-700 transition hover:bg-cyan-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-600">Ver perfil profesional <span aria-hidden="true">→</span></button>
                             </div>
                         </article>
                     @endforeach
@@ -505,10 +545,22 @@
 
 
 
-        <dialog id="fredi-profile-dialog" aria-labelledby="fredi-profile-title" aria-describedby="fredi-profile-intro" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
+        <dialog id="profile-jonathan" aria-labelledby="jonathan-profile-title" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
+            <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-slate-100 bg-white/95 px-6 py-4 backdrop-blur sm:px-9">
+                <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-cyan-600">Nuestro equipo · Perfil profesional</span>
+                <button type="button" data-close-profile aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 hover:bg-cyan-100">×</button>
+            </div>
+            <div class="space-y-7 px-6 py-8 sm:px-9 sm:py-10">
+                <div><p class="mb-2 text-sm font-bold text-cyan-600">Director de URPE</p><h2 id="jonathan-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Jonathan Escobar Zambrano</h2><p class="mt-2 font-semibold text-slate-500">Licenciado en Terapia Física</p><p class="mt-5 leading-7 text-slate-600">Fisioterapeuta infantil con experiencia en rehabilitación pediátrica y evaluación del desarrollo motor.</p></div>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Formación académica</h3><p class="mt-2 leading-7 text-slate-600">Licenciatura en Terapia Física, Escuela de Terapia Física del Sistema DIF (2009–2013).</p></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Experiencia profesional</h3><p class="mt-2 leading-7 text-slate-600">Director de URPE desde 2016. Fisioterapeuta infantil en ÚNETE-AC (2012–2016) y pasantía en terapia física en CREE (2012–2013).</p></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Formación complementaria destacada</h3><ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-slate-600"><li>Certificación en terapia Vojta aplicada a lactantes, niños y adolescentes — Universidad de Salamanca (2017–2018).</li><li>Evaluación de Movimientos Generales de Prechtl — GM Trust (2019; recertificación 2024).</li><li>Terapia Manual Tridimensional del Pie (2019).</li><li>Infant Motor Profile y Newborn Behavioral Observations (2023).</li><li>Hammersmith Infant Neurological Examination (2024).</li><li>Protocolo PediaSuit, curso básico (2026).</li></ul></section>
+            </div>
+        </dialog>
+        <dialog id="profile-fredi" aria-labelledby="fredi-profile-title" aria-describedby="fredi-profile-intro" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
             <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-slate-100 bg-white/95 px-6 py-4 backdrop-blur sm:px-9">
                 <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-pink-600">Nuestro equipo · Perfil profesional</span>
-                <button type="button" data-close-fredi aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 transition hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-pink-600">×</button>
+                <button type="button" data-close-profile aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 transition hover:bg-pink-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-pink-600">×</button>
             </div>
             <div class="space-y-7 px-6 py-8 sm:px-9 sm:py-10">
                 <div>
@@ -532,15 +584,27 @@
                 <p class="border-t border-slate-100 pt-5 text-sm font-medium text-slate-500">Atención profesional con respeto, compromiso y calidez humana.</p>
             </div>
         </dialog>
+        <dialog id="profile-mauricio" aria-labelledby="mauricio-profile-title" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
+            <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-slate-100 bg-white/95 px-6 py-4 backdrop-blur sm:px-9">
+                <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-cyan-600">Nuestro equipo · Perfil profesional</span>
+                <button type="button" data-close-profile aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 hover:bg-cyan-100">×</button>
+            </div>
+            <div class="space-y-7 px-6 py-8 sm:px-9 sm:py-10">
+                <div><p class="mb-2 text-sm font-bold text-cyan-600">Encargado del área de marcha y programa de bipedestación</p><h2 id="mauricio-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Mauricio Ballinas Ramírez</h2><p class="mt-2 font-semibold text-slate-500">Licenciado en Terapia Física</p><p class="mt-5 leading-7 text-slate-600">Fisioterapeuta con experiencia clínica y deportiva en rehabilitación, readaptación funcional y prevención de lesiones.</p></div>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Formación académica</h3><p class="mt-2 leading-7 text-slate-600">Licenciatura en Fisioterapia, Instituto de Estudios Superiores de Chiapas (2020–2023).</p></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Experiencia profesional</h3><p class="mt-2 leading-7 text-slate-600">Pasantía de fisioterapia en Club León FC (marzo 2024–enero 2025). Fisioterapeuta en Evolut, León, Guanajuato (enero–diciembre 2025).</p></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Formación complementaria destacada</h3><ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-slate-600"><li>Curso en punción seca y electropunción.</li><li>Curso de electroestimulación.</li><li>Curso de masoterapia.</li></ul></section>
+            </div>
+        </dialog>
         <script>
             (() => {
-                const dialog = document.getElementById('fredi-profile-dialog');
-                const opener = document.querySelector('[data-open-fredi]');
-                const closer = dialog?.querySelector('[data-close-fredi]');
-                if (!dialog || !opener || !closer || typeof dialog.showModal !== 'function') return;
-                opener.addEventListener('click', () => dialog.showModal());
-                closer.addEventListener('click', () => dialog.close());
-                dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+                document.querySelectorAll('[data-open-profile]').forEach((button) => {
+                    const dialog = document.getElementById('profile-' + button.dataset.openProfile);
+                    if (!dialog || typeof dialog.showModal !== 'function') return;
+                    button.addEventListener('click', () => dialog.showModal());
+                    dialog.querySelector('[data-close-profile]')?.addEventListener('click', () => dialog.close());
+                    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+                });
             })();
         </script>
 
