@@ -18,6 +18,30 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         html { scroll-behavior: smooth; }
+        /* URPE-45: propuesta visual experimental; aislada de la rama aprobable. */
+        .urpe-editorial-gallery { grid-auto-flow: dense; }
+        .urpe-editorial-gallery figure { position: relative; isolation: isolate; }
+        .urpe-editorial-gallery figure::after { content: ""; pointer-events: none; position: absolute; inset: 0; border: 1px solid rgba(255,255,255,.55); border-radius: inherit; }
+        .urpe-editorial-gallery button { height: 100%; }
+        .urpe-editorial-gallery img { height: 100%; min-height: 235px; }
+        @media (min-width: 1024px) {
+            .urpe-editorial-gallery figure:nth-child(8n + 1) { grid-column: span 2; grid-row: span 2; }
+            .urpe-editorial-gallery figure:nth-child(8n + 1) img { min-height: 490px; }
+            .urpe-editorial-gallery figure:nth-child(8n + 4) { grid-row: span 2; }
+            .urpe-editorial-gallery figure:nth-child(8n + 4) img { min-height: 490px; }
+        }
+        .urpe-team-premium article { box-shadow: 0 20px 65px rgba(15,23,42,.075); }
+        .urpe-team-premium article:hover { box-shadow: 0 28px 75px rgba(8,145,178,.15); }
+        .urpe-team-premium article:first-child { border-color: rgba(8,145,178,.25); }
+        .urpe-team-premium article:first-child::before { content: "FUNDADOR Y DIRECTOR"; position: absolute; top: 16px; left: 16px; z-index: 2; padding: 9px 13px; border-radius: 999px; background: rgba(8,145,178,.94); color: white; font-size: 10px; letter-spacing: .12em; font-weight: 900; box-shadow: 0 6px 18px rgba(8,145,178,.2); }
+        .urpe-team-premium article img { transition: transform .65s cubic-bezier(.2,.8,.2,1), filter .65s; }
+        .urpe-team-premium article:hover img { transform: scale(1.045); }
+        .urpe-director-timeline { list-style: none; padding-left: 0; margin-left: 6px; border-left: 2px solid #cffafe; }
+        .urpe-director-timeline li { position: relative; padding: 12px 14px 12px 25px; margin-left: 0; border-bottom: 1px solid #f1f5f9; }
+        .urpe-director-timeline li::before { content: ""; position: absolute; left: -7px; top: 22px; width: 12px; height: 12px; border: 3px solid white; border-radius: 50%; background: #0891b2; box-shadow: 0 0 0 2px #a5f3fc; }
+        .urpe-director-timeline li:nth-child(even)::before { background: #db2777; box-shadow: 0 0 0 2px #fbcfe8; }
+        @media (prefers-reduced-motion: reduce) { .urpe-team-premium article img { transition: none; } }
+
         [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity .75s cubic-bezier(.2,.75,.25,1), transform .75s cubic-bezier(.2,.75,.25,1); }
         [data-reveal="left"] { transform: translate(-34px, 18px); }
         [data-reveal="right"] { transform: translate(34px, 18px); }
@@ -472,7 +496,7 @@
                         <h2 id="therapy-gallery-title" class="mt-4 text-4xl font-black tracking-tight text-slate-800 sm:text-5xl">Acompañamiento <span class="text-pink-600">en acción.</span></h2>
                         <p class="mt-5 text-lg leading-8 text-slate-600">Conoce algunos momentos de nuestro trabajo terapéutico.</p>
                     </div>
-                    <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div class="urpe-editorial-gallery mt-12 grid auto-rows-[235px] gap-5 sm:grid-cols-2 lg:grid-cols-3">
                         @foreach ($availableTherapyPhotos as [$filename,$alt])
                             <figure data-reveal="up" class="group overflow-hidden rounded-[1.75rem] bg-white shadow-[0_14px_45px_rgba(15,23,42,.08)]">
                                 <button type="button" data-gallery-open="{{ $loop->index }}" aria-label="Ampliar imagen: {{ $alt }}" class="relative block w-full cursor-zoom-in overflow-hidden focus-visible:outline focus-visible:outline-4 focus-visible:outline-cyan-500">
@@ -563,7 +587,7 @@
 
                 @php
                     $team = [
-                        ['id'=>'jonathan','name'=>'Jonathan Escobar Zambrano','role'=>'Director de URPE','initial'=>'J','color'=>'cyan','photo'=>'jonathan-escobar.jpg'],
+                        ['id'=>'jonathan','name'=>'Jonathan Escobar Zambrano','role'=>'Fundador y director de URPE','initial'=>'J','color'=>'cyan','photo'=>'jonathan-escobar.jpg'],
                         ['id'=>'fredi','name'=>'Fredi Eduardo Carpio Jiménez','role'=>'Encargado del área de PediaSuit','initial'=>'F','color'=>'pink','photo'=>'fredi-carpio.jpg'],
                         ['id'=>'mauricio','name'=>'Mauricio Ballinas Ramírez','role'=>'Encargado del área de marcha y programa de bipedestación','initial'=>'M','color'=>'lime','photo'=>'mauricio-ballinas.jpg'],
                     ];
@@ -574,7 +598,7 @@
                     ];
                 @endphp
 
-                <div class="mt-12 grid gap-6 md:grid-cols-3">
+                <div class="urpe-team-premium mt-12 grid gap-6 md:grid-cols-3">
                     @foreach ($team as $person)
                         @php
                             $color = $person['color'];
@@ -613,7 +637,7 @@
 
 
 
-        <dialog id="profile-jonathan" aria-labelledby="jonathan-profile-title" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
+        <dialog id="profile-jonathan" aria-labelledby="jonathan-profile-title" class="m-auto w-[calc(100%-2rem)] max-w-4xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
             <div class="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-slate-100 bg-white/95 px-6 py-4 backdrop-blur sm:px-9">
                 <span class="text-xs font-extrabold uppercase tracking-[0.16em] text-cyan-600">Nuestro equipo · Perfil profesional</span>
                 <button type="button" data-close-profile aria-label="Cerrar perfil" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-700 hover:bg-cyan-100">×</button>
@@ -628,7 +652,7 @@
                 <div><p class="mb-2 text-sm font-bold text-cyan-600">Fundador y director de URPE</p><h2 id="jonathan-profile-title" class="text-3xl font-black tracking-tight sm:text-4xl">Jonathan Escobar Zambrano</h2><p class="mt-2 font-semibold text-slate-500">Licenciado en Terapia Física</p><p class="mt-5 leading-7 text-slate-600">Fundador y director de la Unidad de Rehabilitación Pediátrica Evolutiva (URPE), con trayectoria en fisioterapia infantil, evaluación neuromotora y formación especializada nacional e internacional.</p></div>
                 <section><h3 class="text-lg font-extrabold text-slate-800">Formación académica</h3><p class="mt-2 leading-7 text-slate-600">Licenciatura en Terapia Física, Escuela de Terapia Física del Sistema DIF (2009–2013).</p></section>
                 <section><h3 class="text-lg font-extrabold text-slate-800">Experiencia profesional</h3><p class="mt-2 leading-7 text-slate-600">Director de la Unidad de Rehabilitación Pediátrica Evolutiva, Tuxtla Gutiérrez, Chiapas (2016–actualidad). Fisioterapeuta infantil en ÚNETE-AC, Oaxaca de Juárez (2012–2016). Pasantía en terapia física en CREE, Oaxaca de Juárez (2012–2013).</p></section>
-                <section><h3 class="text-lg font-extrabold text-slate-800">Formación complementaria destacada</h3><ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-slate-600"><li>2012 — Primer Encuentro de Terapeutas Vojta en México, APAC, Culiacán, Sinaloa.</li><li>2013 — III Jornada Internacional de Terapia Vojta en España, Hospital de Móstoles, Madrid.</li><li>2013 — Evaluación Neurológica del Recién Nacido, Universidad Nacional Autónoma de México.</li><li>2017–2018 — Certificación de Terapia Vojta aplicada a lactantes, niños y adolescentes con alteraciones motoras cerebrales infantiles, Universidad de Salamanca, España.</li><li>2019 — Certificación GM Trust para la Evaluación Cualitativa de los Movimientos Generales de Prechtl, curso avanzado, Ciudad de México.</li><li>2019 — Certificación GM Trust para la Evaluación Cuantitativa de los Movimientos Generales de Prechtl, curso básico, Ciudad de México.</li><li>2019 — Certificación en Terapia Manual Tridimensional del Pie de Barbara Zukunft-Huber, Dresde, Alemania.</li><li>2023 — Certificación para aplicar el instrumento de evaluación del desarrollo motor Infant Motor Profile.</li><li>2023 — Entrenamiento en Newborn Behavioral Observations System (NBO), Boston Children’s Hospital, Boston, Estados Unidos.</li><li>2024 — Recertificación GM Trust para la Evaluación Cualitativa de los Movimientos Generales de Prechtl, curso avanzado, Ciudad de México.</li><li>2024 — Certificación Hammersmith Infant Neurological Examination (HINE).</li><li>2026 — Entrenamiento básico en el protocolo PediaSuit, Bogotá, Colombia.</li></ul></section>
+                <section><h3 class="text-lg font-extrabold text-slate-800">Trayectoria de formación y certificaciones</h3><p class="mt-2 text-sm leading-6 text-slate-500">Preparación continua en evaluación neurológica, rehabilitación pediátrica y terapia especializada.</p><ul class="urpe-director-timeline mt-5 space-y-1 leading-7 text-slate-600"><li>2012 — Primer Encuentro de Terapeutas Vojta en México, APAC, Culiacán, Sinaloa.</li><li>2013 — III Jornada Internacional de Terapia Vojta en España, Hospital de Móstoles, Madrid.</li><li>2013 — Evaluación Neurológica del Recién Nacido, Universidad Nacional Autónoma de México.</li><li>2017–2018 — Certificación de Terapia Vojta aplicada a lactantes, niños y adolescentes con alteraciones motoras cerebrales infantiles, Universidad de Salamanca, España.</li><li>2019 — Certificación GM Trust para la Evaluación Cualitativa de los Movimientos Generales de Prechtl, curso avanzado, Ciudad de México.</li><li>2019 — Certificación GM Trust para la Evaluación Cuantitativa de los Movimientos Generales de Prechtl, curso básico, Ciudad de México.</li><li>2019 — Certificación en Terapia Manual Tridimensional del Pie de Barbara Zukunft-Huber, Dresde, Alemania.</li><li>2023 — Certificación para aplicar el instrumento de evaluación del desarrollo motor Infant Motor Profile.</li><li>2023 — Entrenamiento en Newborn Behavioral Observations System (NBO), Boston Children’s Hospital, Boston, Estados Unidos.</li><li>2024 — Recertificación GM Trust para la Evaluación Cualitativa de los Movimientos Generales de Prechtl, curso avanzado, Ciudad de México.</li><li>2024 — Certificación Hammersmith Infant Neurological Examination (HINE).</li><li>2026 — Entrenamiento básico en el protocolo PediaSuit, Bogotá, Colombia.</li></ul></section>
             </div>
         </dialog>
         <dialog id="profile-fredi" aria-labelledby="fredi-profile-title" aria-describedby="fredi-profile-intro" class="m-auto w-[calc(100%-2rem)] max-w-3xl max-h-[90dvh] overflow-y-auto rounded-[2rem] border-0 bg-white p-0 text-slate-800 shadow-2xl backdrop:bg-slate-950/70">
