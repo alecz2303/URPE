@@ -178,6 +178,7 @@
     <main class="relative z-10">
         <section class="mx-auto grid min-h-[calc(100vh-96px)] max-w-7xl items-center gap-10 px-5 pb-14 pt-7 sm:px-8 sm:pt-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14 lg:px-10 lg:pb-16 lg:pt-2">
             <div data-reveal="left" class="max-w-2xl">
+                <p class="mb-5 max-w-xl text-xs font-semibold leading-5 text-black">LTF. Jonathan Escobar Zambrano · Céd. Prof. 09692948 · COFEPRIS 2607012002A00678</p>
                 <div class="mb-6 inline-flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.18em] text-cyan-700 sm:text-sm">
                     <span class="h-1 w-8 rounded-full bg-yellow-400"></span>Rehabilitación infantil
                 </div>
@@ -800,7 +801,7 @@
                             </div>
                             <div class="flex gap-4">
                                 <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-lime-400/15 text-lime-300" aria-hidden="true">✉</span>
-                                <div><p class="text-xs font-extrabold uppercase tracking-[.14em] text-slate-400">Correo</p><a href="mailto:joez_sk@hotmail.com" class="mt-1 inline-block break-all font-bold text-white transition hover:text-cyan-300">joez_sk@hotmail.com</a></div>
+                                <div><p class="text-xs font-extrabold uppercase tracking-[.14em] text-slate-400">Correo</p><a href="mailto:contacto@urpe.com.mx" class="mt-1 inline-block break-all font-bold text-white transition hover:text-cyan-300">contacto@urpe.com.mx</a></div>
                             </div>
                         </div>
 
@@ -839,6 +840,7 @@
             <div class="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-8 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-10">
                 <img src="{{ asset('images/brand/urpe-logo.png') }}" alt="URPE - Unidad de Rehabilitación Pediátrica Evolutiva" class="h-12 w-auto object-contain">
                 <p class="text-sm text-slate-500">Unidad de Rehabilitación Pediátrica Evolutiva · Tuxtla Gutiérrez, Chiapas</p>
+                <a href="{{ asset('docs/aviso-de-privacidad.pdf') }}" target="_blank" rel="noopener" class="text-sm font-bold text-cyan-700 transition hover:text-pink-600">Aviso de Privacidad</a>
                 <a href="#inicio" class="text-sm font-bold text-cyan-700 transition hover:text-pink-600">Volver arriba ↑</a>
             </div>
         </footer>
