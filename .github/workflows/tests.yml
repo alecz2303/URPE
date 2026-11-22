@@ -11,11 +11,28 @@ on:
 
 jobs:
   tests:
-    runs-on: self-hosted
+    # Runner elegido con la variable de repo CI_RUNNER: 'self-hosted' por
+    # defecto (la computadora de Alecz); 'ubuntu-latest' cuando la máquina
+    # local no está disponible. Cambiar la variable no toca este archivo.
+    runs-on: ${{ vars.CI_RUNNER || 'self-hosted' }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+
+      - name: Setup PHP 8.4
+        if: runner.environment == 'github-hosted'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_sqlite
+          tools: composer
+
+      - name: Setup Node.js 22
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
       - name: Verify preinstalled PHP 8.4
         run: |

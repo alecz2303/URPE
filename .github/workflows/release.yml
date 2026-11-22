@@ -7,6 +7,14 @@ on:
         description: "New release tag (example v2026.10.24.1)"
         required: true
         type: string
+      runner:
+        description: "Runner para construir el release"
+        required: false
+        type: choice
+        default: self-hosted
+        options:
+          - self-hosted
+          - ubuntu-latest
 
 permissions:
   contents: write
@@ -17,7 +25,11 @@ concurrency:
 
 jobs:
   release:
-    runs-on: self-hosted
+    # Runner elegido al disparar el release (input 'runner'); 'self-hosted'
+    # por defecto (la computadora de Alecz), 'ubuntu-latest' cuando no está
+    # disponible. Elegir ubuntu-latest instala PHP 8.4 y Node.js 22 en la
+    # máquina de GitHub con los pasos de abajo.
+    runs-on: ${{ inputs.runner }}
     timeout-minutes: 30
     steps:
       - name: Validate tag
@@ -41,6 +53,20 @@ jobs:
             echo "Release tag already exists"; exit 1
           fi
           echo "SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Setup PHP 8.4
+        if: runner.environment == 'github-hosted'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, bcmath, pdo_mysql, zip
+          tools: composer
+
+      - name: Setup Node.js 22
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
       - name: Verify preinstalled PHP 8.4
         run: |
