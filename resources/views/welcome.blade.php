@@ -299,14 +299,14 @@
 
                 @php
                     $conditions = [
-                        ['Parálisis cerebral','Acompañamiento para potenciar su autonomía y habilidades.','https://images.pexels.com/photos/8653970/pexels-photo-8653970.jpeg?auto=compress&cs=tinysrgb&w=1200','cyan'],
-                        ['Alto riesgo de daño neurológico','Seguimiento temprano para favorecer su desarrollo.','https://images.pexels.com/photos/7141030/pexels-photo-7141030.jpeg?auto=compress&cs=tinysrgb&w=900','pink'],
+                        ['Parálisis cerebral','Acompañamiento para potenciar su autonomía y habilidades.',asset('images/website/paralisis-cerebral.jpg'),'cyan'],
+                        ['Alto riesgo de daño neurológico','Seguimiento temprano para favorecer su desarrollo.',asset('images/website/alto-riesgo-dano-neurologico.jpg'),'pink'],
                         ['Prematurez','Estimulación y acompañamiento en sus primeras etapas.','https://images.pexels.com/photos/12365687/pexels-photo-12365687.jpeg?auto=compress&cs=tinysrgb&w=900','lime'],
                         ['Síndrome de Down','Apoyo en su desarrollo integral y habilidades para la vida diaria.','https://images.pexels.com/photos/7944379/pexels-photo-7944379.jpeg?auto=compress&cs=tinysrgb&w=900','yellow'],
-                        ['Espina bífida','Acompañamiento para favorecer su movilidad, independencia y calidad de vida.','https://images.pexels.com/photos/6191916/pexels-photo-6191916.jpeg?auto=compress&cs=tinysrgb&w=1200','violet'],
+                        ['Espina bífida','Acompañamiento para favorecer su movilidad, independencia y calidad de vida.',asset('images/website/espina-bifida.jpg'),'violet'],
                         ['Alteraciones del desarrollo motor','Estimulación para fortalecer su movimiento y coordinación.','https://images.pexels.com/photos/8504439/pexels-photo-8504439.jpeg?auto=compress&cs=tinysrgb&w=900','cyan'],
-                        ['Plagiocefalia','Orientación y acompañamiento durante su desarrollo.','https://images.pexels.com/photos/14997907/pexels-photo-14997907.jpeg?auto=compress&cs=tinysrgb&w=900','pink'],
-                        ['Pie equino varo congénito','Acompañamiento en su tratamiento y desarrollo funcional.','https://images.pexels.com/photos/30483062/pexels-photo-30483062.jpeg?auto=compress&cs=tinysrgb&w=900','lime'],
+                        ['Plagiocefalia','Orientación y acompañamiento durante su desarrollo.',asset('images/website/plagiocefalia.jpg'),'pink'],
+                        ['Pie equino varo congénito','Acompañamiento en su tratamiento y desarrollo funcional.',asset('images/website/pie-equino-varo.jpg'),'lime'],
                     ];
                     $visuals=['cyan'=>['soft'=>'bg-cyan-100','ink'=>'text-cyan-600','bar'=>'bg-cyan-400'],'pink'=>['soft'=>'bg-pink-100','ink'=>'text-pink-600','bar'=>'bg-pink-500'],'lime'=>['soft'=>'bg-lime-100','ink'=>'text-lime-600','bar'=>'bg-lime-500'],'yellow'=>['soft'=>'bg-yellow-100','ink'=>'text-amber-500','bar'=>'bg-yellow-400'],'violet'=>['soft'=>'bg-violet-100','ink'=>'text-violet-500','bar'=>'bg-violet-400']];
                 @endphp
@@ -332,7 +332,7 @@
                     <div aria-hidden="true" class="absolute -right-8 -bottom-12 h-40 w-40 rounded-full bg-cyan-100/80"></div>
                     <div class="grid items-stretch lg:grid-cols-[.78fr_1.22fr]">
                         <div class="min-h-48 overflow-hidden lg:min-h-56">
-                            <img src="https://images.pexels.com/photos/7141030/pexels-photo-7141030.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="" loading="lazy" decoding="async" width="1200" height="800" class="h-full w-full object-cover">
+                            <img src="{{ asset('images/website/alto-riesgo-dano-neurologico.jpg') }}" alt="" loading="lazy" decoding="async" width="1200" height="800" class="h-full w-full object-cover">
                         </div>
                         <div class="relative z-10 grid items-center gap-6 px-7 py-8 sm:px-9 lg:grid-cols-[1fr_auto]">
                             <div><p class="text-sm font-extrabold uppercase tracking-[0.16em] text-cyan-700">Estamos aquí para orientarte</p><h3 class="mt-2 text-2xl font-black tracking-[-0.03em] text-slate-800 sm:text-3xl">No es necesario contar con un <span class="text-pink-600">diagnóstico previo.</span></h3><p class="mt-3 max-w-xl text-base leading-7 text-slate-600">Si tienes dudas sobre el desarrollo de tu hijo, puedes solicitar una valoración con nuestro equipo.</p></div>
@@ -367,12 +367,12 @@
                 @php
                     $therapies = [
                         ['Método Vojta','Favorece la aparición de movimientos coordinados y organizados mediante posturas y la estimulación de zonas determinadas del cuerpo.','cyan','V'],
+                        ['Estimulación temprana','Conjunto de estrategias y técnicas terapéuticas especializadas, fundamentadas en el movimiento libre y la exploración activa, que buscan favorecer y potenciar el desarrollo motor de los bebés. A través de experiencias de movimiento acordes con su etapa de desarrollo, se promueve la adquisición de habilidades motrices, el control postural, la coordinación y la interacción con su entorno, respetando el ritmo y las características individuales de cada niño.','yellow','E'],
                         ['PediaSuit / PediaSuit Therapy','Método de rehabilitación neuromotora intensiva que utiliza un traje ortopédico dinámico y propioceptivo durante el trabajo activo.','pink','P'],
                         ['Programa de bipedestación','Estrategia terapéutica utilizada principalmente para prevenir alteraciones músculo-esqueléticas en pacientes con alteraciones del desarrollo motor.','lime','B'],
-                        ['Estimulación temprana',null,'yellow','E'],
-                        ['Terapia orofacial',null,'violet','O'],
-                        ['Entrenamiento de marcha',null,'cyan','M'],
-                        ['Terapia tridimensional del pie',null,'pink','T'],
+                        ['Entrenamiento locomotor','Intervención terapéutica dirigida a desarrollar, mejorar o mantener el patrón de marcha. A través de actividades repetitivas, específicas y progresivas, buscamos promover la mejor movilidad posible para cada pequeño, ya sea para caminar de mejor manera o para mantener activo el movimiento y favorecer su participación diaria.','cyan','L'],
+                        ['Terapia orofacial','Conjuntos de ejercicios que ayudan a mejorar el movimiento y la sensibilidad de boca, labios y lengua para hablar y comer de mejor manera.','violet','O'],
+                        ['Terapia tridimensional del pie','Intervención terapéutica manual que busca favorecer la alineación y funcionalidad del pie. Se utiliza un tipo de vendaje funcional usando vendas de membrana sintética, con la intención de prolongar los efectos de la terapia.','pink','T'],
                     ];
                     $therapyStyles = [
                         'cyan'=>['soft'=>'bg-cyan-50','ink'=>'text-cyan-600','line'=>'bg-cyan-400'],
