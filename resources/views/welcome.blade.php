@@ -283,6 +283,48 @@
                     </div>
                 </div>
             </div>
+
+            <div class="relative mx-auto mt-16 max-w-7xl px-5 sm:mt-20 sm:px-8 lg:px-10">
+                <div data-reveal="up" class="mx-auto max-w-3xl text-center">
+                    <div class="mb-5 inline-flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.18em] text-cyan-700 sm:text-sm"><span class="h-1 w-8 rounded-full bg-yellow-400"></span>Misión, visión y valores</div>
+                    <h2 class="text-4xl font-black leading-tight tracking-[-0.04em] text-slate-800 sm:text-5xl">Lo que nos <span class="text-pink-600">guía.</span></h2>
+                    <div aria-hidden="true" class="mx-auto mt-3 flex w-44 overflow-hidden rounded-full"><span class="h-1 flex-1 bg-cyan-400"></span><span class="h-1 flex-1 bg-pink-500"></span><span class="h-1 flex-1 bg-yellow-400"></span><span class="h-1 flex-1 bg-lime-400"></span></div>
+                </div>
+
+                <div class="mt-12 grid gap-5 lg:grid-cols-2">
+                    <article data-reveal="left" class="rounded-[2rem] bg-white p-8 shadow-xl shadow-slate-200/60 ring-1 ring-slate-100 sm:p-10">
+                        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-cyan-100 text-cyan-600">
+                            <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg>
+                        </div>
+                        <h3 class="mt-6 text-2xl font-black tracking-tight text-slate-800">Misión</h3>
+                        <p class="mt-4 text-lg leading-8 text-slate-600">Brindar atención especializada y de excelencia en rehabilitación infantil y atención temprana, mediante un acompañamiento integral al niño y su familia, orientado a potenciar sus capacidades, favorecer su desarrollo y autonomía, disminuir el impacto de las condiciones neurológicas y contribuir a una mejor calidad de vida.</p>
+                    </article>
+
+                    <article data-reveal="right" class="rounded-[2rem] bg-white p-8 shadow-xl shadow-slate-200/60 ring-1 ring-slate-100 sm:p-10">
+                        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-pink-100 text-pink-600">
+                            <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </div>
+                        <h3 class="mt-6 text-2xl font-black tracking-tight text-slate-800">Visión</h3>
+                        <p class="mt-4 text-lg leading-8 text-slate-600">Ser una institución referente en la región en rehabilitación neurológica infantil, reconocida por la excelencia de su atención, la especialización de sus tratamientos, sus resultados y, sobre todo, por el acompañamiento cercano a los niños y sus familias.</p>
+                    </article>
+                </div>
+
+                <div data-reveal="up" class="mt-5 rounded-[2rem] bg-white p-8 shadow-xl shadow-slate-200/60 ring-1 ring-slate-100 sm:p-10">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-yellow-100 text-amber-500">
+                            <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5S3.5 15.5 3.5 9.6A4.6 4.6 0 0 1 12 6.7a4.6 4.6 0 0 1 8.5 2.9c0 5.9-8.5 10.9-8.5 10.9Z"/></svg>
+                        </div>
+                        <h3 class="text-2xl font-black tracking-tight text-slate-800">Valores</h3>
+                    </div>
+                    <ul class="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                        <li class="flex items-center gap-3 rounded-2xl bg-cyan-50 px-5 py-4 text-base font-bold text-slate-800"><span aria-hidden="true" class="h-3 w-3 shrink-0 rounded-full bg-cyan-400"></span>Empatía</li>
+                        <li class="flex items-center gap-3 rounded-2xl bg-pink-50 px-5 py-4 text-base font-bold text-slate-800"><span aria-hidden="true" class="h-3 w-3 shrink-0 rounded-full bg-pink-500"></span>Respeto</li>
+                        <li class="flex items-center gap-3 rounded-2xl bg-amber-50 px-5 py-4 text-base font-bold text-slate-800"><span aria-hidden="true" class="h-3 w-3 shrink-0 rounded-full bg-yellow-400"></span>Profesionalismo</li>
+                        <li class="flex items-center gap-3 rounded-2xl bg-lime-50 px-5 py-4 text-base font-bold text-slate-800"><span aria-hidden="true" class="h-3 w-3 shrink-0 rounded-full bg-lime-500"></span>Atención centrada en la familia</li>
+                        <li class="flex items-center gap-3 rounded-2xl bg-violet-50 px-5 py-4 text-base font-bold text-slate-800"><span aria-hidden="true" class="h-3 w-3 shrink-0 rounded-full bg-violet-400"></span>Calidez humana</li>
+                    </ul>
+                </div>
+            </div>
         </section>
         <section class="relative overflow-hidden bg-white py-20 sm:py-24 lg:py-28">
             <div aria-hidden="true" class="pointer-events-none absolute -left-20 top-12 h-64 w-64 rounded-full bg-cyan-100/65 blur-2xl"></div>
